@@ -1,0 +1,7 @@
+node_modules
+libpeerconnection.log
+*.idea
+*.iml
+*.tidy
+*.backup
+.DS_Store

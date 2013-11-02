@@ -487,7 +487,7 @@ project can be thought of as roughly the Java equivalent of Node.
 JSON and XML data transfer formats {#jsonxml}
 ----------------------------------
 
-Both XML and JSON are text based, tree shaped data formats with human
+Both XML and JSON are text based, tree-shaped data formats with human
 and machine readability. One of the design goals of XML was to simplify
 SGML to the point that a graduate student could implement a full parser
 in a week [@javatools p287]. Continuing this arc of simpler data
@@ -514,7 +514,7 @@ it may be used directly without any further transformation.
    people: [
       {name: 'John', townOrCity:'London'},
       {name: 'Jack', townOrCity:'Bristol'}
-      {townOrCity:'Walter', name: 'Sally'}
+      {townOrCity:'Cambridge', name: 'Sally'}
    ]
 }
 ~~~~
@@ -532,7 +532,7 @@ structures and that the data found an ordered expression during
 transport would be quickly forgotten. When viewing a document through a
 streaming lens and interpreting while still incomplete it is easier to
 mistakenly react differently according to field order. If nodes from the
-example above were used when only the first field has arrived Walter
+example above were used when only the first field has arrived Sally
 would find a different handling than John or Jack. Because the
 serialisation will contain items which are written to follow an
 indeterminate order it will be important to ensure that, despite the
@@ -668,7 +668,7 @@ Consider the resource below:
    people: [
       {name: 'John', town:'Oxford'},
       {name: 'Jack', town:'Bristol'}
-      {town:'Cambridge', name: 'Walter'}
+      {town:'Cambridge', name: 'Sally'}
    ]
 }
 ~~~~
@@ -690,7 +690,7 @@ below:
             town:'Cambridge', county:'Cambridgeshire', 
             country:'uk'
          },
-         name: 'Walter'
+         name: 'Sally'
       }
    ]
 }
@@ -817,13 +817,12 @@ competed primarily on developer ergonomics with the popular jQuery and
 Prototype.js libraries promoting themselves as *"do more, write less"*
 and *"elegant APIs around the clumsy interfaces of Ajax"*. Written
 against the unadorned browser, Javascript applications read as a maze of
-platform-detection and special cases. Once applications were built using
-abstractions over the underlying browser differences they could be
-written purposefully and were able to express more complex ideas without
-becoming incomprehensible.
+platform detection and special cases. Once applications were built using
+abstractions over the underlying platform differences they could be
+written purposefully and were able to express more complex ideas.
 
-Today JSON is generally the preferred format, especially for REST
-endpoints designed for delivery to client-side web applications.
+Today JSON is generally the preferred format, especially for resources
+transmitted to client-side web applications.
 Javascript programmers occupy a privileged position whereby their
 serialisation format maps exactly onto the inbuilt types of their
 programming language. As such there is never any confusion regarding
@@ -839,7 +838,7 @@ remote resources so streamlined as to require hardly any additional
 effort.
 
 ~~~~ {.javascript}
-jQuery.ajax('http://example.com/people.json', function( people ) {
+ajax('http://example.com/people.json', function( people ) {
 
    // The parsing of the people json into a javascript object
    // feels so natural that it is easy to forget from looking 
@@ -857,9 +856,9 @@ XHRs and streaming
 Browser abstraction layers brought an improvement in expressivity to web
 application programming but were ultimately limited to supporting the
 lowest common denominator of available browser abilities. When the
-jQuery call style above was developed the most popular browser gave no
-access to in-progress responses so inevitably a conceptualisation was
-drawn of the response as a one-time event with no accommodation offered
+call style above was developed the most popular browser barred
+access to in-progress responses so the inevitable conceptualisation was
+drawn of the response as a one-time event with no accommodation provided
 for progressively delivered data.
 
 The followup standard, XHR2 is now at Working Draft stage. Given
@@ -889,16 +888,16 @@ Browser streaming frameworks
 The web's remit is increasingly widening to encompass scenarios which
 would have previously been the domain of native applications. In order
 to use live data many current webapps employ frameworks which push
-soft-real-time events to the client side. This form of streaming has a
-different but overlapping purpose from the XHR2 progress event. Whereas
-XHR2 enables downloads to be viewed as short-lived streams but does not
+soft-real-time events to the client side. This kind of streaming intersects only narrowly
+with the aims of the XHR2 progress event. Whereas
+XHR2 enables downloads to be viewed as streams but does not
 otherwise disrupt the sequence of http's request-response model,
 streaming frameworks facilitate an entirely different sequence, that of
 perpetual data. Consider a webmail interface; initially the user's inbox
 is downloaded via REST and a streaming download might be used to make
 its display more responsive. Regardless, the inbox download is a
 standard REST call and shares little in common with the push events
-which follow and provide instant notification as new messages arrive.
+which follow to provide instant notification as new messages arrive.
 
 **Push tables** sidestep the browser's absent data streaming abilities
 by leaning on a resource that it can stream: progressive html. On the
@@ -3230,7 +3229,19 @@ function instanceApi(emit, on, un, jsonPathCompiler){
     */       
    var addListener = varArgs(function( eventId, parameters ){
 
-      return apply(parameters, oboeApi[eventId]);
+      if( oboeApi[eventId] ) {
+      
+         // event has some special handling:
+         apply(parameters, oboeApi[eventId]);
+      } else {
+      
+         // the even has no special handling, add it direclty to
+         // the event bus:         
+         var listener = parameters[0]; 
+         on(eventId, listener);
+      }
+      
+      return oboeApi;
    });   
    
    // some interface methods are only filled in after we recieve

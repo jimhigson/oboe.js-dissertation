@@ -1,4 +1,4 @@
 oboe.js-dissertation
 ====================
 
-Academic dissertation writeup of [Oboe.js project](github.com/jimhigson/oboe.js)
+Academic dissertation writeup of [Oboe.js project](github.com/jimhigson/oboe.js). Not yet complete.

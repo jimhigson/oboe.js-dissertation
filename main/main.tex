@@ -349,7 +349,7 @@ contagion whereby the updating of any single unit may only be done as
 part of the updating of the whole.
 
 An effective response to this problem would be to integrate into a REST
-client programs the ability to use a response whilst being only loosely
+client programs the ability to use a resource whilst being only loosely
 coupled to the overall \emph{shape} of the message.
 
 \subsection{Deliverables}\label{deliverables}
@@ -3457,7 +3457,7 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
          \FunctionTok{apply}\NormalTok{(parameters, oboeApi[eventId]);}
       \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
       
-         \CommentTok{// the even has no special handling, add it direclty to}
+         \CommentTok{// the even has no special handling, add it directly to}
          \CommentTok{// the event bus:         }
          \KeywordTok{var} \NormalTok{listener = parameters[}\DecValTok{0}\NormalTok{]; }
          \FunctionTok{on}\NormalTok{(eventId, listener);}
@@ -3517,7 +3517,7 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 \CommentTok{ */}
  
  
-\KeywordTok{function} \FunctionTok{instanceController}\NormalTok{(  emit, on, un, }
+\KeywordTok{function} \FunctionTok{instanceController}\NormalTok{(  emit, on, }
                               \NormalTok{clarinetParser, contentBuilderHandlers) \{}
                                 
    \FunctionTok{on}\NormalTok{(STREAM_DATA,         }
@@ -3559,9 +3559,7 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
       
       \CommentTok{// note: don't close clarinet here because if it was not expecting}
       \CommentTok{// end of the json it will throw an error}
-   \NormalTok{\};}
-   
-   \KeywordTok{return} \KeywordTok{new} \FunctionTok{instanceApi}\NormalTok{(emit, on, un, jsonPathCompiler);}
+   \NormalTok{\};   }
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
@@ -4213,17 +4211,18 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 \NormalTok{\}}
 
 \CommentTok{/**}
-\CommentTok{ * Apply a function to every item in a list}
+\CommentTok{ * Call every function in a list of functions}
 \CommentTok{ * }
 \CommentTok{ * This doesn't make any sense if we're doing pure functional because }
-\CommentTok{ * it doesn't return anything. Hence, this is only really useful if fn }
-\CommentTok{ * has side-effects. }
+\CommentTok{ * it doesn't return anything. Hence, this is only really useful if the}
+\CommentTok{ * functions being called have side-effects. }
 \CommentTok{ */}
-\KeywordTok{function} \FunctionTok{each}\NormalTok{(fn, list) \{}
+\KeywordTok{function} \FunctionTok{applyEach}\NormalTok{(args, list) \{}
 
-   \KeywordTok{if}\NormalTok{( list )\{  }
-      \FunctionTok{fn}\NormalTok{(}\FunctionTok{head}\NormalTok{(list));}
-      \FunctionTok{each}\NormalTok{(fn, }\FunctionTok{tail}\NormalTok{(list));}
+   \KeywordTok{if}\NormalTok{( list ) \{  }
+      \FunctionTok{apply}\NormalTok{(args, }\FunctionTok{head}\NormalTok{(list))}
+      
+      \FunctionTok{applyEach}\NormalTok{(args, }\FunctionTok{tail}\NormalTok{(list));}
    \NormalTok{\}}
 \NormalTok{\}}
 
@@ -4311,9 +4310,9 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
       \NormalTok{\}, }
     
       \DataTypeTok{emit}\NormalTok{:}\FunctionTok{varArgs}\NormalTok{(}\KeywordTok{function} \NormalTok{( eventId, parameters ) \{}
-               
-         \FunctionTok{each}\NormalTok{( }
-            \FunctionTok{partialComplete}\NormalTok{( apply, parameters ), }
+                                             
+         \FunctionTok{applyEach}\NormalTok{( }
+            \NormalTok{parameters, }
             \NormalTok{listeners[eventId]}
          \NormalTok{);}
       \NormalTok{\}),}
@@ -4734,11 +4733,13 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
                   \FunctionTok{httpTransport}\NormalTok{(), }
                   \NormalTok{httpMethodName, contentSource, body, headers );                              }
      
-   \KeywordTok{return} \FunctionTok{instanceController}\NormalTok{( }
-               \OtherTok{eventBus}\NormalTok{.}\FunctionTok{emit}\NormalTok{, }\OtherTok{eventBus}\NormalTok{.}\FunctionTok{on}\NormalTok{, }\OtherTok{eventBus}\NormalTok{.}\FunctionTok{un}\NormalTok{, }
+   \FunctionTok{instanceController}\NormalTok{( }
+               \OtherTok{eventBus}\NormalTok{.}\FunctionTok{emit}\NormalTok{, }\OtherTok{eventBus}\NormalTok{.}\FunctionTok{on}\NormalTok{, }
                \OtherTok{clarinet}\NormalTok{.}\FunctionTok{parser}\NormalTok{(), }
                \FunctionTok{incrementalContentBuilder}\NormalTok{(}\OtherTok{eventBus}\NormalTok{.}\FunctionTok{emit}\NormalTok{) }
    \NormalTok{);}
+      
+   \KeywordTok{return} \KeywordTok{new} \FunctionTok{instanceApi}\NormalTok{(}\OtherTok{eventBus}\NormalTok{.}\FunctionTok{emit}\NormalTok{, }\OtherTok{eventBus}\NormalTok{.}\FunctionTok{on}\NormalTok{, }\OtherTok{eventBus}\NormalTok{.}\FunctionTok{un}\NormalTok{, jsonPathCompiler);}
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}

@@ -207,7 +207,7 @@ contagion whereby the updating of any single unit may only be done as
 part of the updating of the whole.
 
 An effective response to this problem would be to integrate into a REST
-client programs the ability to use a response whilst being only loosely coupled
+client programs the ability to use a resource whilst being only loosely coupled
 to the overall *shape* of the message.
 
 Deliverables

@@ -238,7 +238,7 @@ contagion whereby the updating of any single unit may only be done as
 part of the updating of the whole.
 
 An effective response to this problem would be to integrate into a REST
-client programs the ability to use a response whilst being only loosely coupled
+client programs the ability to use a resource whilst being only loosely coupled
 to the overall *shape* of the message.
 
 Deliverables
@@ -3235,7 +3235,7 @@ function instanceApi(emit, on, un, jsonPathCompiler){
          apply(parameters, oboeApi[eventId]);
       } else {
       
-         // the even has no special handling, add it direclty to
+         // the even has no special handling, add it directly to
          // the event bus:         
          var listener = parameters[0]; 
          on(eventId, listener);
@@ -3297,7 +3297,7 @@ instanceController.js {#header_instanceController}
  */
  
  
-function instanceController(  emit, on, un, 
+function instanceController(  emit, on, 
                               clarinetParser, contentBuilderHandlers) {
                                 
    on(STREAM_DATA,         
@@ -3339,9 +3339,7 @@ function instanceController(  emit, on, un,
       
       // note: don't close clarinet here because if it was not expecting
       // end of the json it will throw an error
-   };
-   
-   return new instanceApi(emit, on, un, jsonPathCompiler);
+   };   
 }
 ~~~~
 
@@ -4000,17 +3998,18 @@ function all(fn, list) {
 }
 
 /**
- * Apply a function to every item in a list
+ * Call every function in a list of functions
  * 
  * This doesn't make any sense if we're doing pure functional because 
- * it doesn't return anything. Hence, this is only really useful if fn 
- * has side-effects. 
+ * it doesn't return anything. Hence, this is only really useful if the
+ * functions being called have side-effects. 
  */
-function each(fn, list) {
+function applyEach(args, list) {
 
-   if( list ){  
-      fn(head(list));
-      each(fn, tail(list));
+   if( list ) {  
+      apply(args, head(list))
+      
+      applyEach(args, tail(list));
    }
 }
 
@@ -4102,9 +4101,9 @@ function pubSub(){
       }, 
     
       emit:varArgs(function ( eventId, parameters ) {
-               
-         each( 
-            partialComplete( apply, parameters ), 
+                                             
+         applyEach( 
+            parameters, 
             listeners[eventId]
          );
       }),
@@ -4537,11 +4536,13 @@ function wire (httpMethodName, contentSource, body, headers){
                   httpTransport(), 
                   httpMethodName, contentSource, body, headers );                              
      
-   return instanceController( 
-               eventBus.emit, eventBus.on, eventBus.un, 
+   instanceController( 
+               eventBus.emit, eventBus.on, 
                clarinet.parser(), 
                incrementalContentBuilder(eventBus.emit) 
    );
+      
+   return new instanceApi(eventBus.emit, eventBus.on, eventBus.un, jsonPathCompiler);
 }
 
 ~~~~

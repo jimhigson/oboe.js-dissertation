@@ -136,6 +136,10 @@ $if(title)$
 \maketitle
 $endif$
 
+\begin{center}
+{\large Supervised by Jeremy Gibbons}
+\end{center}
+
 \begin{abstract}
 $abstract$
 \end{abstract}

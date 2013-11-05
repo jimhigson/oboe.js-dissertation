@@ -126,9 +126,8 @@ $for(header-includes)$
 $header-includes$
 $endfor$
 
-$if(title)$
+
 \title{$title$}
-$endif$
 \author{$for(author)$$author$$sep$ \and $endfor$}
 \date{$date$}
 
@@ -136,6 +135,10 @@ $endif$
 $if(title)$
 \maketitle
 $endif$
+
+\begin{abstract}
+$abstract$
+\end{abstract}
 
 $for(include-before)$
 $include-before$

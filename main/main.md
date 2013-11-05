@@ -1,32 +1,34 @@
-% Oboe.js: An approach to I/O for REST clients which is neither batch nor stream; nor SAX nor DOM 
-% Jim Higson
-% 2013
+---
+title:  'Oboe.js: An approach to I/O for REST clients which is neither batch nor stream; nor SAX nor DOM'
+date: 2013
+author:
+- Jim Higson, Kellogg College
+abstract: |
+   A new design is presented for HTTP client libraries which incorporates HTTP streaming,
+   pattern matching, and incremental parsing, with the aim of improving
+   performance, fault tolerance, and encouraging a greater degree of loose
+   coupling between programs. A Javascript client library capable of
+   progressively parsing JSON resources is presented targeting both Node.js
+   and web browsers. Loose coupling is particularly considered in light of
+   the application of Agile methodologies to REST and SOA, providing a
+   framework in which it is acceptable to partially restructure the JSON
+   format of a resource while maintaining compatibility with dependent
+   systems.
+   
+   A critique is made of current practice under which resources are
+   entirely retrieved before items of interest are extracted
+   programmatically. An alternative model is presented allowing the
+   specification of items of interest using a declarative syntax similar to
+   JSONPath. The identified items are then provided incrementally while the
+   resource is still downloading.
+      
+   In addition to a consideration of performance in absolute terms, the
+   usability implications of an incremental model are also considered with
+   regards to developer ergonomics and user perception of performance.
+...
 
 
-Abstract
-========
 
-A new design is presented for HTTP client libraries which incorporates HTTP streaming,
-pattern matching, and incremental parsing, with the aim of improving
-performance, fault tolerance, and encouraging a greater degree of loose
-coupling between programs. A Javascript client library capable of
-progressively parsing JSON resources is presented targeting both Node.js
-and web browsers. Loose coupling is particularly considered in light of
-the application of Agile methodologies to REST and SOA, providing a
-framework in which it is acceptable to partially restructure the JSON
-format of a resource while maintaining compatibility with dependent
-systems.
-
-A critique is made of current practice under which resources are
-entirely retrieved before items of interest are extracted
-programmatically. An alternative model is presented allowing the
-specification of items of interest using a declarative syntax similar to
-JSONPath. The identified items are then provided incrementally while the
-resource is still downloading.
-
-In addition to a consideration of performance in absolute terms, the
-usability implications of an incremental model are also considered with
-regards to developer ergonomics and user perception of performance.
 
 
 Introduction
@@ -129,7 +131,7 @@ simultaneous connections per peer so avoiding bursts is further to our
 advantage. [Appendix i](#appendix_http_limits) lists some actual limits.
 
 Nodes in an n-tier architecture defy categorisation as 'client' or
-'server' in a way which is appropriate from all frames of reference. A
+'server' in a way that is appropriate from all frames of reference. A
 node might be labeled as the 'server' from the layer below and 'client'
 from the layer above. Although the "client software" labels in the
 figures \ref{rest_timeline_1} and \ref{rest_timeline_2} hint at
@@ -297,10 +299,10 @@ Background
 
 ![**Labelling nodes in an n-tier architecture**. Regardless of where a
 node is located, REST may be used as the means of communication. By
-focusing on REST clients, nodes in the middleware and presentation layer
+focusing on REST clients, nodes in the middle tier and presentation layer
 fall in our scope. Although network topology is often split about client
-and server side, for our purposes categorisation as data, middleware,
-and presentation is the more meaningful distinction. According to this
+and server side, for our purposes categorisation as data, middle,
+and presentation tier is the more meaningful distinction. According to this
 split the client-side presentation layer and server-side presentation
 layer serve the same purpose, generating mark-up based on aggregated
 data prepared by the middle tier
@@ -317,7 +319,7 @@ by resisting categorisation as either mode.
 
 While the trend is generally for more client scripting and for many
 sites a Javascript runtime is now requisite, there are also
-counter-trends. In 2012 twitter reduced load times to one fifth of their
+counter-trends. In 2012 Twitter reduced load times to one fifth of their
 previous design by moving much of their rendering back to the
 server-side, commenting that "The future is coming and it looks just
 like the past" [@newTwitter]. Under this architecture short,
@@ -342,14 +344,14 @@ data.
 While REST may not be the only communications technology employed by an
 application architecture, for this project we should examine where REST
 client libraries may fit into the picture. REST is used by the
-presentation layer to pull data from middleware regardless of where the
+presentation layer to pull data from the middle tier regardless of where the
 presentation resides. Likewise, rather than connect to databases
-directly, for portability middlewares often communicate with a thin REST
-layer which wraps data stores. This suggests three uses:
+directly, for portability the middle tier will often communicate with a thin REST
+layer which wraps the data store. This suggests three uses:
 
--   From web browser to middleware
--   From server-side presentation layer to middleware
--   From middleware to nodes in a data tier
+-   From web browser to middle tier
+-   From server-side presentation layer to middle tier
+-   From middle tier to nodes in the data tier
 
 Fortunately, each of these contexts requires a similar performance
 profile. The work done is computationally light and answering a request
@@ -366,7 +368,7 @@ in series, the workload as a whole is embarrassingly parallelisable.
 Node.js
 -------
 
-Node.js is a general purpose tool for executing Javascript outside of a
+Node.js [@nodejs] is a general purpose tool for executing Javascript outside of a
 browser. It has the aim of low-latency I/O and is used mostly for server
 applications and command line tools. It is difficult to judge to what
 degree Javascript is a distraction from Node's principled design and to
@@ -385,13 +387,13 @@ to fetch in parallel each HTTP request is assigned to a thread. These
 complete response, and then participate in a Barrier while the other
 requesters complete. Each thread consumes considerable resources but
 during its multi-second lifespan requires only a fraction of a
-millisecond on the CPU. It is unlikely any two requests return closely
-enough in time that the threads will process in series rather than
-parallel, loosing thread's natural strengths for utilising multiple
-cores. Even if they do, the actual CPU time required in making an HTTP
+millisecond on the CPU. It is unlikely that any two requests will return closely
+enough in time to be processed in parallel, loosing threading's 
+natural strength for simultaneously utilising multiple cores.
+Even if they do, the actual CPU time required in making an HTTP
 request is so short that any concurrent processing is a pyrrhic victory.
 
-Node builds on the model of event-based, asynchronous i/o that was
+Node builds on the model of event-based, asynchronous I/O that was
 established by web browser Javascript execution. Although Javascript in
 a browser may be performing multiple tasks simultaneously, for example
 requesting several resources from the server side, it does so from

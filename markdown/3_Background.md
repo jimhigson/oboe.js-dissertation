@@ -144,7 +144,7 @@ function printResourceToConsole(url) {
          // exits.
          
          // Because it is captured by a closure we are able to 
-         // reference the url parameter after the scope that 
+         // reference the URL parameter after the scope that 
          // declared it has finished.            
          console.log("The response has started for ", url);
       
@@ -724,10 +724,10 @@ function nameOfFirstPerson( myJsonString, callbackFunction ){
 
 The developer pays a high price for progressive parsing, the SAX version
 is considerably longer and more difficult to read. SAX's low-level
-semantics require a lengthy expression and push the responsibility of
-maintaining state regarding the current position in the document and the
-nodes that have previously been seen onto the programmer. This
-maintenance of state tends to programmed once per usage rather than
+semantics require a lengthy expression and push onto the programmer the responsibility for
+managing state regarding the current position in the document and the
+nodes that have previously been seen. This
+maintenance of state tends to be programmed once per usage rather than
 assembled as the composition of reusable parts. I find the order of the
 code under SAX also quite unintuitive; event handlers cover multiple
 unrelated cases and each concern spans multiple handlers. This lends to

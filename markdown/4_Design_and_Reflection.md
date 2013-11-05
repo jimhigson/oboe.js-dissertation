@@ -1,5 +1,5 @@
-Design and Reflection:
-======================
+Design and Reflection
+=====================
 
 The REST workflow is more efficient if we do not wait until we have
 everything before we start using the parts that we do have. The main
@@ -216,7 +216,7 @@ programing, as named in a 2000 usenet discussion:
 An address 'duck-definition' for the above JSON would say that any
 object which has number, street, and town properties is an address.
 Applied to JSON, duck typing takes an individualistic approach by
-deriving type from the node in itself rather than the situaiton in which
+deriving type from the node in itself rather than the situation in which
 it is found. Because I find this selection technique simple and powerful
 I decided to add it to my JSONPath variant. As discussed in section
 \ref{jsonpathxpath}, JSONPath's syntax is designed to resemble the
@@ -238,8 +238,8 @@ REST resources marshaled from an OO representation. In implementation,
 to conform to a duck-type a node must have all of the required fields
 but could also have any others.
 
-Importing CSS4's explicit capturing to Oboe's JSONPath
-------------------------------------------------------
+Importing CSS4's explicit capturing to JSONPath
+-----------------------------------------------
 
 JSONPath naturally expresses a 'contained in' relationship using the dot
 notation but no provision is made for the inverse 'containing'
@@ -257,10 +257,11 @@ continues to work as before. The CSS selector
 important forms but `$form.important input.mandatory` selects important
 forms with mandatory fields.
 
-The new CSS4 capturing technique will be adapted for Oboe's JSONPath. By
+The new CSS4 capturing technique will be adapted for this project's JSONPath
+implementation. By
 duplicating a syntax which the majority of web developers should become
-familiar with over the next few years I hope that Oboe's learning curve
-can be made a little more gradual. Taking on this feature, the selector
+familiar with over the next few years I hope that the learning curve
+can be made more gradual. Taking on this feature, the selector
 `person.$address.town` would identify an address node with a town child,
 or `$people.{name, dob}` can be used to locate the same people array
 repeatedly whenever a new person is added to it. Javascript frameworks
@@ -518,8 +519,8 @@ not follow HTTP's principled design. Due to these concerns, in the
 browser I will only be supporting downloading using XHR.
 
 Although I am designing Oboe as a client for ordinary REST resources and
-not focusing on the library a means to receive live events, it is
-interesting to speculate if Oboe could be used as a REST-compatible
+not focusing on the library as a means to receive live events, it is
+interesting to speculate whether Oboe could be used as a REST-compatible
 bridge to unify live and static data. Consider a REST service which
 gives results per-constituency for UK general elections. When
 requesting historic results the data is delivered in JSON format much as
@@ -528,7 +529,7 @@ election, an incomplete JSON with the constituencies known so far would
 be immediately sent, followed by the remainder dispatched individually
 as the results are called. When all results are known the JSON would
 finally close leaving a complete resource. A few days later, somebody
-wishing to fetch the results would use the *same url for the historic
+wishing to fetch the results would use the *same URL for the historic
 data as was used on the night for the live data*. This is possible
 because the URL refers only to the data that is required, not to whether
 it is current or historic. Because it eventually formed a complete HTTP
@@ -536,7 +537,7 @@ response, the data that was streamed is not incompatible with HTTP
 caching and a cache which saw the data when it was live could store it
 as usual and later serve it as historic. More sophisticated intermediate
 caches sitting on the network between client and service would recognise
-when a new request has the same url as an already ongoing request, serve
+when a new request has the same URL as an already ongoing request, serve
 the response received so far, and then continue by giving both inbound
 requests the content as it arrives from the already established outbound
 request. Hence, the resource would be cacheable even while the election
@@ -615,7 +616,7 @@ libraries than find one with a one-size-fits-all approach, perhaps
 echoing the unix command line tradition for small programs which each do
 exactly one thing. As well as being a small library, in the spirit of
 a micro-library a project should impose as few restrictions as possible
-on its use and be be agnostic as to which other libraries or programming
+on its use and be agnostic as to which other libraries or programming
 styles it will be combined with. Oboe feels on the edge of what is
 possible to elegantly do as a micro-library so while the limit is
 somewhat arbitrary, keeping below this limit whilst writing readable

@@ -227,7 +227,7 @@ The file `oboe-browser.min.js` is the minified, built version of Oboe
 ready to be sent to web browsers and can be found in the project's
 `dist` directory. The size fluctuates as commits are made but after gzip
 it comes to about 4800 bytes; close to but comfortably under the 5120
-limit. At roughly the size as a small image the download footprint of
+limit. At roughly the size of a small image the download footprint of
 Oboe should not discourage adoption.
 
 Potential future work

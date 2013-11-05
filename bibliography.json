@@ -491,7 +491,40 @@
       "url":"http://netty.io/",
       "issued": { "date-parts":[ [2010] ] },
       "type":"webpage"                  
-   }   
+   },
+   
+   {
+      "id":"grunt",
+      "title":"Grunt: The Javascript Task Runner",
+      "author":[         
+         { "family": "Alman", "given":"Ben"}
+      ],
+      "url":"http://gruntjs.com/",
+      "issued": { "date-parts":[ [2012] ] },
+      "type":"webpage"                  
+   },
+   
+   {
+      "id":"browserify",
+      "title":"Browserify website",
+      "author":[         
+         { "family": "Browserling Inc.", "name ":"Browserling Inc."}
+      ],
+      "url":"http://browserify.org/",
+      "issued": { "date-parts":[ [2012] ] },
+      "type":"webpage"                  
+   },
+   
+   {
+      "id":"underscore_memo",
+      "title":"Underscore.js: memoize",
+      "author":[
+         { "family": "Ashkenas", "given":"Jeremy"}
+      ],
+      "url":"http://underscorejs.org/#memoize",
+      "issued": { "date-parts":[ [2008] ] },
+      "type":"webpage"                  
+   }         
       
    
 ]

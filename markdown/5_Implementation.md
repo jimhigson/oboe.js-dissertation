@@ -60,7 +60,7 @@ service is started. This test service is written using Node and returns
 known content progressively according to predefined timings, somewhat
 emulating a slow internet connection. The integration tests particularly
 verify behaviours where platform differences could cause
-inconsistencies. For example, the test url `/tenSlowNumbers` writes out
+inconsistencies. For example, the test URL `/tenSlowNumbers` writes out
 the first ten natural numbers as a JSON array at a rate of two per
 second. The test registers a JSONPath selector that matches the numbers
 against a callback that aborts the HTTP request on seeing the fifth. The
@@ -76,7 +76,7 @@ efficiently as wholly side-effect free Javascript. To promote
 testability the state is delegated to a simple state-storing unit. The
 intricate logic may then be expressed as a separately tested set of
 side-effect free functions which transition between one state and the
-next. Although proof of correctness is impossible, for whichever results
+next. Although proof of correctness is difficult, for whichever results
 the functions give while under test, uninfluenced by state I can be
 confident that they will always yield the same response given the same
 future events. The separate unit maintaining the state has exactly one
@@ -92,8 +92,8 @@ being passed in by an inversion of control container during the wiring
 phase. For example, the network component which hides browser
 differences does not know how to create the underlying XHR that it
 adapts. Undoubtedly, by not instantiating its own transport this
-component presents a less friendly interface: it's data source is no
-longer a hidden implementation detail but exposed as a part of it's
+component presents a less friendly interface: its data source is no
+longer a hidden implementation detail but exposed as a part of its
 API as the responsibility of the caller. I feel this disadvantage is
 mitigated by the interface being purely internal. Dependency injection
 in this case allows the tests to be written more simply because it is
@@ -109,7 +109,7 @@ leaking between test cases.
 Running the tests
 -----------------
 
-The Grunt task runner is used to automate routine tasks such as
+The Grunt task runner [@grunt] is used to automate routine tasks such as
 executing the tests and building, configured so that the unit and
 component tests run automatically whenever a change is made to a source
 file or specification. As well as executing correctly, the project is
@@ -209,7 +209,7 @@ task. After finding a free Grunt plugin analogous to the unix `cat`
 command I quickly had a working build process and a distributable
 library requiring no run-time dependency management to be loaded.
 
-For future consideration there is Browserify. This library reverses the
+For future consideration there is Browserify [@browserify]. This library reverses the
 'browser first' Javascript mindset by viewing Node as the primary target
 for Javascript development and adapting the browser environment to
 match. Browserify converts applications written for Node into a single
@@ -250,7 +250,7 @@ the handlers share access to variables from the containing scope. From
 outside the closure the values are not only protected as private as
 would be seen in an OO model, they are inherently unaddressable.
 
-Although not following an established object orientated metamodel, the
+Although not following an established object-oriented metamodel, the
 high-level componentisation hasn't departed very far from what I would
 make were I following that style and OO design patterns have influenced
 their layout considerably. If we wished to think in terms of the OO
@@ -360,7 +360,7 @@ to the next handler.
 
 Linked lists were chosen for the ascents in preference to the more
 conventional approach of using native Javascript arrays for several
-reasons. Firstly, I find the program more easy to test and debug given
+reasons. Firstly, I find the program easier to test and debug given
 immutable data structures. Employing native Arrays without mutating
 would be very expensive because on each new path the whole array would
 have to be copied. Secondly, while debugging, unpicking a stack trace is
@@ -371,7 +371,7 @@ later. Thirdly, the lack of side effects means that I can try new
 commands in the debugger's CLI without worrying about breaking the
 execution of the program. Most Javascript virtual machines are also
 quite poor at array growing and shrinking so for collections whose size
-changes often, arrays are relatively inperformant. Finally, lists are a
+changes often, arrays are relatively unperformant. Finally, lists are a
 very convenient format for the JSONPath engine to match against as will
 be discussed in the next section. The Javascript file
 [lists.js](#header_lists) (Appendix p.\pageref{src_lists}) implements
@@ -476,7 +476,7 @@ elements, the same JSONPath evaluator term could be tested against the
 parent element many times, always with the same result. Although
 Javascript doesn't come with functional caching, it can be added using
 the language itself, probably the best known example being `memoize`
-from Underscore.js. I suspect, however, that hashing the cache
+from Underscore.js [@underscore_memo]. I suspect, however, that hashing the cache
 parameters might be slower than performing the matching. Although the
 parameters are all immutable and could in theory be hashed by object
 identity, in practice there is no way to access an object ID from inside

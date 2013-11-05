@@ -437,7 +437,7 @@ function printResourceToConsole(url) {
          // exits.
          
          // Because it is captured by a closure we are able to 
-         // reference the url parameter after the scope that 
+         // reference the URL parameter after the scope that 
          // declared it has finished.            
          console.log("The response has started for ", url);
       
@@ -617,8 +617,8 @@ be anywhere else.
 
 In the *Red Queen's race* it took "all the running you can do, to keep
 in the same place". Ideally as a programmer I'd like to expend effort to
-make my code to do something new, or to perform something that it
-already did better, not to stay still. Following an object oriented
+make my code to do something new, or to perform better something that it
+already did, not to stay still. Following an object oriented
 encapsulation of data such that a caller does not have to concern itself
 with the data structures behind an interface, the internal
 implementation may be changed without disruptions to the rest of the
@@ -706,7 +706,7 @@ distinct lists of child nodes, attribute children and node list
 children; from one perspective attributes are child nodes of their
 parent element but they can alternatively be considered as data stored
 in the element. Because of this classification ambiguity an XML document
-doesn't have a singly correct n-way tree. XML attributes may only
+can't be said to form a single correct n-way tree. XML attributes may only
 contain strings and have a lesser expressivity than child nodes which
 allow recursive structure; it is a common refactor to change from
 attributes to elements when a scalar value is upgraded to be a compound.
@@ -778,8 +778,8 @@ example might be if we expanded our model to contain fuzzy knowledge:
 }
 ~~~~
 
-Considering the general case, it will not be possible to track all
-possible service refactors safely. By necessity a resource consumer
+Considering the general case, it will not be possible to safely track every
+refactoring of a service. By necessity a resource consumer
 should limit their ambitions to tracking ontology expansions which do
 not alter the existing concepts. In practice integration testing against
 the beta version of a service will be necessary to be pre-warned of
@@ -863,13 +863,13 @@ access to in-progress responses so the inevitable conceptualisation was
 drawn of the response as a one-time event with no accommodation provided
 for progressively delivered data.
 
-The followup standard, XHR2 is now at Working Draft stage. Given
+The followup standard, XHR2 is now at Working Draft stage [@xhr2progress]. Given
 ambitions to build a streaming REST client, of greatest interest is the
 progress event:
 
 > While the download is progressing, queue a task to fire a progress
 > event named progress about every 50ms or for every byte received,
-> whichever is least frequent. [@xhr2progress]
+> whichever is least frequent.
 
 The historic lack of streaming for data fetched using XHR stands
 incongruously with the browser as a platform in which almost every other
@@ -1017,10 +1017,10 @@ function nameOfFirstPerson( myJsonString, callbackFunction ){
 
 The developer pays a high price for progressive parsing, the SAX version
 is considerably longer and more difficult to read. SAX's low-level
-semantics require a lengthy expression and push the responsibility of
-maintaining state regarding the current position in the document and the
-nodes that have previously been seen onto the programmer. This
-maintenance of state tends to programmed once per usage rather than
+semantics require a lengthy expression and push onto the programmer the responsibility for
+managing state regarding the current position in the document and the
+nodes that have previously been seen. This
+maintenance of state tends to be programmed once per usage rather than
 assembled as the composition of reusable parts. I find the order of the
 code under SAX also quite unintuitive; event handlers cover multiple
 unrelated cases and each concern spans multiple handlers. This lends to
@@ -1042,8 +1042,8 @@ adoption for all but fringe uses.
     https://github.com/dscape/clarinet/blob/master/samples/twitter.js
 
 
-Design and Reflection:
-======================
+Design and Reflection
+=====================
 
 The REST workflow is more efficient if we do not wait until we have
 everything before we start using the parts that we do have. The main
@@ -1260,7 +1260,7 @@ programing, as named in a 2000 usenet discussion:
 An address 'duck-definition' for the above JSON would say that any
 object which has number, street, and town properties is an address.
 Applied to JSON, duck typing takes an individualistic approach by
-deriving type from the node in itself rather than the situaiton in which
+deriving type from the node in itself rather than the situation in which
 it is found. Because I find this selection technique simple and powerful
 I decided to add it to my JSONPath variant. As discussed in section
 \ref{jsonpathxpath}, JSONPath's syntax is designed to resemble the
@@ -1282,8 +1282,8 @@ REST resources marshaled from an OO representation. In implementation,
 to conform to a duck-type a node must have all of the required fields
 but could also have any others.
 
-Importing CSS4's explicit capturing to Oboe's JSONPath
-------------------------------------------------------
+Importing CSS4's explicit capturing to JSONPath
+-----------------------------------------------
 
 JSONPath naturally expresses a 'contained in' relationship using the dot
 notation but no provision is made for the inverse 'containing'
@@ -1301,10 +1301,11 @@ continues to work as before. The CSS selector
 important forms but `$form.important input.mandatory` selects important
 forms with mandatory fields.
 
-The new CSS4 capturing technique will be adapted for Oboe's JSONPath. By
+The new CSS4 capturing technique will be adapted for this project's JSONPath
+implementation. By
 duplicating a syntax which the majority of web developers should become
-familiar with over the next few years I hope that Oboe's learning curve
-can be made a little more gradual. Taking on this feature, the selector
+familiar with over the next few years I hope that the learning curve
+can be made more gradual. Taking on this feature, the selector
 `person.$address.town` would identify an address node with a town child,
 or `$people.{name, dob}` can be used to locate the same people array
 repeatedly whenever a new person is added to it. Javascript frameworks
@@ -1562,8 +1563,8 @@ not follow HTTP's principled design. Due to these concerns, in the
 browser I will only be supporting downloading using XHR.
 
 Although I am designing Oboe as a client for ordinary REST resources and
-not focusing on the library a means to receive live events, it is
-interesting to speculate if Oboe could be used as a REST-compatible
+not focusing on the library as a means to receive live events, it is
+interesting to speculate whether Oboe could be used as a REST-compatible
 bridge to unify live and static data. Consider a REST service which
 gives results per-constituency for UK general elections. When
 requesting historic results the data is delivered in JSON format much as
@@ -1572,7 +1573,7 @@ election, an incomplete JSON with the constituencies known so far would
 be immediately sent, followed by the remainder dispatched individually
 as the results are called. When all results are known the JSON would
 finally close leaving a complete resource. A few days later, somebody
-wishing to fetch the results would use the *same url for the historic
+wishing to fetch the results would use the *same URL for the historic
 data as was used on the night for the live data*. This is possible
 because the URL refers only to the data that is required, not to whether
 it is current or historic. Because it eventually formed a complete HTTP
@@ -1580,7 +1581,7 @@ response, the data that was streamed is not incompatible with HTTP
 caching and a cache which saw the data when it was live could store it
 as usual and later serve it as historic. More sophisticated intermediate
 caches sitting on the network between client and service would recognise
-when a new request has the same url as an already ongoing request, serve
+when a new request has the same URL as an already ongoing request, serve
 the response received so far, and then continue by giving both inbound
 requests the content as it arrives from the already established outbound
 request. Hence, the resource would be cacheable even while the election
@@ -1659,7 +1660,7 @@ libraries than find one with a one-size-fits-all approach, perhaps
 echoing the unix command line tradition for small programs which each do
 exactly one thing. As well as being a small library, in the spirit of
 a micro-library a project should impose as few restrictions as possible
-on its use and be be agnostic as to which other libraries or programming
+on its use and be agnostic as to which other libraries or programming
 styles it will be combined with. Oboe feels on the edge of what is
 possible to elegantly do as a micro-library so while the limit is
 somewhat arbitrary, keeping below this limit whilst writing readable
@@ -1728,7 +1729,7 @@ service is started. This test service is written using Node and returns
 known content progressively according to predefined timings, somewhat
 emulating a slow internet connection. The integration tests particularly
 verify behaviours where platform differences could cause
-inconsistencies. For example, the test url `/tenSlowNumbers` writes out
+inconsistencies. For example, the test URL `/tenSlowNumbers` writes out
 the first ten natural numbers as a JSON array at a rate of two per
 second. The test registers a JSONPath selector that matches the numbers
 against a callback that aborts the HTTP request on seeing the fifth. The
@@ -1744,7 +1745,7 @@ efficiently as wholly side-effect free Javascript. To promote
 testability the state is delegated to a simple state-storing unit. The
 intricate logic may then be expressed as a separately tested set of
 side-effect free functions which transition between one state and the
-next. Although proof of correctness is impossible, for whichever results
+next. Although proof of correctness is difficult, for whichever results
 the functions give while under test, uninfluenced by state I can be
 confident that they will always yield the same response given the same
 future events. The separate unit maintaining the state has exactly one
@@ -1760,8 +1761,8 @@ being passed in by an inversion of control container during the wiring
 phase. For example, the network component which hides browser
 differences does not know how to create the underlying XHR that it
 adapts. Undoubtedly, by not instantiating its own transport this
-component presents a less friendly interface: it's data source is no
-longer a hidden implementation detail but exposed as a part of it's
+component presents a less friendly interface: its data source is no
+longer a hidden implementation detail but exposed as a part of its
 API as the responsibility of the caller. I feel this disadvantage is
 mitigated by the interface being purely internal. Dependency injection
 in this case allows the tests to be written more simply because it is
@@ -1777,7 +1778,7 @@ leaking between test cases.
 Running the tests
 -----------------
 
-The Grunt task runner is used to automate routine tasks such as
+The Grunt task runner [@grunt] is used to automate routine tasks such as
 executing the tests and building, configured so that the unit and
 component tests run automatically whenever a change is made to a source
 file or specification. As well as executing correctly, the project is
@@ -1877,7 +1878,7 @@ task. After finding a free Grunt plugin analogous to the unix `cat`
 command I quickly had a working build process and a distributable
 library requiring no run-time dependency management to be loaded.
 
-For future consideration there is Browserify. This library reverses the
+For future consideration there is Browserify [@browserify]. This library reverses the
 'browser first' Javascript mindset by viewing Node as the primary target
 for Javascript development and adapting the browser environment to
 match. Browserify converts applications written for Node into a single
@@ -1918,7 +1919,7 @@ the handlers share access to variables from the containing scope. From
 outside the closure the values are not only protected as private as
 would be seen in an OO model, they are inherently unaddressable.
 
-Although not following an established object orientated metamodel, the
+Although not following an established object-oriented metamodel, the
 high-level componentisation hasn't departed very far from what I would
 make were I following that style and OO design patterns have influenced
 their layout considerably. If we wished to think in terms of the OO
@@ -2028,7 +2029,7 @@ to the next handler.
 
 Linked lists were chosen for the ascents in preference to the more
 conventional approach of using native Javascript arrays for several
-reasons. Firstly, I find the program more easy to test and debug given
+reasons. Firstly, I find the program easier to test and debug given
 immutable data structures. Employing native Arrays without mutating
 would be very expensive because on each new path the whole array would
 have to be copied. Secondly, while debugging, unpicking a stack trace is
@@ -2039,7 +2040,7 @@ later. Thirdly, the lack of side effects means that I can try new
 commands in the debugger's CLI without worrying about breaking the
 execution of the program. Most Javascript virtual machines are also
 quite poor at array growing and shrinking so for collections whose size
-changes often, arrays are relatively inperformant. Finally, lists are a
+changes often, arrays are relatively unperformant. Finally, lists are a
 very convenient format for the JSONPath engine to match against as will
 be discussed in the next section. The Javascript file
 [lists.js](#header_lists) (Appendix p.\pageref{src_lists}) implements
@@ -2144,7 +2145,7 @@ elements, the same JSONPath evaluator term could be tested against the
 parent element many times, always with the same result. Although
 Javascript doesn't come with functional caching, it can be added using
 the language itself, probably the best known example being `memoize`
-from Underscore.js. I suspect, however, that hashing the cache
+from Underscore.js [@underscore]. I suspect, however, that hashing the cache
 parameters might be slower than performing the matching. Although the
 parameters are all immutable and could in theory be hashed by object
 identity, in practice there is no way to access an object ID from inside

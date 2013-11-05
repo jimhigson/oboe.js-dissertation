@@ -72,7 +72,7 @@ in series, the workload as a whole is embarrassingly parallelisable.
 Node.js
 -------
 
-Node.js is a general purpose tool for executing Javascript outside of a
+Node.js [@nodejs] is a general purpose tool for executing Javascript outside of a
 browser. It has the aim of low-latency I/O and is used mostly for server
 applications and command line tools. It is difficult to judge to what
 degree Javascript is a distraction from Node's principled design and to
@@ -91,10 +91,10 @@ to fetch in parallel each HTTP request is assigned to a thread. These
 complete response, and then participate in a Barrier while the other
 requesters complete. Each thread consumes considerable resources but
 during its multi-second lifespan requires only a fraction of a
-millisecond on the CPU. It is unlikely any two requests return closely
-enough in time that the threads will process in series rather than
-parallel, loosing thread's natural strengths for utilising multiple
-cores. Even if they do, the actual CPU time required in making an HTTP
+millisecond on the CPU. It is unlikely that any two requests will return closely
+enough in time to be processed in parallel, loosing threading's 
+natural strength for simultaneously utilising multiple cores.
+Even if they do, the actual CPU time required in making an HTTP
 request is so short that any concurrent processing is a pyrrhic victory.
 
 Node builds on the model of event-based, asynchronous I/O that was

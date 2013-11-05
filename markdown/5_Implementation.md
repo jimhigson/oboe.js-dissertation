@@ -4,7 +4,7 @@ Implementation
 Componentisation of the project
 -------------------------------
 
-![**Major components of Oboe.js illustrating program flow from http
+![**Major components of Oboe.js illustrating program flow from HTTP
 transport to application callbacks.** UML facet/receptacle notation is
 used to show the flow of events and event names are given in capitals.
 For clarity events are depicted as transferring directly between
@@ -12,7 +12,7 @@ publisher and subscriber but this is actually performed through an
 intermediary. \label{overallDesign}](images/overallDesign.png)
 
 Oboe's architecture describes a fairly linear pipeline visiting a small
-number of tasks between receiving http content and notifying application
+number of tasks between receiving HTTP content and notifying application
 callbacks. The internal componentisation is designed primarily so that
 automated testing can provide a high degree of confidence regarding the
 correct working of the library. A local event bus facilitates
@@ -47,14 +47,14 @@ Because the compositions are quite simple there are fewer component
 tests than unit tests. The component tests do not take account of how
 the composition is drawn and predominantly examine the behaviour of the
 library through its public API. One exception is that the streamingXHR
-component is switched for a stub so that http traffic can be simulated.
+component is switched for a stub so that HTTP traffic can be simulated.
 
 At the apex of the test pyramid are a small number of *integration
 tests*. These verify Oboe as a black box without any knowledge of, or
 access to, the internals, using the same API as is exposed to
 application programmers. These tests are the most expensive to write but
 a small number are necessary in order to verify that Oboe works
-correctly end-to-end. Without access to the internals http traffic
+correctly end-to-end. Without access to the internals HTTP traffic
 cannot be faked so before these tests are performed a corresponding REST
 service is started. This test service is written using Node and returns
 known content progressively according to predefined timings, somewhat
@@ -63,7 +63,7 @@ verify behaviours where platform differences could cause
 inconsistencies. For example, the test url `/tenSlowNumbers` writes out
 the first ten natural numbers as a JSON array at a rate of two per
 second. The test registers a JSONPath selector that matches the numbers
-against a callback that aborts the http request on seeing the fifth. The
+against a callback that aborts the HTTP request on seeing the fifth. The
 correct behaviour is to get no sixth callback, even when running on a
 platform lacking support for XHR2 where all ten will have already been
 downloaded.
@@ -98,7 +98,7 @@ API as the responsibility of the caller. I feel this disadvantage is
 mitigated by the interface being purely internal. Dependency injection
 in this case allows the tests to be written more simply because it is
 easy to substitute the real XHR for a stub. Unit tests should test
-exactly one unit; were the streaming http object to create its own
+exactly one unit; were the streaming HTTP object to create its own
 transport, the XHR would also be under test, plus whichever external
 service it connects to. Because Javascript allows redefinition of built
 in types the stubbing could have potentially also been done by
@@ -157,7 +157,7 @@ downloaded. For a developer wishing to include my library in their own
 project a single file is much more convenient than the multi-file raw
 source. If they are not using a similar build process on their site, a
 single file is also faster to transfer to their users, mostly because
-the http overhead is of constant size per resource.
+the HTTP overhead is of constant size per resource.
 
 Javascript files are interpreted in series by the browser so load-time
 dependencies must precede dependants. If several valid Javascript files
@@ -216,7 +216,7 @@ match. Browserify converts applications written for Node into a single
 file packaged for delivery to a web browser. Significantly, other than
 adaptors wrapping browser APIs in the call style of the Node
 equivalents, Browserify leaves no trace of itself in the final
-Javascript. Additionally, the http adaptor[^1] is capable of using XHRs
+Javascript. Additionally, the HTTP adaptor[^1] is capable of using XHRs
 as a streaming source when run on supporting browsers.
 
 Javascript source can be made significantly smaller by *minification*

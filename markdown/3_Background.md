@@ -85,8 +85,8 @@ computation over multiple cores but are less well suited to scheduling
 concurrent tasks which are mostly I/O dependent. Programming threads
 safely with shared access to mutable objects requires great care and
 experience, otherwise the programmer is liable to create race
-conditions. Consider for example a Java http aggregator; because we wish
-to fetch in parallel each http request is assigned to a thread. These
+conditions. Consider for example a Java HTTP aggregator; because we wish
+to fetch in parallel each HTTP request is assigned to a thread. These
 'requester' tasks are computationally simple: make a request, wait for a
 complete response, and then participate in a Barrier while the other
 requesters complete. Each thread consumes considerable resources but
@@ -94,7 +94,7 @@ during its multi-second lifespan requires only a fraction of a
 millisecond on the CPU. It is unlikely any two requests return closely
 enough in time that the threads will process in series rather than
 parallel, loosing thread's natural strengths for utilising multiple
-cores. Even if they do, the actual CPU time required in making an http
+cores. Even if they do, the actual CPU time required in making an HTTP
 request is so short that any concurrent processing is a pyrrhic victory.
 
 Node builds on the model of event-based, asynchronous i/o that was
@@ -150,7 +150,7 @@ function printResourceToConsole(url) {
       
          response.on('data', function(chunk) {      
             // This function is called each time some data is
-            // received from the http request. The task writes
+            // received from the HTTP request. The task writes
             // the response to the console and quickly exits.
             console.log('Got some response ', chunk);
                    
@@ -498,7 +498,7 @@ for the client to march perfectly in sync with the service.
 Browser XML HTTP Request (XHR)
 ------------------------------
 
-Making http requests from Javascript, commonly termed AJAX, was so
+Making HTTP requests from Javascript, commonly termed AJAX, was so
 significant in establishing the modern web architecture that it is
 sometimes used synonymously with Javascript-rich web applications.
 Although AJAX is an acronym for **A**synchronous **J**avascript
@@ -599,7 +599,7 @@ to use live data many current webapps employ frameworks which push
 soft-real-time events to the client side. This kind of streaming intersects only narrowly
 with the aims of the XHR2 progress event. Whereas
 XHR2 enables downloads to be viewed as streams but does not
-otherwise disrupt the sequence of http's request-response model,
+otherwise disrupt the sequence of HTTP's request-response model,
 streaming frameworks facilitate an entirely different sequence, that of
 perpetual data. Consider a webmail interface; initially the user's inbox
 is downloaded via REST and a streaming download might be used to make
@@ -615,7 +615,7 @@ completes, fed by a connection that never closes. When the server wishes
 to push a message to the client it writes a new row to the table which
 is then noticed by Javascript monitoring the iframe on the client. More
 recently, **Websockets** is a new standard that builds a standardised
-streaming transport on top of http's chunked mode. Websockets requires
+streaming transport on top of HTTP's chunked mode. Websockets requires
 browser implementation and cannot be retrofitted to older browsers
 through Javascript. Websockets is a promising technology but for the
 time being patchy support means it cannot be used without a suitable
@@ -623,7 +623,7 @@ fallback.
 
 These frameworks do not interoperate at all with REST. Because the
 resources they serve never complete they may not be read by a standard
-REST client. Unlike REST they also are not amenable to standard http
+REST client. Unlike REST they also are not amenable to standard HTTP
 mechanisms such as caching. A server which writes to an esoteric format
 requiring a specific, known, specialised client also feels quite
 anti-REST, especially when we consider that the format design reflects

@@ -5,7 +5,7 @@ This purpose of this dissertation is to encourage the REST paradigm to
 be viewed through a novel lens which in application may be used to
 deliver tangible benefits to many common REST use cases. Although I
 express my thesis through programming, the contribution I hope to make
-is felt more strongly as a modification in how we *think* about http
+is felt more strongly as a modification in how we *think* about HTTP
 than as the delivery of new software.
 
 In the interest of developer ergonomics, REST clients have tended to
@@ -39,11 +39,11 @@ first possible opportunity: examining content *while it streams* rather
 than holding it unexamined until it is wholly available.
 
 While the coining of the term REST represented a shift in how we think
-about http, away from the transfer of hypertext documents to that of
+about HTTP, away from the transfer of hypertext documents to that of
 arbitrary data [@rest pp. 407–416], it introduced no fundamentally new
 methods. Similarly building on previous ideas, no new computing
 techniques need be invented to realise my thesis. As a minimum it
-requires an http client which reveals the response whilst it is in
+requires an HTTP client which reveals the response whilst it is in
 progress and a parser which can begin to interpret that response before
 it sees all of it. Nor is it novel to use these preexisting parts in
 composition. Every current web browser already implements such a schema;
@@ -103,7 +103,7 @@ figures \ref{rest_timeline_1} and \ref{rest_timeline_2} hint at
 something running directly on a user's own device, the same benefits
 apply if this layer is running remotely. If this layer were generating a
 web page on the server-side to be displayed by the client's browser, the
-same perceptual speed improvements apply because of http chunked
+same perceptual speed improvements apply because of HTTP chunked
 encoding [@perceptionHttpChunkedSpeed]. If this layer were a remote
 aggregation service, starting to write out the aggregated response early
 provides much the same benefits for a client able to interpret it
@@ -145,7 +145,7 @@ Staying fast on a fallible network
 
 REST operates over networks whose reliability varies widely. On
 unreliable networks connections are abruptly dropped and in my opinion
-existing http clients handle unexpected terminations suboptimally.
+existing HTTP clients handle unexpected terminations suboptimally.
 Consider the everyday situation of a person using a smartphone browser
 to check their email. Mobile data coverage is often weak outside of
 major cities [@opensignal] so while travelling the signal will be lost
@@ -171,7 +171,7 @@ I propose moving away from this polarised view of
 successful/unsuccessful requests to one in which identifiable parts of a
 message are recognised as interesting in themselves, regardless of what
 follows, and these parts are handed back to the application as streaming
-occurs. This follows naturally from a conceptualisation of the http
+occurs. This follows naturally from a conceptualisation of the HTTP
 response as a progressive stream of many small parts; as each part
 arrives it should be possible to use it without knowing if the next will
 be delivered successfully. Should an early disconnection occur, the
@@ -228,7 +228,7 @@ To reify the vision above a streaming client is the MVP. Although an
 explicitly streaming server would improve the situation further, because
 all network transmissions may be viewed though a streaming lens it is
 not required to start taking advantage of progressive REST. In the
-interest of creating something new, whilst http servers capable of
+interest of creating something new, whilst HTTP servers capable of
 streaming are quite common even if they are not always programmed as
 such, I have been unable to find any example of a streaming-receptive
 REST client.

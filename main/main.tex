@@ -102,16 +102,16 @@ stream; nor SAX nor DOM}
 
 \section{Abstract}\label{abstract}
 
-A new design for http client libraries incorporating http streaming,
-pattern matching, and incremental parsing, with the aim of improving
-performance, fault tolerance, and encouraging a greater degree of loose
-coupling between programs. A Javascript client library capable of
-progressively parsing JSON resources is presented targeting both Node.js
-and web browsers. Loose coupling is particularly considered in light of
-the application of Agile methodologies to REST and SOA, providing a
-framework in which it is acceptable to partially restructure the JSON
-format of a resource while maintaining compatibility with dependent
-systems.
+A new design is presented for HTTP client libraries which incorporates
+HTTP streaming, pattern matching, and incremental parsing, with the aim
+of improving performance, fault tolerance, and encouraging a greater
+degree of loose coupling between programs. A Javascript client library
+capable of progressively parsing JSON resources is presented targeting
+both Node.js and web browsers. Loose coupling is particularly considered
+in light of the application of Agile methodologies to REST and SOA,
+providing a framework in which it is acceptable to partially restructure
+the JSON format of a resource while maintaining compatibility with
+dependent systems.
 
 A critique is made of current practice under which resources are
 entirely retrieved before items of interest are extracted
@@ -131,7 +131,7 @@ be viewed through a novel lens which in application may be used to
 deliver tangible benefits to many common REST use cases. Although I
 express my thesis through programming, the contribution I hope to make
 is felt more strongly as a modification in how we \emph{think} about
-http than as the delivery of new software.
+HTTP than as the delivery of new software.
 
 In the interest of developer ergonomics, REST clients have tended to
 style the calling of remote resources similar to the call style of the
@@ -165,11 +165,11 @@ data at the first possible opportunity: examining content \emph{while it
 streams} rather than holding it unexamined until it is wholly available.
 
 While the coining of the term REST represented a shift in how we think
-about http, away from the transfer of hypertext documents to that of
+about HTTP, away from the transfer of hypertext documents to that of
 arbitrary data (Fielding 2000, 407--416), it introduced no fundamentally
 new methods. Similarly building on previous ideas, no new computing
 techniques need be invented to realise my thesis. As a minimum it
-requires an http client which reveals the response whilst it is in
+requires an HTTP client which reveals the response whilst it is in
 progress and a parser which can begin to interpret that response before
 it sees all of it. Nor is it novel to use these preexisting parts in
 composition. Every current web browser already implements such a schema;
@@ -245,7 +245,7 @@ figures \ref{rest_timeline_1} and \ref{rest_timeline_2} hint at
 something running directly on a user's own device, the same benefits
 apply if this layer is running remotely. If this layer were generating a
 web page on the server-side to be displayed by the client's browser, the
-same perceptual speed improvements apply because of http chunked
+same perceptual speed improvements apply because of HTTP chunked
 encoding (Stefanov 2009). If this layer were a remote aggregation
 service, starting to write out the aggregated response early provides
 much the same benefits for a client able to interpret it progressively
@@ -286,7 +286,7 @@ network}\label{staying-fast-on-a-fallible-network}
 
 REST operates over networks whose reliability varies widely. On
 unreliable networks connections are abruptly dropped and in my opinion
-existing http clients handle unexpected terminations suboptimally.
+existing HTTP clients handle unexpected terminations suboptimally.
 Consider the everyday situation of a person using a smartphone browser
 to check their email. Mobile data coverage is often weak outside of
 major cities (Gill 2013) so while travelling the signal will be lost and
@@ -312,7 +312,7 @@ I propose moving away from this polarised view of
 successful/unsuccessful requests to one in which identifiable parts of a
 message are recognised as interesting in themselves, regardless of what
 follows, and these parts are handed back to the application as streaming
-occurs. This follows naturally from a conceptualisation of the http
+occurs. This follows naturally from a conceptualisation of the HTTP
 response as a progressive stream of many small parts; as each part
 arrives it should be possible to use it without knowing if the next will
 be delivered successfully. Should an early disconnection occur, the
@@ -369,7 +369,7 @@ To reify the vision above a streaming client is the MVP. Although an
 explicitly streaming server would improve the situation further, because
 all network transmissions may be viewed though a streaming lens it is
 not required to start taking advantage of progressive REST. In the
-interest of creating something new, whilst http servers capable of
+interest of creating something new, whilst HTTP servers capable of
 streaming are quite common even if they are not always programmed as
 such, I have been unable to find any example of a streaming-receptive
 REST client.
@@ -485,8 +485,8 @@ computation over multiple cores but are less well suited to scheduling
 concurrent tasks which are mostly I/O dependent. Programming threads
 safely with shared access to mutable objects requires great care and
 experience, otherwise the programmer is liable to create race
-conditions. Consider for example a Java http aggregator; because we wish
-to fetch in parallel each http request is assigned to a thread. These
+conditions. Consider for example a Java HTTP aggregator; because we wish
+to fetch in parallel each HTTP request is assigned to a thread. These
 `requester' tasks are computationally simple: make a request, wait for a
 complete response, and then participate in a Barrier while the other
 requesters complete. Each thread consumes considerable resources but
@@ -494,7 +494,7 @@ during its multi-second lifespan requires only a fraction of a
 millisecond on the CPU. It is unlikely any two requests return closely
 enough in time that the threads will process in series rather than
 parallel, loosing thread's natural strengths for utilising multiple
-cores. Even if they do, the actual CPU time required in making an http
+cores. Even if they do, the actual CPU time required in making an HTTP
 request is so short that any concurrent processing is a pyrrhic victory.
 
 Node builds on the model of event-based, asynchronous i/o that was
@@ -551,7 +551,7 @@ synchronised access to mutable objects that are shared between threads.
       
          \OtherTok{response}\NormalTok{.}\FunctionTok{on}\NormalTok{(}\StringTok{'data'}\NormalTok{, }\KeywordTok{function}\NormalTok{(chunk) \{      }
             \CommentTok{// This function is called each time some data is}
-            \CommentTok{// received from the http request. The task writes}
+            \CommentTok{// received from the HTTP request. The task writes}
             \CommentTok{// the response to the console and quickly exits.}
             \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{'Got some response '}\NormalTok{, chunk);}
                    
@@ -926,7 +926,7 @@ client to march perfectly in sync with the service.
 \subsection{Browser XML HTTP Request
 (XHR)}\label{browser-xml-http-request-xhr}
 
-Making http requests from Javascript, commonly termed AJAX, was so
+Making HTTP requests from Javascript, commonly termed AJAX, was so
 significant in establishing the modern web architecture that it is
 sometimes used synonymously with Javascript-rich web applications.
 Although AJAX is an acronym for \textbf{A}synchronous
@@ -1032,7 +1032,7 @@ to use live data many current webapps employ frameworks which push
 soft-real-time events to the client side. This kind of streaming
 intersects only narrowly with the aims of the XHR2 progress event.
 Whereas XHR2 enables downloads to be viewed as streams but does not
-otherwise disrupt the sequence of http's request-response model,
+otherwise disrupt the sequence of HTTP's request-response model,
 streaming frameworks facilitate an entirely different sequence, that of
 perpetual data. Consider a webmail interface; initially the user's inbox
 is downloaded via REST and a streaming download might be used to make
@@ -1048,7 +1048,7 @@ that never completes, fed by a connection that never closes. When the
 server wishes to push a message to the client it writes a new row to the
 table which is then noticed by Javascript monitoring the iframe on the
 client. More recently, \textbf{Websockets} is a new standard that builds
-a standardised streaming transport on top of http's chunked mode.
+a standardised streaming transport on top of HTTP's chunked mode.
 Websockets requires browser implementation and cannot be retrofitted to
 older browsers through Javascript. Websockets is a promising technology
 but for the time being patchy support means it cannot be used without a
@@ -1056,7 +1056,7 @@ suitable fallback.
 
 These frameworks do not interoperate at all with REST. Because the
 resources they serve never complete they may not be read by a standard
-REST client. Unlike REST they also are not amenable to standard http
+REST client. Unlike REST they also are not amenable to standard HTTP
 mechanisms such as caching. A server which writes to an esoteric format
 requiring a specific, known, specialised client also feels quite
 anti-REST, especially when we consider that the format design reflects
@@ -1483,7 +1483,7 @@ programming in a style which is unfamiliar to most programmers. With
 this in mind it is a high priority to design a public API for Oboe which
 is concise, simple, and resembles other commonly used tools. If Oboe's
 API is made similar to common tools, a lesser modification should be
-required to switch existing projects to streaming http.
+required to switch existing projects to streaming HTTP.
 
 For some common use cases it should be possible to create an API which
 is a close enough equivalent to popular tools that it can be used as a
@@ -1713,19 +1713,19 @@ to when they are completed.
 transport}\label{choice-of-streaming-data-transport}
 
 As discussed in section \ref{browserstreamingframeworks}, current
-techniques to provide streaming over http encourage a dichotomous split
+techniques to provide streaming over HTTP encourage a dichotomous split
 of traffic as either stream or download. I find that this split is not
 necessary and that streaming may be used as the most effective means of
 downloading. Streaming services implemented using push pages or
 websockets are not REST. Under these frameworks a stream has a URL
 address but the data in the stream is not addressable. This is similar
 to STREST, the \emph{Service Trampled REST} anti-pattern (Cragg 2006),
-in which http URLs are viewed as locating endpoints for services rather
+in which HTTP URLs are viewed as locating endpoints for services rather
 than the actual resources. Being unaddressable, the data in the stream
 is also uncacheable: an event which is streamed live cannot later, when
 it is historic, be retrieved from a cache which was populated by the
-stream. These frameworks use http as the underlying transport but I find
-they do not follow http's principled design. Due to these concerns, in
+stream. These frameworks use HTTP as the underlying transport but I find
+they do not follow HTTP's principled design. Due to these concerns, in
 the browser I will only be supporting downloading using XHR.
 
 Although I am designing Oboe as a client for ordinary REST resources and
@@ -1743,8 +1743,8 @@ wishing to fetch the results would use the \emph{same url for the
 historic data as was used on the night for the live data}. This is
 possible because the URL refers only to the data that is required, not
 to whether it is current or historic. Because it eventually formed a
-complete http response, the data that was streamed is not incompatible
-with http caching and a cache which saw the data when it was live could
+complete HTTP response, the data that was streamed is not incompatible
+with HTTP caching and a cache which saw the data when it was live could
 store it as usual and later serve it as historic. More sophisticated
 intermediate caches sitting on the network between client and service
 would recognise when a new request has the same url as an already
@@ -1761,7 +1761,7 @@ announced would automatically be able to show historic data.
 
 Taking this idea one step further, Oboe might be used for infinite data
 which intentionally never completes. In principle this is not
-incompatible with http caching although more research would have to be
+incompatible with HTTP caching although more research would have to be
 done into how well current caches handle requests which do not finish. A
 REST service which provides infinite resources would have to confirm
 that it is delivering to a streaming client, perhaps with a request
@@ -1786,9 +1786,9 @@ libraries such as jQuery. On legacy browsers Oboe could not be used to
 receive live data -- in the election night example no constituencies
 could be shown until they had all been called.
 
-Node's standard http library provides a view of the response as a
+Node's standard HTTP library provides a view of the response as a
 standard ReadableStream so there will be no problems programming to a
-progressive interpretation of http. In Node all streams provide a common
+progressive interpretation of HTTP. In Node all streams provide a common
 API regardless of their origin so there is no reason not to allow
 arbitrary streams to be read. Although Oboe is intended primarily as a
 REST client, under Node it will be capable of reading data from any
@@ -1839,7 +1839,7 @@ project}\label{componentisation-of-the-project}
 \centering
 \includegraphics{images/overallDesign.png}
 \caption{\textbf{Major components of Oboe.js illustrating program flow
-from http transport to application callbacks.} UML facet/receptacle
+from HTTP transport to application callbacks.} UML facet/receptacle
 notation is used to show the flow of events and event names are given in
 capitals. For clarity events are depicted as transferring directly
 between publisher and subscriber but this is actually performed through
@@ -1847,7 +1847,7 @@ an intermediary. \label{overallDesign}}
 \end{figure}
 
 Oboe's architecture describes a fairly linear pipeline visiting a small
-number of tasks between receiving http content and notifying application
+number of tasks between receiving HTTP content and notifying application
 callbacks. The internal componentisation is designed primarily so that
 automated testing can provide a high degree of confidence regarding the
 correct working of the library. A local event bus facilitates
@@ -1886,7 +1886,7 @@ examined. Because the compositions are quite simple there are fewer
 component tests than unit tests. The component tests do not take account
 of how the composition is drawn and predominantly examine the behaviour
 of the library through its public API. One exception is that the
-streamingXHR component is switched for a stub so that http traffic can
+streamingXHR component is switched for a stub so that HTTP traffic can
 be simulated.
 
 At the apex of the test pyramid are a small number of \emph{integration
@@ -1894,7 +1894,7 @@ tests}. These verify Oboe as a black box without any knowledge of, or
 access to, the internals, using the same API as is exposed to
 application programmers. These tests are the most expensive to write but
 a small number are necessary in order to verify that Oboe works
-correctly end-to-end. Without access to the internals http traffic
+correctly end-to-end. Without access to the internals HTTP traffic
 cannot be faked so before these tests are performed a corresponding REST
 service is started. This test service is written using Node and returns
 known content progressively according to predefined timings, somewhat
@@ -1903,7 +1903,7 @@ verify behaviours where platform differences could cause
 inconsistencies. For example, the test url \texttt{/tenSlowNumbers}
 writes out the first ten natural numbers as a JSON array at a rate of
 two per second. The test registers a JSONPath selector that matches the
-numbers against a callback that aborts the http request on seeing the
+numbers against a callback that aborts the HTTP request on seeing the
 fifth. The correct behaviour is to get no sixth callback, even when
 running on a platform lacking support for XHR2 where all ten will have
 already been downloaded.
@@ -1938,7 +1938,7 @@ as the responsibility of the caller. I feel this disadvantage is
 mitigated by the interface being purely internal. Dependency injection
 in this case allows the tests to be written more simply because it is
 easy to substitute the real XHR for a stub. Unit tests should test
-exactly one unit; were the streaming http object to create its own
+exactly one unit; were the streaming HTTP object to create its own
 transport, the XHR would also be under test, plus whichever external
 service it connects to. Because Javascript allows redefinition of built
 in types the stubbing could have potentially also been done by
@@ -1996,7 +1996,7 @@ downloaded. For a developer wishing to include my library in their own
 project a single file is much more convenient than the multi-file raw
 source. If they are not using a similar build process on their site, a
 single file is also faster to transfer to their users, mostly because
-the http overhead is of constant size per resource.
+the HTTP overhead is of constant size per resource.
 
 Javascript files are interpreted in series by the browser so load-time
 dependencies must precede dependants. If several valid Javascript files
@@ -2056,7 +2056,7 @@ match. Browserify converts applications written for Node into a single
 file packaged for delivery to a web browser. Significantly, other than
 adaptors wrapping browser APIs in the call style of the Node
 equivalents, Browserify leaves no trace of itself in the final
-Javascript. Additionally, the http adaptor\footnote{\url{https://github.com/substack/http-browserify}}
+Javascript. Additionally, the HTTP adaptor\footnote{\url{https://github.com/substack/http-browserify}}
 is capable of using XHRs as a streaming source when run on supporting
 browsers.
 
@@ -2639,7 +2639,7 @@ contains a benchmark which concentrates on measuring the performance of
 Oboe's pattern matching. This test registers a complex pattern which
 intentionally uses all features from the JSONPath language and then
 fetches a JSON file containing approximately 800 nodes, 100 of which
-will match. Although actual http is used, it is over an unthrottled
+will match. Although actual HTTP is used, it is over an unthrottled
 connection to localhost so network delay should be negligible. The tests
 were executed on a relatively low-powered Macbook Air laptop running OS
 X 10.7.5, except for Chrome Mobile which was tested on an iPhone 5 with
@@ -2741,7 +2741,7 @@ would scale badly as messages become more complex. A stream-writer
 server side library would allow Oboe to be used as a REST-compatible
 streaming solution for situations which currently employ push tables or
 Websockets. This would provide a form of REST streaming that operates
-according to the principled design of http rather than by sidestepping
+according to the principled design of HTTP rather than by sidestepping
 it.
 
 Although JSON is particularly well suited, there is nothing about Oboe
@@ -2784,13 +2784,13 @@ the produced library is in many cases easier to use than the previous
 simplest solution.
 
 \hyperdef{}{appendixux5fhttpux5flimits}{\section{Appendix i: Limits to
-number of simultaneous connections under various http
+number of simultaneous connections under various HTTP
 clients}\label{appendixux5fhttpux5flimits}}
 
 \begin{longtable}[c]{@{}ll@{}}
 \hline\noalign{\medskip}
 \begin{minipage}[b]{0.21\columnwidth}\raggedright
-http Client
+HTTP Client
 \end{minipage} & \begin{minipage}[b]{0.27\columnwidth}\raggedright
 connection limit per server
 \end{minipage}
@@ -4277,6 +4277,78 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
       \NormalTok{\});}
    
    \KeywordTok{return} \NormalTok{headers;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\pagebreak
+
+\subsection{patternAdapter.js}\label{headerux5fpatternAdapter}
+
+\label{src_patternAdapter}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{function} \FunctionTok{patternAdapter}\NormalTok{(bus, jsonPathCompiler) \{}
+
+   \KeywordTok{function} \FunctionTok{addUnderlyingListener}\NormalTok{( matchEventName, predicateEventName, pattern )\{}
+
+      \KeywordTok{var} \NormalTok{compiledJsonPath = }\FunctionTok{jsonPathCompiler}\NormalTok{( pattern );}
+   
+      \OtherTok{bus}\NormalTok{.}\FunctionTok{on}\NormalTok{(predicateEventName, }\KeywordTok{function} \NormalTok{(ascent) \{}
+
+         \KeywordTok{var} \NormalTok{maybeMatchingMapping = }\FunctionTok{compiledJsonPath}\NormalTok{(ascent);}
+
+         \CommentTok{/* Possible values for maybeMatchingMapping are now:}
+
+\CommentTok{          false: }
+\CommentTok{          we did not match }
+
+\CommentTok{          an object/array/string/number/null: }
+\CommentTok{          we matched and have the node that matched.}
+\CommentTok{          Because nulls are valid json values this can be null.}
+
+\CommentTok{          undefined:}
+\CommentTok{          we matched but don't have the matching node yet.}
+\CommentTok{          ie, we know there is an upcoming node that matches but we }
+\CommentTok{          can't say anything else about it. }
+\CommentTok{          */}
+         \KeywordTok{if} \NormalTok{(maybeMatchingMapping !== }\KeywordTok{false}\NormalTok{) \{}
+             
+            \OtherTok{bus}\NormalTok{.}\FunctionTok{emit}\NormalTok{(matchEventName, }\FunctionTok{nodeOf}\NormalTok{(maybeMatchingMapping), ascent);}
+         \NormalTok{\}}
+      \NormalTok{\}, matchEventName);}
+   
+   
+      \OtherTok{bus}\NormalTok{.}\FunctionTok{on}\NormalTok{(}\StringTok{'removeListener'}\NormalTok{, }\KeywordTok{function}\NormalTok{(removedEventName)\{}
+   
+         \CommentTok{// if the match even listener is later removed, clean up by removing}
+         \CommentTok{// the underlying listener if nothing else is using that pattern:}
+      
+         \KeywordTok{if}\NormalTok{( removedEventName == matchEventName ) \{}
+         
+            \KeywordTok{if}\NormalTok{( !}\OtherTok{bus}\NormalTok{.}\FunctionTok{listeners}\NormalTok{( removedEventName )) \{}
+               \OtherTok{bus}\NormalTok{.}\FunctionTok{un}\NormalTok{( predicateEventName, matchEventName );}
+            \NormalTok{\}}
+         \NormalTok{\}}
+      \NormalTok{\});   }
+   \NormalTok{\}}
+
+   \OtherTok{bus}\NormalTok{.}\FunctionTok{on}\NormalTok{(}\StringTok{'newListener'}\NormalTok{, }\KeywordTok{function}\NormalTok{(matchEventName)\{}
+
+      \KeywordTok{var} \NormalTok{match = }\OtherTok{/}\FloatTok{(}\BaseNTok{\textbackslash{}w}\FloatTok{+)}\OtherTok{:}\FloatTok{(}\OtherTok{.}\FloatTok{*)}\OtherTok{/}\NormalTok{.}\FunctionTok{exec}\NormalTok{(matchEventName),}
+          \NormalTok{predicateEventName = match && \{}\DataTypeTok{node}\NormalTok{:NODE_FOUND, }\DataTypeTok{path}\NormalTok{:PATH_FOUND\}[match[}\DecValTok{1}\NormalTok{]];}
+                    
+      \KeywordTok{if}\NormalTok{( predicateEventName && !}\OtherTok{bus}\NormalTok{.}\FunctionTok{hasListener}\NormalTok{(predicateEventName, matchEventName) ) \{  }
+               
+         \FunctionTok{addUnderlyingListener}\NormalTok{(}
+            \NormalTok{matchEventName,}
+            \NormalTok{predicateEventName, }
+            \NormalTok{match[}\DecValTok{2}\NormalTok{]}
+         \NormalTok{);}
+      \NormalTok{\}    }
+   \NormalTok{\})}
+
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}

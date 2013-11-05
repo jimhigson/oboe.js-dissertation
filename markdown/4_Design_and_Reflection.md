@@ -292,7 +292,7 @@ programming in a style which is unfamiliar to most programmers. With
 this in mind it is a high priority to design a public API for Oboe which
 is concise, simple, and resembles other commonly used tools. If Oboe's
 API is made similar to common tools, a lesser modification should be
-required to switch existing projects to streaming http.
+required to switch existing projects to streaming HTTP.
 
 For some common use cases it should be possible to create an API which
 is a close enough equivalent to popular tools that it can be used as a
@@ -502,19 +502,19 @@ Choice of streaming data transport
 ----------------------------------
 
 As discussed in section \ref{browserstreamingframeworks}, current
-techniques to provide streaming over http encourage a dichotomous split
+techniques to provide streaming over HTTP encourage a dichotomous split
 of traffic as either stream or download. I find that this split is not
 necessary and that streaming may be used as the most effective means of
 downloading. Streaming services implemented using push pages or
 websockets are not REST. Under these frameworks a stream has a URL
 address but the data in the stream is not addressable. This is similar
 to STREST, the *Service Trampled REST* anti-pattern [@strest], in which
-http URLs are viewed as locating endpoints for services rather than the
+HTTP URLs are viewed as locating endpoints for services rather than the
 actual resources. Being unaddressable, the data in the stream is also
 uncacheable: an event which is streamed live cannot later, when it is
 historic, be retrieved from a cache which was populated by the stream.
-These frameworks use http as the underlying transport but I find they do
-not follow http's principled design. Due to these concerns, in the
+These frameworks use HTTP as the underlying transport but I find they do
+not follow HTTP's principled design. Due to these concerns, in the
 browser I will only be supporting downloading using XHR.
 
 Although I am designing Oboe as a client for ordinary REST resources and
@@ -531,8 +531,8 @@ finally close leaving a complete resource. A few days later, somebody
 wishing to fetch the results would use the *same url for the historic
 data as was used on the night for the live data*. This is possible
 because the URL refers only to the data that is required, not to whether
-it is current or historic. Because it eventually formed a complete http
-response, the data that was streamed is not incompatible with http
+it is current or historic. Because it eventually formed a complete HTTP
+response, the data that was streamed is not incompatible with HTTP
 caching and a cache which saw the data when it was live could store it
 as usual and later serve it as historic. More sophisticated intermediate
 caches sitting on the network between client and service would recognise
@@ -550,7 +550,7 @@ show historic data.
 
 Taking this idea one step further, Oboe might be used for infinite data
 which intentionally never completes. In principle this is not
-incompatible with http caching although more research would have to be
+incompatible with HTTP caching although more research would have to be
 done into how well current caches handle requests which do not finish. A
 REST service which provides infinite resources would have to confirm
 that it is delivering to a streaming client, perhaps with a request
@@ -575,9 +575,9 @@ libraries such as jQuery. On legacy browsers Oboe could not be used to
 receive live data -- in the election night example no constituencies
 could be shown until they had all been called.
 
-Node's standard http library provides a view of the response as a
+Node's standard HTTP library provides a view of the response as a
 standard ReadableStream so there will be no problems programming to a
-progressive interpretation of http. In Node all streams provide a common
+progressive interpretation of HTTP. In Node all streams provide a common
 API regardless of their origin so there is no reason not to allow
 arbitrary streams to be read. Although Oboe is intended primarily as a
 REST client, under Node it will be capable of reading data from any

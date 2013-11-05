@@ -153,7 +153,7 @@ concentrates on measuring the performance of Oboe's pattern matching.
 This test registers a complex pattern which intentionally uses all
 features from the JSONPath language and then fetches a JSON file
 containing approximately 800 nodes, 100 of which will match. Although
-actual http is used, it is over an unthrottled connection to localhost
+actual HTTP is used, it is over an unthrottled connection to localhost
 so network delay should be negligible. The tests were executed on a
 relatively low-powered Macbook Air laptop running OS X 10.7.5, except
 for Chrome Mobile which was tested on an iPhone 5 with iOS 7.0.2. Test
@@ -242,7 +242,7 @@ would scale badly as messages become more complex. A stream-writer
 server side library would allow Oboe to be used as a REST-compatible
 streaming solution for situations which currently employ push tables or
 Websockets. This would provide a form of REST streaming that operates
-according to the principled design of http rather than by sidestepping
+according to the principled design of HTTP rather than by sidestepping
 it.
 
 Although JSON is particularly well suited, there is nothing about Oboe

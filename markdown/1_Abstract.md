@@ -1,7 +1,7 @@
 Abstract
 ========
 
-A new design for http client libraries incorporating http streaming,
+A new design is presented for HTTP client libraries which incorporates HTTP streaming,
 pattern matching, and incremental parsing, with the aim of improving
 performance, fault tolerance, and encouraging a greater degree of loose
 coupling between programs. A Javascript client library capable of

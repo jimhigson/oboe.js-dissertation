@@ -24,10 +24,10 @@ make no special accommodation for REST resources.
 
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
 documents are often interpreted in a streaming fashion, to date REST
-resources are not commonly examined in this way. In most practical cases
+resources are not commonly examined in this way. For most practical cases
 where we wish to be increase the speed of a system there is no
-reasonable distinction between acting *earlier* and being *quicker*. To
-create efficient software we should be using data at the first possible
+reasonable distinction between acting *earlier* and being *quicker*. 
+In the interest of creating efficient software we should prefer to use data at the first possible
 opportunity: examining content *while it streams* rather than holding it
 unexamined until it is wholly available. The purpose of this
 dissertation is to explore tangible benefits that may be realised by
@@ -36,12 +36,16 @@ folding HTTP streaming into the REST paradigm.
 Natural languages encourage our thinking to follow patterns that they
 easily support [@whorf56]. This idea has been applied to programming,
 for example Whorfianism was influential in the design of Ruby
-[@rubylang]. REST clients tend to style the calling of remote
+[@rubylang].
+It may be useful when looking for new techniques to question which
+established constructs are as they are because of languages which
+unintentionally suggest that formulation; it is perhaps significant that
+REST clients tend to style the calling of remote
 resources similarly to the call style of the host programming
 language. In practice one of two schemas are generally followed:
 a synchronous, blocking style in which an
 invocation halts execution for the duration of the request before
-evaluating to the fetched resource; or asynchronous, non-blocking in
+evaluating to the fetched resource; or an asynchronous, non-blocking form in
 which some logic is specified to be applied to the response once it is
 available. Languages which promote concurrency though threading
 generally consider blocking in a single thread to be acceptable and will

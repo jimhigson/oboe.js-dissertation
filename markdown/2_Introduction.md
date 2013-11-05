@@ -1,24 +1,26 @@
 Introduction
 ============
 
-REST[@rest pp. 407–416] uses HTTP much as it was originally intended
-with the exception that its scope is expanded to include the transfer of
+REST [@rest] is the use of HTTP much as it was originally intended but 
+with an extended scope to include the transfer of
 data resources as well as hypertext documents. Whereas the rival
 technology SOAP [@soap] largely disregards HTTP's principled design by
-using the protocol as a widely-supported transport on top of which an
-additional semantic layer may be bootstrapped, REST adopts all of HTTP's
-core semantics. This includes the HTTP methods for fetching, creating
+adopting the protocol as a transport for bootstrapping its own semantics,
+REST adopts all of HTTP's core phrasing.
+This includes the HTTP methods for fetching, creating
 and modifying resources: GET, POST, PUT, PATCH, DELETE, and the locating
 of resources using URLs. Under HTTP's original design hierarchical URLs
 are used to locate documents without reference to the services which
-produce it even where the content is dynamically generated. REST
-continues this by likewise locating data resources, not data services,
-using URLs. As with HTTP, REST is stateless and therefore cacheable,
-allowing large-scale content distribution networks to be built. HTTP's
-inbuilt headers for content type, language negotiation and resource
-expiry continue to function according to the originally intended
-meanings [@headers] allowing REST to work with existing HTTP
-intermediaries such as load balancing proxies, gateways, and caches.
+produce them. REST
+advances this same naming strategy by likewise using URLs to locate data 
+resources, not services.
+As with HTTP, REST is stateless and therefore cacheable,
+allowing large-scale content distribution networks to be built. Because HTTP's
+inbuilt headers for content type, language negotiation, and resource
+expiry are used according to the originally intended
+meanings [@headers], existing HTTP
+intermediaries such as load balancing proxies, gateways, and caches need
+make no special accommodation for REST resources.
 
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
 documents are often interpreted in a streaming fashion, to date REST

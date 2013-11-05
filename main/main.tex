@@ -131,33 +131,38 @@ regards to developer ergonomics and user perception of performance.
 
 \section{Introduction}\label{introduction}
 
-REST uses HTTP as it was originally intended but expands the scope to
-include the transfer of data resources as well as hypertext documents.
-Whereas under the rival technology SOAP (Gudgin et al. 2007) HTTP is
-taken as a widely-supported transport on top of which an additional
-semantic layer can be bootstrapped, REST incorporates the protocol's
-existing semantics. This includes the HTTP's methods for fetching,
-creating and modifying resources: GET, POST, PUT, PATCH, DELETE and the
-locating of resources using URLs. Under HTTP's original design,
-hierarchical URLs locate documents without reference to the means of
-producing the document, even if the content is dynamically generated.
-REST continues this by locating resources, not services, using URLs.
-HTTP's inbuilt headers for content type, language negotiation and
-specifying a resource's expiry time continue to function according to
-their originally intended meaning (R. Fielding et al. 1999) allowing
-REST to work with existing HTTP intermediaries such as load balancing
-proxies and caches. As with HTTP, REST is stateless and therefore
-cacheable allowing large-scale distributed content distribution networks
-to be built.
+REST uses HTTP much as it was originally intended but expands the scope
+to include the transfer of data resources as well as hypertext
+documents. Whereas the rival technology SOAP (Gudgin et al. 2007)
+largely disregards HTTP's principled design bu using the protocol as a
+widely-supported transport on top of which an additional semantic layer
+may be bootstrapped, REST adopts all of HTTP's core semantics. This
+includes the HTTP methods for fetching, creating and modifying
+resources: GET, POST, PUT, PATCH, DELETE and the locating of resources
+using URLs. Under HTTP's original design, hierarchical URLs locate
+documents without reference to the means of producing the document even
+if the content is dynamically generated. REST continues this by locating
+resources, not services, using URLs. As with HTTP, REST is stateless and
+therefore cacheable allowing large-scale content distribution networks
+to be built. HTTP's inbuilt headers for content type, language
+negotiation and specifying a resource's expiry continue to function
+according to their originally intended meanings (R. Fielding et al.
+1999) allowing REST to work with existing HTTP intermediaries such as
+load balancing proxies, gateways, and caches.
 
-Despite adopting the mechanisms and semantics of HTTP, whereas documents
-transferred using HTTP are often interpreted in a streaming fashion, to
-date REST resources are not examined in this way. The purpose of this
-dissertation is to allow tangible performance benefits by integrating
-HTTP streaming with the REST paradigm.
+Despite REST adopting the mechanisms and semantics of HTTP, whereas
+document transfer is often interpreted in a streaming fashion, to date
+REST resources are not commonly examined in this way. In most practical
+cases where we wish to be increase performance in terms of time there is
+no reasonable distinction between acting \emph{earlier} and being
+\emph{quicker}. To create efficient software we should be using data at
+the first possible opportunity: examining content \emph{while it
+streams} rather than holding it unexamined until it is wholly available.
+The purpose of this dissertation is to explore tangible benefits that
+may be realised by folding HTTP streaming into the REST paradigm.
 
-In the interest of developer ergonomics, REST clients have tended to
-style the calling of remote resources similar to the call style of the
+In the interest of developer ergonomics REST clients have tended to
+style the calling of remote resources similar to the call style of their
 host programming language. Depending on the language, one of two schemas
 are followed: a synchronous, blocking style in which an invocation halts
 execution for the duration of the request before evaluating to the
@@ -176,16 +181,10 @@ programming languages of the day. For any multi-packet message sent via
 a network some parts will arrive before others, at least approximately
 in-order, but viewed from inside a language whose statements invariably
 yield single, discrete values it is comfortable to conceptualise the
-REST response as a discrete event. UML sequence diagrams contain the
+REST response as a discrete event. UML sequence diagrams provide a
 syntax for instantaneously delivered return values, with no
 corresponding notation for a resource whose data is progressively
 revealed.
-
-In most practical cases where we wish to be fast in performing a task
-there is no reasonable distinction between acting \emph{earlier} and
-being \emph{quicker}. To create efficient software we should be using
-data at the first possible opportunity: examining content \emph{while it
-streams} rather than holding it unexamined until it is wholly available.
 
 While the coining of the term REST represented a shift in how we think
 about HTTP, away from the transfer of hypertext documents to that of

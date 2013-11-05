@@ -1,6 +1,6 @@
 ---
 title:  'Oboe.js: An approach to I/O for REST clients which is neither batch nor stream; nor SAX nor DOM'
-date: 2013
+date: November 2013
 author:
 - Jim Higson, Kellogg College
 abstract: |

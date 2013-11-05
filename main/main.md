@@ -31,81 +31,90 @@ abstract: |
 Introduction
 ============
 
-REST uses HTTP much as it was originally intended but expands the scope
-to include the transfer of data resources as well as hypertext
-documents. Whereas the rival technology SOAP [@soap] largely disregards
-HTTP's principled design bu using the protocol as a widely-supported
-transport on top of which an additional semantic layer may be
-bootstrapped, REST adopts all of HTTP's core semantics. This includes
-the HTTP methods for fetching, creating and modifying resources: GET,
-POST, PUT, PATCH, DELETE and the locating of resources using URLs. Under
-HTTP's original design, hierarchical URLs locate documents without
-reference to the means of producing the document even if the content is
-dynamically generated. REST continues this by locating resources, not
-services, using URLs. As with HTTP, REST is stateless and therefore
-cacheable allowing large-scale content distribution networks to be
-built. HTTP's inbuilt headers for content type, language negotiation and
-specifying a resource's expiry continue to function according to their
-originally intended meanings [@headers] allowing REST to work with
-existing HTTP intermediaries such as load balancing proxies, gateways,
-and caches.
+REST [@rest] is the use of HTTP much as it was originally intended but 
+with an extended scope to include the transfer of
+data resources as well as hypertext documents. Whereas the rival
+technology SOAP [@soap] largely disregards HTTP's principled design by
+adopting the protocol as a transport for bootstrapping its own semantics,
+REST adopts all of HTTP's core phrasing.
+This includes the HTTP methods for fetching, creating
+and modifying resources: GET, POST, PUT, PATCH, DELETE, and the locating
+of resources using URLs. Under HTTP's original design hierarchical URLs
+are used to locate documents without reference to the services which
+produce them. REST
+advances this same naming strategy by likewise using URLs to locate data 
+resources, not services.
+As with HTTP, REST is stateless and therefore cacheable,
+allowing large-scale content distribution networks to be built. Because HTTP's
+inbuilt headers for content type, language negotiation, and resource
+expiry are used according to the originally intended
+meanings [@headers], existing HTTP
+intermediaries such as load balancing proxies, gateways, and caches need
+make no special accommodation for REST resources.
 
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
-document transfer is often interpreted in a streaming fashion, to date
-REST resources are not commonly examined in this way. In most practical
-cases where we wish to be increase performance in terms of time there is
-no reasonable distinction between acting *earlier* and being *quicker*.
-To create efficient software we should be using data at the first
-possible opportunity: examining content *while it streams* rather than
-holding it unexamined until it is wholly available. The purpose of this
+documents are often interpreted in a streaming fashion, to date REST
+resources are not commonly examined in this way. For most practical cases
+where we wish to be increase the speed of a system there is no
+reasonable distinction between acting *earlier* and being *quicker*. 
+In the interest of creating efficient software we should prefer to use data at the first possible
+opportunity: examining content *while it streams* rather than holding it
+unexamined until it is wholly available. The purpose of this
 dissertation is to explore tangible benefits that may be realised by
 folding HTTP streaming into the REST paradigm.
 
-In the interest of developer ergonomics REST clients have tended to
-style the calling of remote resources similar to the call style of their
-host programming language. Depending on the language, one of two schemas
-are followed: a synchronous, blocking style in which an invocation halts
-execution for the duration of the request before evaluating to the
-fetched resource; or asynchronous, non-blocking in which some logic is
-specified to be applied to a response once it is available. Languages
-encourage our thinking to follow the terms that they easily
-support[@whorf56]. Languages which promote concurrency though threading
+Natural languages encourage our thinking to follow patterns that they
+easily support [@whorf56]. This idea has been applied to programming,
+for example Whorfianism was influential in the design of Ruby
+[@rubylang].
+It may be useful when looking for new techniques to question which
+established constructs are as they are because of languages which
+unintentionally suggest that formulation; it is perhaps significant that
+REST clients tend to style the calling of remote
+resources similarly to the call style of the host programming
+language. In practice one of two schemas are generally followed:
+a synchronous, blocking style in which an
+invocation halts execution for the duration of the request before
+evaluating to the fetched resource; or an asynchronous, non-blocking form in
+which some logic is specified to be applied to the response once it is
+available. Languages which promote concurrency though threading
 generally consider blocking in a single thread to be acceptable and will
 prefer the synchronous mode whereas languages with first class functions
 are naturally conversant in callbacks and will prefer asynchronous I/O.
-We should remember in programming that languages limit the patterns that
-we readily see [@rubylang] and that better mappings may be possible.
-This observation extends to graphical notations such as UML whose
-constructs strongly reflect the programming languages of the day. For
-any multi-packet message sent via a network some parts will arrive
-before others, at least approximately in-order, but viewed from inside a
+We should remember that in programming our languages limit the patterns
+that we readily see and that the schemes which map most easily onto our
+languages are not necessarily the best possible organisation. For any
+multi-packet message sent via a network some parts will arrive before
+others, at least approximately in-order but viewed from inside a
 language whose statements invariably yield single, discrete values it is
-comfortable to conceptualise the REST response as a discrete event. UML
-sequence diagrams provide a syntax for instantaneously delivered
-return values, with no corresponding notation for a resource whose data
-is progressively revealed.
+comfortable to conceptualise the REST response as a discrete event. This
+tendency for a 'limiting comfort' extends to graphical notations such as
+UML whose constructs strongly reflect the programming languages of the
+day. UML sequence diagrams provide a syntax for instantaneously
+delivered return values, with no corresponding notation available for a
+resource whose data is progressively revealed.
 
 While the coining of the term REST represented a shift in how we think
 about HTTP, away from the transfer of hypertext documents to that of
-arbitrary data [@rest pp. 407–416], it introduced no fundamentally new
-methods. Similarly building on previous ideas, no new computing
-techniques need be invented to realise my thesis. As a minimum it
-requires an HTTP client which reveals the response whilst it is in
-progress and a parser which can begin to interpret that response before
-it sees all of it. Nor is it novel to use these preexisting parts in
-composition. Every current web browser already implements such a schema;
-load any complex webpage -- essentially an aggregation of hypertext and
-other resources -- the HTML will be parsed and displayed incrementally
-while it is downloading and resources such as images are requested in
-parallel as soon as they are referenced. In the case of progressive
-JPEGs or SVGs[^2_Introduction1] the images may themselves be presented incrementally.
-This incremental display is achieved through highly optimised software
-created for a single task, that of displaying web pages. The new
-contribution of this dissertation is to provide a generic analogue,
-applicable to any problem domain.
+arbitrary data, it introduced no fundamentally new methods. Similarly
+building on previous ideas, no new computing techniques need be invented
+before this dissertation may be implemented. As a minimum it requires an
+HTTP client which reveals the response whilst it is in progress and a
+parser which can begin to interpret that response before it sees all of
+it. Nor is it novel to use these parts together to produce a streaming
+resource interpretation. Every current web browser already implements
+such a schema; load any complex webpage -- essentially an aggregation of
+hypertext and other resources -- and the HTML will be parsed and
+displayed incrementally while it is downloading, with resources such as
+images requested in parallel as soon as they are referenced. In the case
+of progressive JPEGs or SVGs[^2_Introduction1] the images themselves will also be
+presented incrementally. This incremental display is achieved through
+optimised software created for the single task of displaying web pages.
+The new contribution of this dissertation is to provide a generic
+analogue, applicable to any problem domain.
 
-How REST aggregation could be faster
-------------------------------------
+REST aggregation could be faster
+--------------------------------
 
 ![**Sequence diagram showing the aggregation of low-level REST resources
 by an intermediary.** A client fetches an author's publication list and

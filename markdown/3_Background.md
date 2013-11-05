@@ -485,8 +485,8 @@ example might be if we expanded our model to contain fuzzy knowledge:
 }
 ~~~~
 
-Considering the general case, it will not be possible to track all
-possible service refactors safely. By necessity a resource consumer
+Considering the general case, it will not be possible to safely track every
+refactoring of a service. By necessity a resource consumer
 should limit their ambitions to tracking ontology expansions which do
 not alter the existing concepts. In practice integration testing against
 the beta version of a service will be necessary to be pre-warned of

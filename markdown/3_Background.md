@@ -190,7 +190,8 @@ http.get(url)
 
 Following Node's lead, traditionally thread-based environments are
 beginning to embrace asynchronous, single-threaded servers. The Netty
-project can be thought of as roughly the Java equivalent of Node.
+project [@netty] can be thought of as roughly the equivalent of Node
+for the Java Virtual Machine.
 
 JSON and XML data transfer formats {#jsonxml}
 ----------------------------------
@@ -199,7 +200,7 @@ Both XML and JSON are text based, tree-shaped data formats with human
 and machine readability. One of the design goals of XML was to simplify
 SGML to the point that a graduate student could implement a full parser
 in a week [@javatools p287]. Continuing this arc of simpler data
-formats, JSON "The fat-free alternative to XML [@jsonorg]" isolates
+formats, JSON "The fat-free alternative to XML" [@jsonorg] isolates
 Javascript's syntax for literal values into a stand-alone serialisation
 language. For the graduate tackling JSON parsing the task is simpler
 still, being expressible as fifteen context free grammars.
@@ -265,7 +266,7 @@ originated locally. Automatic marshaling generalises this process by
 providing a two-way mapping between the domain model and its
 serialisation, either completely automatically or based on a declarative
 specification. It is common in strongly typed languages for REST client
-libraries to automatically demarshal as part of receiving a fetched rest
+libraries to automatically demarshal as part of receiving a fetched REST
 response. From the programmer's vantage it is as if the domain objects
 themselves had been fetched. Adding an additional layer, another common
 design pattern intended to give a degree of isolation between remote
@@ -323,8 +324,8 @@ be anywhere else.
 
 In the *Red Queen's race* it took "all the running you can do, to keep
 in the same place". Ideally as a programmer I'd like to expend effort to
-make my code to do something new, or to perform something that it
-already did better, not to stay still. Following an object oriented
+make my code to do something new, or to perform better something that it
+already did, not to stay still. Following an object oriented
 encapsulation of data such that a caller does not have to concern itself
 with the data structures behind an interface, the internal
 implementation may be changed without disruptions to the rest of the
@@ -412,7 +413,7 @@ distinct lists of child nodes, attribute children and node list
 children; from one perspective attributes are child nodes of their
 parent element but they can alternatively be considered as data stored
 in the element. Because of this classification ambiguity an XML document
-doesn't have a singly correct n-way tree. XML attributes may only
+can't be said to form a single correct n-way tree. XML attributes may only
 contain strings and have a lesser expressivity than child nodes which
 allow recursive structure; it is a common refactor to change from
 attributes to elements when a scalar value is upgraded to be a compound.

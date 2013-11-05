@@ -480,7 +480,18 @@
       "url":"http://nodejs.org/",
       "issued": { "date-parts":[ [2009] ] },
       "type":"webpage"                  
-   }
+   },
+   
+   {
+      "id":"netty",
+      "title":"Netty Project",
+      "author":[         
+         { "family":"Netty", "name": "Netty Project Community" }
+      ],
+      "url":"http://netty.io/",
+      "issued": { "date-parts":[ [2010] ] },
+      "type":"webpage"                  
+   }   
       
    
 ]

@@ -584,6 +584,8 @@ REST client, under Node it will be capable of reading data from any
 source. Oboe might be used to read from a local file, an ftp server, a
 cryptography source, or the process's standard input.
 
+*one security model, not two*
+
 Handling transport failures
 ---------------------------
 

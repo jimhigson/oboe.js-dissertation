@@ -32,6 +32,8 @@ regards to developer ergonomics and user perception of performance.
 Introduction
 ============
 
+*intro to REST here*
+
 This purpose of this dissertation is to encourage the REST paradigm to
 be viewed through a novel lens which in application may be used to
 deliver tangible benefits to many common REST use cases. Although I
@@ -42,7 +44,7 @@ than as the delivery of new software.
 In the interest of developer ergonomics, REST clients have tended to
 style the calling of remote resources similar to the call style of the
 host programming language. Depending on the language, one of two schemas
-are followed: a synchronous, blocking style in which a some invocation
+are followed: a synchronous, blocking style in which an invocation
 halts execution for the duration of the request before evaluating to the
 fetched resource; or asynchronous, non-blocking in which some logic is
 specified to be applied to a response once it is available. Languages
@@ -81,7 +83,7 @@ composition. Every current web browser already implements such a schema;
 load any complex webpage -- essentially an aggregation of hypertext and
 other resources -- the HTML will be parsed and displayed incrementally
 while it is downloading and resources such as images are requested in
-parallel as soon as they are referenced. in the case of progressive
+parallel as soon as they are referenced. In the case of progressive
 JPEGs or SVGs[^2_Introduction1] the images may themselves be presented incrementally.
 This incremental display is achieved through highly optimised software
 created for a single task, that of displaying web pages. The new
@@ -1625,6 +1627,8 @@ arbitrary streams to be read. Although Oboe is intended primarily as a
 REST client, under Node it will be capable of reading data from any
 source. Oboe might be used to read from a local file, an ftp server, a
 cryptography source, or the process's standard input.
+
+*one security model, not two*
 
 Handling transport failures
 ---------------------------

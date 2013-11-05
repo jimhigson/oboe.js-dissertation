@@ -1,6 +1,8 @@
 Introduction
 ============
 
+*intro to REST here*
+
 This purpose of this dissertation is to encourage the REST paradigm to
 be viewed through a novel lens which in application may be used to
 deliver tangible benefits to many common REST use cases. Although I
@@ -11,7 +13,7 @@ than as the delivery of new software.
 In the interest of developer ergonomics, REST clients have tended to
 style the calling of remote resources similar to the call style of the
 host programming language. Depending on the language, one of two schemas
-are followed: a synchronous, blocking style in which a some invocation
+are followed: a synchronous, blocking style in which an invocation
 halts execution for the duration of the request before evaluating to the
 fetched resource; or asynchronous, non-blocking in which some logic is
 specified to be applied to a response once it is available. Languages
@@ -50,7 +52,7 @@ composition. Every current web browser already implements such a schema;
 load any complex webpage -- essentially an aggregation of hypertext and
 other resources -- the HTML will be parsed and displayed incrementally
 while it is downloading and resources such as images are requested in
-parallel as soon as they are referenced. in the case of progressive
+parallel as soon as they are referenced. In the case of progressive
 JPEGs or SVGs[^1] the images may themselves be presented incrementally.
 This incremental display is achieved through highly optimised software
 created for a single task, that of displaying web pages. The new
@@ -96,7 +98,7 @@ simultaneous connections per peer so avoiding bursts is further to our
 advantage. [Appendix i](#appendix_http_limits) lists some actual limits.
 
 Nodes in an n-tier architecture defy categorisation as 'client' or
-'server' in a way which is appropriate from all frames of reference. A
+'server' in a way that is appropriate from all frames of reference. A
 node might be labeled as the 'server' from the layer below and 'client'
 from the layer above. Although the "client software" labels in the
 figures \ref{rest_timeline_1} and \ref{rest_timeline_2} hint at

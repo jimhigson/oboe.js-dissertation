@@ -3,10 +3,10 @@ Background
 
 ![**Labelling nodes in an n-tier architecture**. Regardless of where a
 node is located, REST may be used as the means of communication. By
-focusing on REST clients, nodes in the middleware and presentation layer
+focusing on REST clients, nodes in the middle tier and presentation layer
 fall in our scope. Although network topology is often split about client
-and server side, for our purposes categorisation as data, middleware,
-and presentation is the more meaningful distinction. According to this
+and server side, for our purposes categorisation as data, middle,
+and presentation tier is the more meaningful distinction. According to this
 split the client-side presentation layer and server-side presentation
 layer serve the same purpose, generating mark-up based on aggregated
 data prepared by the middle tier
@@ -23,7 +23,7 @@ by resisting categorisation as either mode.
 
 While the trend is generally for more client scripting and for many
 sites a Javascript runtime is now requisite, there are also
-counter-trends. In 2012 twitter reduced load times to one fifth of their
+counter-trends. In 2012 Twitter reduced load times to one fifth of their
 previous design by moving much of their rendering back to the
 server-side, commenting that "The future is coming and it looks just
 like the past" [@newTwitter]. Under this architecture short,
@@ -48,14 +48,14 @@ data.
 While REST may not be the only communications technology employed by an
 application architecture, for this project we should examine where REST
 client libraries may fit into the picture. REST is used by the
-presentation layer to pull data from middleware regardless of where the
+presentation layer to pull data from the middle tier regardless of where the
 presentation resides. Likewise, rather than connect to databases
-directly, for portability middlewares often communicate with a thin REST
-layer which wraps data stores. This suggests three uses:
+directly, for portability the middle tier will often communicate with a thin REST
+layer which wraps the data store. This suggests three uses:
 
--   From web browser to middleware
--   From server-side presentation layer to middleware
--   From middleware to nodes in a data tier
+-   From web browser to middle tier
+-   From server-side presentation layer to middle tier
+-   From middle tier to nodes in the data tier
 
 Fortunately, each of these contexts requires a similar performance
 profile. The work done is computationally light and answering a request
@@ -97,7 +97,7 @@ parallel, loosing thread's natural strengths for utilising multiple
 cores. Even if they do, the actual CPU time required in making an HTTP
 request is so short that any concurrent processing is a pyrrhic victory.
 
-Node builds on the model of event-based, asynchronous i/o that was
+Node builds on the model of event-based, asynchronous I/O that was
 established by web browser Javascript execution. Although Javascript in
 a browser may be performing multiple tasks simultaneously, for example
 requesting several resources from the server side, it does so from

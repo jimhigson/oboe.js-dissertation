@@ -548,7 +548,7 @@ effort.
 ~~~~ {.javascript}
 ajax('http://example.com/people.json', function( people ) {
 
-   // The parsing of the people json into a javascript object
+   // The parsing of the people JSON into a javascript object
    // feels so natural that it is easy to forget from looking 
    // at the code that parsing happens at all. 
    
@@ -580,7 +580,7 @@ progress event:
 The historic lack of streaming for data fetched using XHR stands
 incongruously with the browser as a platform in which almost every other
 remote resource is interpreted progressively. Examples include
-progressive image formats, html, svg, video, and Javascript itself
+progressive image formats, HTML, SVG, video, and Javascript itself
 (script interpretation starts before the script is fully loaded).
 
 The progress event is supported by the latest version of all major
@@ -608,7 +608,7 @@ standard REST call and shares little in common with the push events
 which follow to provide instant notification as new messages arrive.
 
 **Push tables** sidestep the browser's absent data streaming abilities
-by leaning on a resource that it can stream: progressive html. On the
+by leaning on a resource that it can stream: progressive HTML. On the
 client a page containing a table is hidden in an off-screen iframe. The
 frame's content is served as an HTML page containing a table that never
 completes, fed by a connection that never closes. When the server wishes

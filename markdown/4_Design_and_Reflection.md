@@ -277,8 +277,8 @@ Parsing the JSON response
 
 While SAX parsers provide an unappealing interface to application
 developers, as a starting point to handle low-level parsing in
-higher-level libraries they work very well (most XML DOM parsers are
-built in this way). The pre-existing Clarinet project is well tested,
+higher-level libraries they work very well -- most XML DOM parsers are
+built in this way. The pre-existing Clarinet project [@clarinet] is well tested,
 liberally licenced, and compact, meeting our needs perfectly. The name
 of this project, Oboe.js, was chosen in tribute to the value delivered
 by Clarinet.

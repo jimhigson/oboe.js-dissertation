@@ -1321,8 +1321,8 @@ Parsing the JSON response
 
 While SAX parsers provide an unappealing interface to application
 developers, as a starting point to handle low-level parsing in
-higher-level libraries they work very well (most XML DOM parsers are
-built in this way). The pre-existing Clarinet project is well tested,
+higher-level libraries they work very well -- most XML DOM parsers are
+built in this way. The pre-existing Clarinet project [@clarinet] is well tested,
 liberally licenced, and compact, meeting our needs perfectly. The name
 of this project, Oboe.js, was chosen in tribute to the value delivered
 by Clarinet.
@@ -2145,7 +2145,7 @@ elements, the same JSONPath evaluator term could be tested against the
 parent element many times, always with the same result. Although
 Javascript doesn't come with functional caching, it can be added using
 the language itself, probably the best known example being `memoize`
-from Underscore.js [@underscore]. I suspect, however, that hashing the cache
+from Underscore.js [@underscore_memo]. I suspect, however, that hashing the cache
 parameters might be slower than performing the matching. Although the
 parameters are all immutable and could in theory be hashed by object
 identity, in practice there is no way to access an object ID from inside
@@ -2506,7 +2506,7 @@ The file `oboe-browser.min.js` is the minified, built version of Oboe
 ready to be sent to web browsers and can be found in the project's
 `dist` directory. The size fluctuates as commits are made but after gzip
 it comes to about 4800 bytes; close to but comfortably under the 5120
-limit. At roughly the size as a small image the download footprint of
+limit. At roughly the size of a small image the download footprint of
 Oboe should not discourage adoption.
 
 Potential future work

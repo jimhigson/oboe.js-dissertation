@@ -461,6 +461,17 @@
    },
    
    {
+      "id":"clarinet",
+      "title":"Clarinet - SAX based evented streaming JSON parser in JavaScript",
+      "author":[         
+         { "family": "Job", "given":"Nuno"}
+      ],
+      "url":"https://github.com/dscape/clarinet",
+      "issued": { "date-parts":[ [2011] ] },
+      "type":"webpage"                  
+   },
+   
+   {
       "id":"clarinetspeed",
       "title":"Clarinet - SAX based evented streaming JSON parser in JavaScript for the browser and nodejs",
       "author":[         

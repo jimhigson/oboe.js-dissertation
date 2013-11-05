@@ -1,20 +1,40 @@
 Introduction
 ============
 
-*intro to REST here*
+REST uses HTTP in much the way it was originally
+intended but expands the scope to include the transfer of data resources as well 
+as hypertext documents. Whereas under the rival
+technology SOAP [@soap] HTTP is taken as a widely-supported transport on top of
+which an additional semantic layer can be bootstrapped, REST incorporates the
+protocol's existing semantics. This includes the HTTP's methods for
+fetching, creating and modifying resources: GET, POST, PUT, PATCH, DELETE and
+the locating of resources using URLs. Under HTTP's
+original design, hierarchical URLs locate documents without reference to
+the means of producing the document, even if the content is
+dynamically generated. REST continues this by locating resources, not services,
+using URLs. HTTP's inbuilt headers for content type, language negotiation and
+specifying a resource's expiry time continue to function according to their
+originally intended meaning [@headers] allowing REST to work with
+existing HTTP intermediaries such as load balancing proxies and caches.
+As with HTTP, REST is stateless and therefore
+cacheable allowing large-scale distributed content distribution networks to be
+built.
 
-This purpose of this dissertation is to encourage the REST paradigm to
-be viewed through a novel lens which in application may be used to
-deliver tangible benefits to many common REST use cases. Although I
-express my thesis through programming, the contribution I hope to make
-is felt more strongly as a modification in how we *think* about HTTP
-than as the delivery of new software.
+Despite adopting the mechanisms and semantics of HTTP, whereas documents 
+transferred
+using HTTP are often interpreted in a streaming fashion, to date REST
+resources are not examined in this way.
+The purpose of this dissertation is to allow tangible
+performance benefits by integrating HTTP streaming with the REST paradigm.
+Although I express my thesis through programming, the contribution I
+hope to make is felt more strongly as a modification in how one may
+think about REST.
 
 In the interest of developer ergonomics, REST clients have tended to
 style the calling of remote resources similar to the call style of the
 host programming language. Depending on the language, one of two schemas
-are followed: a synchronous, blocking style in which an invocation
-halts execution for the duration of the request before evaluating to the
+are followed: a synchronous, blocking style in which an invocation halts
+execution for the duration of the request before evaluating to the
 fetched resource; or asynchronous, non-blocking in which some logic is
 specified to be applied to a response once it is available. Languages
 encourage our thinking to follow the terms that they easily
@@ -209,8 +229,8 @@ contagion whereby the updating of any single unit may only be done as
 part of the updating of the whole.
 
 An effective response to this problem would be to integrate into a REST
-client programs the ability to use a resource whilst being only loosely coupled
-to the overall *shape* of the message.
+client programs the ability to use a resource whilst being only loosely
+coupled to the overall *shape* of the message.
 
 Deliverables
 ------------

@@ -424,10 +424,38 @@
    },
    
    {
+      "id":"soap",
+      "title":"SOAP Version 1.2 Part 1: Messaging Framework (Second Edition)",
+      "author":[         
+         { "family": "Gudgin", "given":"Martin"},  
+         { "family": "Hadley", "given":"Marc"},   
+         { "family": "Mendelsohn", "given":"Noah"},  
+         { "family": "Moreau", "given":"Jean-Jacques"},   
+         { "family": "Nielsen", "given":"Henrik Frystyk"},
+         { "family": "Karmarkar", "given":"Anish"},  
+         { "family": "Lafon", "given":"Yves"}   
+      ],
+      "url":"http://www.w3.org/TR/soap12-part1/",
+      "issued": { "date-parts":[ [2007] ] },
+      "type":"webpage"                  
+   },   
+   
+   {
       "id":"headers",
       "title":"Hypertext Transfer Protocol -- HTTP/1.1: Header Field Definitions",
       "author":[         
-         { "family": "Fielding", "given":"R"}
+         { "family": "Fielding", "given":"R"},  
+         { "family": "Gettys", "given":"J"},
+         { "name": "Compaq/W3C"},        
+         { "family": "Mogul", "given":"J"},          
+         { "name": "Compaq"},
+         { "family": "Frystyk", "given":"H"},        
+         { "name":"W3C/MIT"},           
+         { "family": "Masinter", "given":"L"}, 
+         { "name":"Xerox"},             
+         { "family": "Leach", "given":"P"},          
+         { "name":"Microsoft"},          
+         { "family": "Berners-Lee", "given":"T"}          
       ],
       "url":"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.5",
       "issued": { "date-parts":[ [1999] ] },

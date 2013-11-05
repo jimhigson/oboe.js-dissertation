@@ -131,14 +131,32 @@ regards to developer ergonomics and user perception of performance.
 
 \section{Introduction}\label{introduction}
 
-\emph{intro to REST here}
+REST uses HTTP in much the way it was originally intended but expands
+the scope to include the transfer of data resources as well as hypertext
+documents. Whereas under the rival technology SOAP (Gudgin et al. 2007)
+HTTP is taken as a widely-supported transport on top of which an
+additional semantic layer can be bootstrapped, REST incorporates the
+protocol's existing semantics. This includes the HTTP's methods for
+fetching, creating and modifying resources: GET, POST, PUT, PATCH,
+DELETE and the locating of resources using URLs. Under HTTP's original
+design, hierarchical URLs locate documents without reference to the
+means of producing the document, even if the content is dynamically
+generated. REST continues this by locating resources, not services,
+using URLs. HTTP's inbuilt headers for content type, language
+negotiation and specifying a resource's expiry time continue to function
+according to their originally intended meaning (R. Fielding et al. 1999)
+allowing REST to work with existing HTTP intermediaries such as load
+balancing proxies and caches. As with HTTP, REST is stateless and
+therefore cacheable allowing large-scale distributed content
+distribution networks to be built.
 
-This purpose of this dissertation is to encourage the REST paradigm to
-be viewed through a novel lens which in application may be used to
-deliver tangible benefits to many common REST use cases. Although I
-express my thesis through programming, the contribution I hope to make
-is felt more strongly as a modification in how we \emph{think} about
-HTTP than as the delivery of new software.
+Despite adopting the mechanisms and semantics of HTTP, whereas documents
+transferred using HTTP are often interpreted in a streaming fashion, to
+date REST resources are not examined in this way. The purpose of this
+dissertation is to allow tangible performance benefits by integrating
+HTTP streaming with the REST paradigm. Although I express my thesis
+through programming, the contribution I hope to make is felt more
+strongly as a modification in how one may think about REST.
 
 In the interest of developer ergonomics, REST clients have tended to
 style the calling of remote resources similar to the call style of the
@@ -173,10 +191,10 @@ streams} rather than holding it unexamined until it is wholly available.
 
 While the coining of the term REST represented a shift in how we think
 about HTTP, away from the transfer of hypertext documents to that of
-arbitrary data (Fielding 2000, 407--416), it introduced no fundamentally
-new methods. Similarly building on previous ideas, no new computing
-techniques need be invented to realise my thesis. As a minimum it
-requires an HTTP client which reveals the response whilst it is in
+arbitrary data (R. T. Fielding 2000, 407--416), it introduced no
+fundamentally new methods. Similarly building on previous ideas, no new
+computing techniques need be invented to realise my thesis. As a minimum
+it requires an HTTP client which reveals the response whilst it is in
 progress and a parser which can begin to interpret that response before
 it sees all of it. Nor is it novel to use these preexisting parts in
 composition. Every current web browser already implements such a schema;
@@ -5104,6 +5122,10 @@ XML, EJB, CORBA, Servlets and SOAP}.
 Etemad, Elika J, and Tab Atkins. 2013. ``Selectors Level 4.''
 \url{http://dev.w3.org/csswg/selectors4/}.
 
+Fielding, R, J Gettys, J Mogul, H Frystyk, et al. 1999. ``Hypertext
+Transfer Protocol -{}- HTTP/1.1: Header Field Definitions.''
+\url{http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html\#sec14.5}.
+
 Fielding, R. T. 2000. ``Principled Design of the Modern Web
 Architecture.''
 
@@ -5115,6 +5137,11 @@ Gill, Brendan. 2013. ``OpenSignal.''
 
 Goessner, Stefan. 2007. ``JSONPath - XPath for JSON.''
 \url{http://goessner.net/articles/JsonPath/}.
+
+Gudgin, Martin, Marc Hadley, Noah Mendelsohn, Jean-Jacques Moreau,
+Henrik Frystyk Nielsen, Anish Karmarkar, and Yves Lafon. 2007. ``SOAP
+Version 1.2 Part 1: Messaging Framework (Second Edition).''
+\url{http://www.w3.org/TR/soap12-part1/}.
 
 Guo, shu-yu. 2013. ``Two Reasons Functional Style Is Slow in
 SpiderMonkey.''

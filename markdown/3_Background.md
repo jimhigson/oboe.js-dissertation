@@ -570,13 +570,13 @@ access to in-progress responses so the inevitable conceptualisation was
 drawn of the response as a one-time event with no accommodation provided
 for progressively delivered data.
 
-The followup standard, XHR2 is now at Working Draft stage. Given
+The followup standard, XHR2 is now at Working Draft stage [@xhr2progress]. Given
 ambitions to build a streaming REST client, of greatest interest is the
 progress event:
 
 > While the download is progressing, queue a task to fire a progress
 > event named progress about every 50ms or for every byte received,
-> whichever is least frequent. [@xhr2progress]
+> whichever is least frequent.
 
 The historic lack of streaming for data fetched using XHR stands
 incongruously with the browser as a platform in which almost every other

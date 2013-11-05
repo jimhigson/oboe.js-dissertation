@@ -1,68 +1,64 @@
 Introduction
 ============
 
-REST [@rest] is the use of HTTP much as it was originally intended but 
-with an extended scope to include the transfer of
-data resources as well as hypertext documents. Whereas the rival
-technology SOAP [@soap] largely disregards HTTP's principled design by
-adopting the protocol as a transport for bootstrapping its own semantics,
-REST adopts all of HTTP's core phrasing.
-This includes the HTTP methods for fetching, creating
-and modifying resources: GET, POST, PUT, PATCH, DELETE, and the locating
-of resources using URLs. Under HTTP's original design hierarchical URLs
-are used to locate documents without reference to the services which
-produce them. REST
-advances this same naming strategy by likewise using URLs to locate data 
-resources, not services.
-As with HTTP, REST is stateless and therefore cacheable,
-allowing large-scale content distribution networks to be built. Because HTTP's
-inbuilt headers for content type, language negotiation, and resource
-expiry are used according to the originally intended
-meanings [@headers], existing HTTP
-intermediaries such as load balancing proxies, gateways, and caches need
-make no special accommodation for REST resources.
+REST [@rest] is the use of HTTP much as it was originally intended but
+with an extended scope to include the transfer of data resources as well
+as hypertext documents. Whereas the rival technology SOAP [@soap]
+largely disregards HTTP's principled design by adopting the protocol as
+a transport for bootstrapping its own semantics, REST adopts all of
+HTTP's core phrasing. This includes the HTTP methods for fetching,
+creating and modifying resources: GET, POST, PUT, PATCH, DELETE, and the
+locating of resources using URLs. Under HTTP's original design
+hierarchical URLs are used to locate documents without reference to the
+services which produce them. REST advances this same naming strategy by
+likewise using URLs to locate data resources, not services. As with
+HTTP, REST is stateless and therefore cacheable, allowing large-scale
+content distribution networks to be built. Because HTTP's inbuilt
+headers for content type, language negotiation, and resource expiry are
+used according to the originally intended meanings [@headers], existing
+HTTP intermediaries such as load balancing proxies, gateways, and caches
+need make no special accommodation for REST resources.
 
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
 documents are often interpreted in a streaming fashion, to date REST
-resources are not commonly examined in this way. For most practical cases
-where we wish to be increase the speed of a system there is no
-reasonable distinction between acting *earlier* and being *quicker*. 
-In the interest of creating efficient software we should prefer to use data at the first possible
-opportunity: examining content *while it streams* rather than holding it
-unexamined until it is wholly available. The purpose of this
-dissertation is to explore tangible benefits that may be realised by
-folding HTTP streaming into the REST paradigm.
+resources are not commonly examined in this way. For most practical
+cases where we wish to be increase the speed of a system there is no
+reasonable distinction between acting *earlier* and being *quicker*. In
+the interest of creating efficient software we should prefer to use data
+at the first possible opportunity: examining content *while it streams*
+rather than holding it unexamined until it is wholly available. The
+purpose of this dissertation is to explore tangible benefits that may be
+realised by folding HTTP streaming into the REST paradigm.
 
 Natural languages encourage our thinking to follow patterns that they
 easily support [@whorf56]. This idea has been applied to programming,
 for example Whorfianism was influential in the design of Ruby
-[@rubylang].
-It may be useful when looking for new techniques to question which
-established constructs are as they are because of languages which
-unintentionally suggest that formulation; it is perhaps significant that
-REST clients tend to style the calling of remote
-resources similarly to the call style of the host programming
-language. In practice one of two schemas are generally followed:
-a synchronous, blocking style in which an
-invocation halts execution for the duration of the request before
-evaluating to the fetched resource; or an asynchronous, non-blocking form in
-which some logic is specified to be applied to the response once it is
-available. Languages which promote concurrency though threading
-generally consider blocking in a single thread to be acceptable and will
-prefer the synchronous mode whereas languages with first class functions
-are naturally conversant in callbacks and will prefer asynchronous I/O.
-We should remember that in programming our languages limit the patterns
-that we readily see and that the schemes which map most easily onto our
-languages are not necessarily the best possible organisation. For any
-multi-packet message sent via a network some parts will arrive before
-others, at least approximately in-order but viewed from inside a
-language whose statements invariably yield single, discrete values it is
-comfortable to conceptualise the REST response as a discrete event. This
-tendency for a 'limiting comfort' extends to graphical notations such as
-UML whose constructs strongly reflect the programming languages of the
-day. UML sequence diagrams provide a syntax for instantaneously
-delivered return values, with no corresponding notation available for a
-resource whose data is progressively revealed.
+[@rubylang]. It may be useful when looking for new techniques to
+question which established constructs are as they are because of
+languages which unintentionally suggest that formulation; it is perhaps
+significant that REST clients tend to style the calling of remote
+resources similarly to the call style of the host programming language.
+In practice one of two schemas are generally followed: a synchronous,
+blocking style in which an invocation halts execution for the duration
+of the request before evaluating to the fetched resource; or an
+asynchronous, non-blocking form in which some logic is specified to be
+applied to the response once it is available. Languages which promote
+concurrency though threading generally consider blocking in a single
+thread to be acceptable and will prefer the synchronous mode whereas
+languages with first class functions are naturally conversant in
+callbacks and will prefer asynchronous I/O. We should remember that in
+programming our languages limit the patterns that we readily see and
+that the schemes which map most easily onto our languages are not
+necessarily the best possible organisation. For any multi-packet message
+sent via a network some parts will arrive before others, at least
+approximately in-order but viewed from inside a language whose
+statements invariably yield single, discrete values it is comfortable to
+conceptualise the REST response as a discrete event. This tendency for a
+'limiting comfort' extends to graphical notations such as UML whose
+constructs strongly reflect the programming languages of the day. UML
+sequence diagrams provide a syntax for instantaneously delivered return
+values, with no corresponding notation available for a resource whose
+data is progressively revealed.
 
 While the coining of the term REST represented a shift in how we think
 about HTTP, away from the transfer of hypertext documents to that of

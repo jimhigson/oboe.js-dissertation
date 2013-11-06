@@ -6,7 +6,7 @@ REST [@rest] introduces no fundamentally new methods but extends the scope
 of HTTP to include the transfer of arbitrary data.
 Whereas the rival technology SOAP [@soap]
 largely disregards HTTP's principled design by adopting the protocol as
-a transport on which it bootstraps its own semantics, REST adopts all of
+a transport on which to bootstrap its own semantics, REST adopts all of
 HTTP's core phrasing. This includes the HTTP methods for fetching,
 creating and modifying resources: GET, POST, PUT, PATCH, DELETE, and the
 locating of resources using URLs. Under HTTP's original design
@@ -17,7 +17,7 @@ HTTP, REST is stateless and therefore cacheable, allowing large-scale
 content distribution networks to be built. Because HTTP's inbuilt
 headers for content type, language negotiation, and resource expiry are
 used according to the originally intended meanings [@headers], existing
-HTTP intermediaries such as load balancing proxies, gateways, and caches
+intermediaries such as load balancing proxies, gateways, and caches
 need make no special accommodation for REST resources.
 
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
@@ -28,19 +28,19 @@ reasonable distinction between acting *earlier* and being *quicker*. In
 the interest of creating efficient software we should use data
 at the first possible opportunity: examining content *while it streams*
 rather than holding it unexamined until it is wholly available. The
-purpose of this dissertation is to explore tangible benefits that may be
-realised by folding HTTP streaming into the REST paradigm.
+purpose of this dissertation is to explore tangible benefits which may be
+realised if we fold HTTP streaming into the REST paradigm.
 
 Natural languages encourage our thinking to follow patterns that they
 easily support [@whorf56]. This idea has been applied to programming,
 for example Ruby is intentionally designed to discourage global variables
 by using a less attractive notation [@rubylang].
-It may be useful when looking for new techniques to
+It may be useful when exploring new techniques to
 question which established constructs are as they are because of
 languages which unintentionally suggest that formulation; it is perhaps
 significant that REST clients tend to style the calling of remote
 resources similarly to the call style of the host programming language.
-In practice one of two schemas are generally followed: a synchronous,
+In practice one of two schemas is generally followed: a synchronous,
 blocking style in which an invocation halts execution for the duration
 of the request before evaluating to the fetched resource; or an
 asynchronous, non-blocking form in which some logic is specified to be
@@ -53,12 +53,12 @@ programming the language limits the patterns that we readily see and
 the schemes which map most easily onto our languages are not
 necessarily the best possible organisation. For any multi-packet message
 sent via a network some parts will arrive before others, at least
-approximately in-order but viewed from inside a language whose phasing
+approximately in-order, but viewed from inside a language whose phasing
 encourages 
 statements to yield single, wholly evaluated results it is comfortable to
 conceptualise the REST response as a discrete event. This establishment of a
 'limiting comfort' extends to graphical notations such as UML whose
-constructs strongly reflect the textual programming languages of the day. 
+constructs strongly reflect the textual languages of the day. 
 UML sequence diagrams include the syntax for instantaneously delivered return
 values but, despite being commonly used to draw network data transfer, 
 provide no corresponding notation for a resource whose
@@ -69,15 +69,15 @@ before this dissertation can be implemented. As a minimum it requires an
 HTTP client which reveals the response whilst it is in progress and a
 parser which can begin to interpret that response before it sees all of
 it. Nor is it novel to use these parts together to produce a streaming
-resource interpretation. Every current web browser already implements
-such a schema. Load any complex webpage -- essentially an aggregation of
+interpretation. Every current web browser already implements
+a similar pattern. Load any complex webpage -- essentially an aggregation of
 hypertext and other resources -- and the HTML will be parsed and
 displayed incrementally while it is downloading, with resources such as
 images requested in parallel as soon as they are referenced. In the case
 of progressive JPEG or SVG[^1] the images themselves will also be
 presented incrementally. This incremental display is achieved through
-optimised software created for the single task of displaying web pages.
-The new contribution of this dissertation is to provide a generic
+software created for a single purpose, to display web pages.
+The contribution of this dissertation is to provide a generic
 analogue, applicable to any problem domain.
 
 REST aggregation could be faster
@@ -86,19 +86,17 @@ REST aggregation could be faster
 ![**Sequence diagram showing the aggregation of low-level REST resources
 by an intermediary.** A client fetches an author's publication list and
 then their first three articles. This sequence represents the most
-commonly used technique in which the client does not react to the
-response until it is complete. In this example the second wave of
-requests cannot be made until the original response is complete, at
-which time they are issued in quick succession.
+commonly used technique in which the client does not react util the
+response is complete.
 \label{rest_timeline_1}](images/rest_timeline_1.png)
 
-![**Revised aggregation sequence for a client capable of progressively
-interpreting the resources.** Because arrows in UML sequence diagrams
+![**Revised aggregation sequence showing a client which progressively
+interprets the resources.** Because the arrows in a UML sequence diagrams
 draw returned values as a one-off happening rather than a continuous
 process, the lighter arrow notation is added to represent
 fragments of an incremental response. Each request for an individual
 publication is made as soon as its URL can be extracted from the
-publications list and once all required data has been read from the
+publications list and once all required links have been read from the
 original response it is aborted rather than continuing to download
 unnecessary data. \label{rest_timeline_2}](images/rest_timeline_2.png)
 
@@ -129,15 +127,16 @@ web page on the server-side to be displayed by the client's browser, the
 same perceptual speed improvements apply because of HTTP chunked
 encoding [@perceptionHttpChunkedSpeed]. If this layer were a remote
 aggregation service, starting to write out the aggregated response early
-provides much the same benefits for a client able to interpret it
+provides much the same benefits to the client able to interpret it
 progressively and, even if it is not, the overall delivery remains
 faster.
 
 Stepping outside the big-small tradeoff
 ---------------------------------------
 
-Where a domain model is requestable via REST and contains data in a
-series with continuous ranges there is often a tradeoff in client
+Where a domain model contains a
+series of data from which continuous ranges are requestable via REST
+there is often a tradeoff in the client
 design with regards to how much should be requested with each call.
 Because at any time it shows only a small window into a much larger
 model, the social networking site Twitter might be a good example. The

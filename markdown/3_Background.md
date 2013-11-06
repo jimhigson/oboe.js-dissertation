@@ -1,15 +1,13 @@
 Background
 ==========
 
-![**Labelling nodes in an n-tier architecture**. Regardless of where a
-node is located, REST may be used as the means of communication. By
-focusing on REST clients, nodes in the middle tier and presentation layer
-fall in our scope. Although network topology is often split about client
+![**Labelling nodes in an n-tier architecture**. By
+Although network topology is often split about client
 and server side, for our purposes categorisation as data, middle,
 and presentation tier is the more meaningful distinction. According to this
-split the client-side presentation layer and server-side presentation
+split the client- and server-side presentation
 layer serve the same purpose, generating mark-up based on aggregated
-data prepared by the middle tier
+data prepared by the middle tier.
 \label{architecture}](images/architecture.png)
 
 The web as an application platform
@@ -21,7 +19,7 @@ document viewing system to the preferred application platform for all
 but the most specialised interfaces, the web perpetuates this narrative
 by resisting categorisation as either mode.
 
-While the trend is generally for more client scripting and for many
+While the trend is generally towards more client scripting and for many
 sites a Javascript runtime is now requisite, there are also
 counter-trends. In 2012 Twitter reduced load times to one fifth of their
 previous design by moving much of their rendering back to the
@@ -41,7 +39,7 @@ decisions should be taken here. A banking site should not allow loan
 approval to take place in the browser because for the knowledgeable user
 any decision would be possible. Separated from data stores by the public
 internet, the client is also a poor place to perform data aggregation or
-examine large data sets. For non-trivial applications these restrictions
+examine large data sets. In non-trivial applications these restrictions
 encourage a middle tier to execute business logic and produce aggregate
 data.
 
@@ -59,9 +57,7 @@ layer which wraps the data store. This suggests three uses:
 
 Fortunately, each of these contexts requires a similar performance
 profile. The work done is computationally light and answering a request
-involves more time waiting than processing. The node is essentially
-acting as a data router serving messages containing a small subset of
-the data from a larger model. As a part of an interactive system low
+involves more time waiting than processing. As a part of an interactive system low
 latency is important whereas throughput can be increased relatively
 cheaply by adding more hardware, especially in a cloud hosted
 environment. As demand for the system increases the total work required
@@ -75,15 +71,15 @@ Node.js
 Node.js [@nodejs] is a general purpose tool for executing Javascript outside of a
 browser. It has the aim of low-latency I/O and is used mostly for server
 applications and command line tools. It is difficult to judge to what
-degree Javascript is a distraction from Node's principled design and to
+degree Javascript is a distraction from Node's design as a tool for I/O and to
 what degree the language defines the platform.
 
 For most imperative languages the thread is the basic unit of
 concurrency, whereas Node presents the programmer with a single-threaded
 abstraction. Threads are an effective means to share parallel
 computation over multiple cores but are less well suited to scheduling
-concurrent tasks which are mostly I/O dependent. Programming threads
-safely with shared access to mutable objects requires great care and
+concurrent tasks which are mostly I/O dependent. Safely programming threads
+to share mutable objects requires great care and
 experience, otherwise the programmer is liable to create race
 conditions. Consider for example a Java HTTP aggregator; because we wish
 to fetch in parallel each HTTP request is assigned to a thread. These

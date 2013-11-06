@@ -106,7 +106,7 @@ such a schema. Load any complex webpage -- essentially an aggregation of
 hypertext and other resources -- and the HTML will be parsed and
 displayed incrementally while it is downloading, with resources such as
 images requested in parallel as soon as they are referenced. In the case
-of progressive JPEGs or SVGs[^2_Introduction1] the images themselves will also be
+of progressive JPEG or SVG[^2_Introduction1] the images themselves will also be
 presented incrementally. This incremental display is achieved through
 optimised software created for the single task of displaying web pages.
 The new contribution of this dissertation is to provide a generic

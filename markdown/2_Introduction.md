@@ -160,7 +160,7 @@ individual tweets to the page as they are incrementally parsed out of
 the ongoing response. With a streaming transport, the time taken to
 receive the first tweet should not vary depending on the total number
 that are also being sent so there is no relationship between the size of
-the request made and the time required to first update the interface.
+the request and the interval before the interface starts updating.
 
 Staying fast on a fallible network
 ----------------------------------
@@ -178,7 +178,7 @@ For example, the popular AJAX library jQuery automatically parses JSON
 or XML responses before passing back to the application but given an
 early disconnection there is no attempt to hand over the partial
 response. To the programmer who knows where to look the partial
-responses are extractable as raw text but handling them involves writing
+responses can be extracted as raw text but handling them involves writing
 a special case and is not possible using standard parsers which are not
 amenable to incomplete markup. Because of this difficulty the canonical webapp
 drops partial messages without inspection. For
@@ -188,7 +188,7 @@ it received none and show her nothing. Later, when the network is
 available the inbox will be downloaded from scratch including the
 90% which has already been successfully delivered. A more efficient system
 would allow the 90% from the aborted first request to be used straight away 
-and when signal later returns fetch only the lost 10%. 
+and when the signal later returns fetch only the lost 10%. 
 
 The delivered part of a partially successful message may be used if we
 turn away from this polarised view of
@@ -199,7 +199,7 @@ part will also arrive.
 As well as allowing partially successful messages to be used,
 seeing the resource as a stream of small parts allows those parts
 to be used earlier if they are made available to the application 
-as soon as they arrive, while the streaming is ongoing.
+while the streaming is ongoing.
 Should an early disconnection occur, the
 content delivered up to that point will have already been handled so no
 special case is required to salvage it. In most cases the only recovery
@@ -207,15 +207,15 @@ necessary will be to make a new request for just the part that was
 missed. This approach is not incompatible with a problem domain where
 the usefulness of an earlier part is dependent on the correct delivery
 of the whole providing optimistic locking is used. In this case earlier
-parts may be used immediately but their effect rolled back should a
-notification of failure be received.
+parts may be used immediately but their effect rolled back should the
+transfer later fail.
 
 Agile methodologies, frequent deployments, and compatibility today with versions tomorrow
 -----------------------------------------------------------------------------------------
 
 In most respects a SOA architecture fits well with the fast release
 cycle encouraged by Agile methodologies. Because in SOA we may consider
-that all data is local rather than global and that the components are
+that all data is local and that the components are
 loosely coupled and autonomous, frequent releases of any particular
 sub-system shouldn't pose a problem to the correct operation of the
 whole. In allowing a design to emerge organically it should be possible
@@ -223,7 +223,7 @@ for the structure of resource formats to be realised slowly and
 iteratively while a greater understanding of the problem is gained.
 Unfortunately in practice the ability to change often is hampered by
 tools which encourage programming against rigidly specified formats.
-When a data consumer is allowed to be tightly coupled to a data format
+If a data consumer is tightly coupled to the format it consumes
 it will resist changes to the programs which produce data in that
 format. As an anecdote, working in enterprise I have seen the release of dozens of
 components cancelled because of a single unit that failed to meet
@@ -231,10 +231,9 @@ acceptance criteria. By insisting on exact data formats, subsystems
 become tightly coupled and the perfect environment is created for
 contagion whereby the updating of any single unit may only be done as
 part of the updating of the whole.
-
-An effective response to this problem would be to integrate into a REST
-client programs the ability to use a resource whilst being only loosely
-coupled to the overall *shape* of the message.
+An effective response to this problem would be REST
+clients which are able to use a resource whilst being only loosely
+coupled to the overall shape of the message.
 
 Deliverables
 ------------
@@ -246,19 +245,21 @@ badly. Amongst commentators on start-up companies this is known as a
 *zoom-in pivot* [@lean p172] and the work it produces should be the
 *Minimum Viable Product* or MVP [@lean p106-110]. 
 It would not be feasible to deliver a full stack so we are obliged to 
-focus on solutions which interoperate with existing deployments. This is
-advantageous; to a third party adding small
-enhancements to an existing architecture is more inviting than wholesale change.
+focus on solutions which interoperate with existing deployments. 
+To a third party wishing to adopt the technology
+it is also more inviting to add small enhancements to the existing architecture
+than to action a shift which requires wholesale change.
 
-To reify the vision above a streaming client is the MVP. Although an
+Although an
 explicitly streaming server would improve the situation further, because
-all network data transfer may be thought of as a stream regardless of
-how it is sent, a streaming server is
-not required to start taking advantage of progressive REST. In the
+all network data transfer may be thought of as a stream, it is
+not required to start taking advantage of progressive REST.
+In the
 interest of creating something new, whilst HTTP servers capable of
 streaming are quite common even if they are not always programmed as
 such, there seems to be no published general-purpose, streaming-receptive
 REST client library.
+A streaming client is the MVP and is the code deliverable of this project.
 
 Criteria for success
 --------------------
@@ -267,8 +268,8 @@ In evaluating this project we may say it has been a success if
 non-trivial improvements in speed can be made without a corresponding
 increase in the difficulty of programming the client. This improvement
 may be in terms of the absolute total time required to complete a
-representative task or in a user's perception of the application
-responsiveness while performing the task. Because applications in the
+representative task or in a user's perception of application
+responsiveness. Because applications in the
 target domain are much more I/O-bound than CPU-bound, optimisation in
 terms of the execution time of algorithms will be de-emphasised unless
 especially egregious. Additionally, there will be a consideration of how 

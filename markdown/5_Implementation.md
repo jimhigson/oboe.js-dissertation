@@ -272,8 +272,9 @@ unit and because each test specifies a very small unit of
 functionality, encourages the writing of very simple unit tests. Because
 the tests are simple is more difficult for unanticipated cases to hide.
 Due to pressures on code size a general purpose
-functional library was not chosen, one was created created with only the parts that are
-necessary. See [functional.js](#header_functional) (Appendix
+functional library was not chosen, one was created created containing only the 
+necessary functions.
+See [functional.js](#header_functional) (Appendix
 p.\pageref{src_functional}). Functional programming in Javascript is
 known to be slower than other styles, particularly in Firefox which
 lacks optimisations such as Lambda Lifting [@functionalSpiderMonkey] but

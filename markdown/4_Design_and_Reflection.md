@@ -519,10 +519,10 @@ historic, be retrieved from a cache which was populated by the stream.
 Like SOAP, these frameworks use HTTP as the underlying transport but do
 not follow HTTP's principled design.
 
-Although Oboe is not being designed for live events, it is
+Although Oboe is not designed for live events, it is
 interesting to speculate whether it could be used as a REST-compatible
 bridge to unify live-ongoing feeds with ordinary REST resources. Consider a REST service which
-gives results per-constituency for UK general elections. When
+gives per-constituency results for UK general elections. When
 requesting historic results the data is delivered in JSON format much as
 usual. Requesting the results for the current year on the night of the
 election, an incomplete JSON with the constituencies known so far would

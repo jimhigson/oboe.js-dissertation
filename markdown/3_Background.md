@@ -82,7 +82,7 @@ concurrent tasks which are mostly I/O dependent. Safely programming threads
 to share mutable objects requires great care and
 experience, otherwise the programmer is liable to create race
 conditions. Consider for example a Java HTTP aggregator; because we wish
-to fetch in parallel each HTTP request is assigned to a thread. These
+to fetch in parallel each request is assigned to a thread. These
 'requester' tasks are computationally simple: make a request, wait for a
 complete response, and then participate in a Barrier while the other
 requesters complete. Each thread consumes considerable resources but
@@ -93,8 +93,8 @@ chief advantage, that it may process simultaneously utilising multiple cores.
 Even if requests do return proximately, the actual CPU time required in making an HTTP
 request is so short that any concurrent processing is a pyrrhic victory.
 
-Node builds on the model of event-based, asynchronous I/O that was
-established by web browser Javascript execution. Although Javascript in
+Node builds on a model of event-based, asynchronous I/O which was
+established by browser Javascript execution. Although Javascript in
 a browser may be performing multiple tasks simultaneously, for example
 requesting several resources from the server side, it does so from
 within a single-threaded virtual machine. Node facilitates concurrency
@@ -108,7 +108,9 @@ non-blocking I/O available each task naturally exits quickly without any
 special effort. Accidental non-terminating loops or heavy
 number-crunching aside, with no reason for a task to wait it is
 difficult to write a node program in which the tasks do not complete
-quickly.
+quickly. In production environments Node deployments usually take advantage of
+multiple cores by creating one Node instance per processor code. The separate
+instances act independently and do not normally use shared RAM.
 
 Each task in Node is simply a Javascript function. Node is able to swap
 its single Javascript thread between these tasks efficiently while
@@ -125,7 +127,7 @@ which are very short and exit quickly allowing Node to finely interlace
 them between other concurrent concerns. The `on` method is used to
 attach functions as listeners to streams. However sophisticated and
 performant this style of programming, to the developer it is hardly any
-more difficult an expression than if I/O were used. It is certainly
+more difficult an expression than if blocking I/O were used. It is certainly
 harder to make mistakes programming in this way than managing
 synchronised access to mutable objects that are shared between threads.
 
@@ -142,13 +144,13 @@ function printResourceToConsole(url) {
          // Because it is captured by a closure we are able to 
          // reference the URL parameter after the scope that 
          // declared it has finished.            
-         console.log("The response has started for ", url);
+         console.log("The response has started for", url);
       
          response.on('data', function(chunk) {      
             // This function is called each time some data is
             // received from the HTTP request. The task writes
             // the response to the console and quickly exits.
-            console.log('Got some response ', chunk);
+            console.log('Got some response', chunk);
                    
          }).on('end', function(){
             console.log('The response is complete');
@@ -156,7 +158,7 @@ function printResourceToConsole(url) {
          
       }).on("error", function(e){
          
-         console.log("There was an error: " + e.message);
+         console.log("There was an error", e.message);
       });      
    console.log("The request has been made");
 }   
@@ -169,9 +171,10 @@ function printResourceToConsole(url) {
 
 In Node I/O is performed using a unified data streaming interface
 regardless of the source. The streams fit comfortably with the wider
-event-driven model by implementing Node's EventEmitter interface, a
-generic Observer pattern API. Although the abstraction provided by
-streams is quite a thin layer on top of the host system's socket, it
+event-driven model by implementing Node's EventEmitter interface,
+a generic dispatcher capable of supporting any event type.
+Although the abstraction provided by
+streams is quite a thin layer on top of the host system's sockets, it
 forms a powerful and intuitive interface. For many tasks it is
 preferable to program in a 'plumbing' style by joining one stream's
 output to another's input. In the example below a resource from the
@@ -201,7 +204,7 @@ Javascript's syntax for literal values into a stand-alone serialisation
 language. For the graduate tackling JSON parsing the task is simpler
 still, being expressible as fifteen context free grammars.
 
-Whereas XML's design can be traced to document formats, JSON's lineage
+Whereas XML's markup can be traced to document formats, JSON's lineage
 is in a programming language. From these roots it isn't surprising that
 JSON maps more directly to the metamodel that most programmers think in.
 XML parsers produce Elements, Text, Attributes, ProcessingInstruction
@@ -229,13 +232,14 @@ while expressed as text the encoding is inevitably written according to
 some serialisation order. XML specifically states that the order of
 attributes is not significant [@xmlorder], JSON has no such detailed
 specification but a similar order insignificance seems to be implied by
-the JSON object's likeness to Javascript objects. In the example above,
-the people objects would probably have been written as a representation
-of either a class with two public properties or a hash map. On receiving
+the JSON object's likeness to Javascript objects whose iteration order
+is indeterminate [@ecma3 4.3.3]. In the example above
+the people objects would probably have been written based on
+either a class with two public properties or a hash map. On receiving
 this data the text would be demarshalled into similar orderless
 structures and that the data found an ordered expression during
-transport would be quickly forgotten. When viewing a document through a
-streaming lens and interpreting while still incomplete it is easier to
+transport would be quickly forgotten. When viewing a document as a
+stream and interpreting while still incomplete it is easier to
 mistakenly react differently according to field order. If nodes from the
 example above were used when only the first field has arrived Sally
 would find a different handling than John or Jack. Because the
@@ -251,7 +255,7 @@ For languages such as Javascript or Clojure which use a loosely-typed
 representation of objects as generic key-value pairs, when a JSON REST
 resource is received the output from the parser resembles the normal
 object types closely enough that it is acceptable to use it directly
-throughout the program. For XML this is not the case for any language
+throughout the program. For XML this is not the case in any language
 and some marshaling is required. In more strongly typed OO languages
 such as Java or C\#, JSON's classless, relatively freeform objects are
 less convenient. To smoothly integrate the example JSON from the
@@ -264,12 +268,12 @@ serialisation, either completely automatically or based on a declarative
 specification. It is common in strongly typed languages for REST client
 libraries to automatically demarshal as part of receiving a fetched REST
 response. From the programmer's vantage it is as if the domain objects
-themselves had been fetched. Adding an additional layer, another common
+themselves had been fetched. Another common
 design pattern intended to give a degree of isolation between remote
 resources and the local domain model is to demarshal automatically only
 so far as *Data Transfer Objects* (DTOs). DTOs are instances of classes
-which implement no logic other than storage, and from these DTOs the
-domain model objects may be programmatically instantiated. DTOs are more
+which implement no logic other than storage, and from these DTOs an additional 
+layer programmatically instantiates the local domain model objects. DTOs are more
 necessary when using XML. Reading resources encoded as JSON we might say
 that the JSON objects are already DTOs.
 
@@ -277,8 +281,8 @@ The degree of marshaling that is used generally changes only the types
 of the entities that the REST client library hands over to the
 application developer without affecting the overall structure of the
 message. Regardless of the exact types, having received the response
-model the developer will usually start by addressing in pertinent parts
-of the response by drilling down into the structures using the
+model the developer will usually start by locating the pertinent parts
+of the response by drilling down into its structure using the
 programming language itself.
 
 ~~~~ {.java}
@@ -306,8 +310,8 @@ function handleResponse( response ){
 }
 ~~~~
 
-One weakness in this means of drilling down is that the code making the
-inspection is quite tightly coupled to the precise structure of the
+One weakness of this method for locating resource parts is that the code making the
+inspection is coupled to the precise structure of the
 thing that it is inspecting. Taking the above example, if the resource
 being fetched were later refactored such that the town concept were
 changed to a fuller address structure as a street-town-county-country
@@ -316,14 +320,16 @@ to continue to do the same thing. Although this kind of drill-down
 programming is commonly practiced and not generally recognised as a code
 smell, requiring knock-on changes when an unrelated system is refactored
 should perhaps be seen as undesirable in relation to format structures as it would
-be elsewhere.
+be elsewhere. DTOs limit the spread of refactoring inside the client because only
+the translation from DTO to domain object must be updated but do not avoid
+change altogether if a service format is refactored.
 In the *Red Queen's race* it took "all the running you can do, to keep
 in the same place". Ideally a programmer should only have to expend effort 
 so that their code 
 does something new, or performs better something that it
 already did, not to stay still. Following an object oriented
 encapsulation of data such that a caller does not have to concern itself
-with the data structures behind an interface, the internal
+with the data structures behind an interface the internal
 implementation may be changed without disruptions to the rest of the
 code base. However, when the structure of the inter-object composition
 is revised, isolation from the changes is less often recognised as a
@@ -331,10 +337,10 @@ desirable trait. A method of programming which truly embraced extreme
 programming would allow structural refactoring to occur without
 disparate parts having to be modified in parallel.
 
-Extraneous changes also dilute a VCS changelog, making it less easy to
-later follow a narrative of code changes which are intrinsic to the
-update in logic expressed by the program, and therefore harder to later
-understand the thinking behind the change and the reason for the change.
+Extraneous changes also dilute a VCS changelog, making it difficult to
+later follow a narrative of updates to the logic expressed by the program.
+It is therefore harder to later understand the thinking behind a change or
+the reason for the change.
 
 JSONPath and XPath selector languages
 -------------------------------------

@@ -77,16 +77,16 @@ efficiently as wholly side-effect free Javascript. To promote
 testability the state is delegated to a simple state-storing unit. The
 intricate logic may then be expressed as a separately tested set of
 side-effect free functions which transition between one state and the
-next. Although proof of correctness is difficult, for whichever results
+next. For whichever results
 the functions give while under test, uninfluenced by state one may be
-confident that they will later yield the same result when 
+confident that they will later yield the same result if 
 given the same input.
 The separate unit to maintain the state has exactly one
 responsibility, to hold the incremental parse output between function
 calls, and is trivial to test. This approach slightly breaks with the
 object oriented principle of encapsulation by hiding state behind the
-logic which acts on it but the departure will be justified if a
-more testable codebase leads to a more reliable library.
+logic which acts on it but the departure will be justified if the
+more testable codebase promotes greater reliability.
 
 To enhance testability Oboe has also embraced dependency injection.
 Components do not instantiate their dependencies but rather rely on them
@@ -133,10 +133,10 @@ step by step transform it into its final form," but software is created
 through intermediate proxies. He attempts to close this gap by merging
 programming with the results of programming [@humanize pp.8-9]. 
 If we bring together the medium and the message by viewing the
-result of code while we write it, we can build as a series of small,
+result of code while we write it, we can build in a series of small,
 iterative, correct steps and programming can be more explorative and
 expressive. Running the tests subtly, automatically hundreds of times
-per day isn't merely convenient, this build process actually improved
+per day isn't merely convenient, this build noticeably improved
 the quality of the project's programming.
 
 Integration tests are not run on save. They intentionally simulate a
@@ -171,9 +171,9 @@ of the build process that topologically sort the dependency graph before
 concatenation in order to find a suitable script order.
 
 Early in the project *Require.js* was chosen for this task. Javascript as a
-language doesn't have an import statement, Require adds
-importing from inside the language itself by
-providing the asynchronous `require` function. Calls to `require` AJAX in
+language doesn't have an import statement so Require adds
+one from inside the language itself as the asynchronous `require` function.
+Calls to `require` AJAX in
 and execute the imported source, passing any exported items to the given
 callback. For non-trivial applications loading each dependency
 individually over AJAX is intended only for debugging because making so
@@ -208,7 +208,8 @@ dependency graph, finding a working order on paper proved simpler than
 integrating with tools offering to automate the process.
 After finding a Grunt plugin analogous to the unix `cat`
 command it was trivial to create a build process which produces a
-distributable library requiring no run-time dependency management to be loaded.
+distributable library requiring no dependency management code
+to be loaded at run-time.
 
 For future consideration there is Browserify [@browserify]. This library reverses the
 'browser first' Javascript mindset by viewing Node as the primary target
@@ -225,9 +226,10 @@ techniques such as reducing scoped symbols to a single character or
 deleting the comments. For Oboe the popular minifier library *Uglify*
 was chosen. Uglify performs only surface optimisations, concentrating
 mostly on producing compact syntax by manipulating the code's abstract
-syntax tree. An alternative option would have been Google's *Closure Compiler* which
-resembles a more sophisticated optimiser by leveraging a deeper understanding
-of the program under optimisation. Unfortunately, proving equivalence in highly
+syntax tree. An alternative option would have been Google Closure 
+Compiler [@closure],
+a more sophisticated optimiser which leverages a deeper understanding
+of the program. Unfortunately, proving equivalence in highly
 dynamic languages is often impossible and Closure Compiler is only safe
 given a well-advised subset of Javascript. It delivers no reasonable
 guarantee of equivalence if code is not written as the Closure team

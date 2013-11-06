@@ -278,7 +278,8 @@ See [functional.js](#header_functional) (Appendix
 p.\pageref{src_functional}). Functional programming in Javascript is
 known to be slower than other styles, particularly in Firefox which
 lacks optimisations such as Lambda Lifting [@functionalSpiderMonkey] but
-the effect should not be large enough to counter Oboe's performance gains.
+the effect should be insignificant, particularly when considered alongside 
+the performance advantages that streaming I/O offers.
 Because of its
 single-threaded execution model, in the browser any Javascript is run
 during script execution frames, interlaced with frames for other

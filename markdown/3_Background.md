@@ -462,17 +462,17 @@ moving target but it would be easier to miss with XPATH than with JSONPath. In
 the JSON metamodel each node has only one, unambiguous set of children so the
 format author is not given a choice of logically equivalent
 features that must be addressed through different mechanisms. If a
-scalar value is updated to a compound only the node itself changes, the
+scalar value is updated to a compound only the node changes, the
 addressing of the node is unaffected.
 
 Generally in descriptive hierarchical data there is a trend for
-ancestorship to denote the same relationship between concepts regardless
+ancestorship to signify the same relationship regardless
 of the number of intermediate generations. In the example above, `town`
 transitioned from a child to grandchild of `person` without disturbing
 the implicit 'lives in' relationship. In JSONPath the `..` operator
 provides matching through zero or more generations, unperturbed when
-extra levels are added. Of course, this trend will not hold for every
-conceivable way of building message semantics because it is possible
+extra levels are added. This trend does not hold for every
+way that message semantics may be built because it is possible
 that an intermediate node on the path from ancestor to descendant will
 change the nature of the expressed relationship. A slightly contrived
 example might be if we expanded our model to contain fuzzy knowledge:

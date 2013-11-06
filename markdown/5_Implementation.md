@@ -69,8 +69,9 @@ platform lacking support for XHR2 where all ten will have already been
 downloaded.
 
 Confidently black-box testing a stateful unit is difficult. Because of
-side-effects and hidden state we can not be certain that the same call
-won't later give a different behaviour. Building up the parse result
+side-effects and hidden state we can only rely on inductive reasoning to
+say that similar future calls won't later result in different behaviours.
+Building up the parse result
 from SAX events is a fairly complex process which cannot be implemented
 efficiently as wholly side-effect free Javascript. To promote
 testability the state is delegated to a simple state-storing unit. The
@@ -78,8 +79,9 @@ intricate logic may then be expressed as a separately tested set of
 side-effect free functions which transition between one state and the
 next. Although proof of correctness is difficult, for whichever results
 the functions give while under test, uninfluenced by state one may be
-confident that they will always yield the same response given the same
-future events. The separate unit maintaining the state has exactly one
+confident that they will later yield the same result when 
+given the same input.
+The separate unit to maintain the state has exactly one
 responsibility, to hold the incremental parse output between function
 calls, and is trivial to test. This approach slightly breaks with the
 object oriented principle of encapsulation by hiding state behind the

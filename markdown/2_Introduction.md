@@ -1,9 +1,10 @@
 Introduction
 ============
 
-REST [@rest] is the use of HTTP much as it was originally designed but
-with the scope extended to include the transfer of data resources as well
-as hypertext documents. Whereas the rival technology SOAP [@soap]
+HTTP was originally designed for the transfer of hypertext documents. 
+REST [@rest] introduces no fundamentally new methods but extends the scope
+of HTTP to include the transfer of arbitrary data.
+Whereas the rival technology SOAP [@soap]
 largely disregards HTTP's principled design by adopting the protocol as
 a transport on which it bootstraps its own semantics, REST adopts all of
 HTTP's core phrasing. This includes the HTTP methods for fetching,
@@ -63,11 +64,8 @@ values but, despite being commonly used to draw network data transfer,
 provide no corresponding notation for a resource whose
 data is progressively revealed.
 
-While the coining of the term REST represented a shift in how we think
-about HTTP, away from the transfer of hypertext documents to that of
-arbitrary data, it introduced no fundamentally new methods. Similarly
-building on previous ideas, no new computing techniques need be invented
-before this dissertation may be implemented. As a minimum it requires an
+No new computing techniques need be invented
+before this dissertation can be implemented. As a minimum it requires an
 HTTP client which reveals the response whilst it is in progress and a
 parser which can begin to interpret that response before it sees all of
 it. Nor is it novel to use these parts together to produce a streaming

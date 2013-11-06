@@ -489,13 +489,13 @@ example might be if we expanded our model to contain fuzzy knowledge:
 ~~~~
 
 Considering the general case, it will not be possible to safely track every
-refactoring which a service might undergo. By necessity a resource consumer
+refactoring. By necessity a resource consumer
 should limit their ambitions to tracking ontology expansions which do
-not alter the existing concepts. In practice integration testing against
+not change the meanings of existing concepts. In practice integration testing against
 the beta version of a service will be necessary to be pre-warned of
 upcoming, incompatible changes. If an incompatibility is found the
 ability to then create an expression which is compatible with a
-present and known future version remains a valuable tool because it
+present and known future version would remain a valuable tool because it
 decouples the consumer and provider update schedules, removing the need
 for the client to march perfectly in sync with the service.
 
@@ -531,7 +531,7 @@ and *"elegant APIs around the clumsy interfaces of Ajax"*. Written
 against the unadorned browser, Javascript applications read as a maze of
 platform detection and special cases. Once applications were built using
 abstractions over the underlying platform differences they could be
-written purposefully and were able to express more complex ideas.
+written purposefully and programmers were able to express more complex ideas.
 
 Today JSON is generally the preferred format, especially for resources
 transmitted to client-side web applications.
@@ -556,7 +556,7 @@ ajax('http://example.com/people.json', function( people ) {
    // feels so natural that it is easy to forget from looking 
    // at the code that parsing happens at all. 
    
-   alert('the first person is called ' + people[0].name);
+   console.log('the first person is called', people[0].name);
 });
 ~~~~
 
@@ -606,8 +606,8 @@ XHR2 enables downloads to be viewed as streams but does not
 otherwise disrupt the sequence of HTTP's request-response model,
 streaming frameworks facilitate an entirely different sequence, that of
 perpetual data. Consider a webmail interface; initially the user's inbox
-is downloaded via REST and a streaming download might be used to make
-its display more responsive. Regardless, the inbox download is a
+is downloaded via REST and although a streaming download might be used to make
+its display more responsive, the inbox download is a
 standard REST call and shares little in common with the push events
 which follow to provide instant notification as new messages arrive.
 
@@ -618,10 +618,10 @@ frame's content is served as an HTML page containing a table that never
 completes, fed by a connection that never closes. When the server wishes
 to push a message to the client it writes a new row to the table which
 is then noticed by Javascript monitoring the iframe on the client. More
-recently, **Websockets** is a new standard that builds a standardised
+recently, **Websockets** provides a standardised
 streaming transport on top of HTTP's chunked mode. Websockets requires
 browser implementation and cannot be retrofitted to older browsers
-through Javascript. Websockets is a promising technology but for the
+through Javascript. It is a promising technology but for the
 time being patchy support means it cannot be used without a suitable
 fallback.
 
@@ -648,15 +648,15 @@ DOM by far the more popular. Both styles of parsers are also available
 for JSON. DOM performs a parse as a single evaluation and returns an
 object model representing the whole of the document. Conversely, SAX
 parsers are probably better considered as enhanced tokenisers, providing
-a very low-level event driven interface following the Observer pattern
+a very low-level event driven interface
 that notifies the programmer of each token separately as it is found.
 Working with DOM's level of abstraction the markup syntax is a distant
-concern whereas for SAX each element's opening and closing is noted so
+concern whereas for SAX each element's opening and closing must be noted so
 the developer may not put the data's serialisation aside. SAX comes with
 the advantages that it may read a document progressively and has lower
 memory requirements because it does not store the parsed tree.
 Correspondingly, it it popular for embedded systems running on
-constrained hardware which need to handle documents larger than the
+constrained hardware and may be used to handle documents larger than the
 available RAM.
 
 Suppose we have some JSON representing people and want to extract the
@@ -692,8 +692,7 @@ function nameOfFirstPerson( myJsonString, callbackFunction ){
    clarinet.onopenarray = function(){
       // For brevity we'll cheat by assuming there is only one
       // array in the document. In practice this would be overly
-      // brittle.
-      
+      // brittle.      
       inPeopleArray = true; 
    };
    
@@ -728,7 +727,7 @@ function nameOfFirstPerson( myJsonString, callbackFunction ){
 The developer pays a high price for progressive parsing, the SAX version
 is considerably longer and more difficult to read. SAX's low-level
 semantics require a lengthy expression and push onto the programmer the responsibility for
-managing state regarding the current position in the document and keeping the data
+managing state regarding the current position in the document and storing data
 extracted from previously seen nodes. This
 maintenance of state tends to be programmed once per usage rather than
 assembled as the composition of reusable parts. The ordering of the
@@ -743,7 +742,7 @@ handler.
 
 While SAX addresses many of the problems raised in this dissertation, 
 its unfriendly developer ergonomics have presented too high a barrier for
-adoption in all but fringe uses.
+adoption for all but fringe use cases.
 
 [^1]: See
     <http://jackson.codehaus.org/1.0.1/javadoc/org/codehaus/jackson/node/NullNode.html>

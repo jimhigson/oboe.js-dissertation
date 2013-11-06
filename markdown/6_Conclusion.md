@@ -8,16 +8,17 @@ I feel it is important to experimentally answer the question, *is this
 way actually any faster?* To measure performance the Oboe repository
 contains a small
 benchmarking suite that runs under Node.js. One of the advantages
-suggested for incremental parsing was a perceptual improvement in speed.
+of incremental parsing suggested in the introduction was a perceptual 
+improvement in speed.
 The experiments do not direct measure user perception because it
 would require subjective judgement and human
-participants which could be a project in itself. 
-In lieu of perceptual experiments, the benchmarks measure the time taken to provide the first
-output which correlates with how quickly interface can be first drawn
+participants, an undertaking large enough to be a project in itself. 
+In lieu of perceptual experiments the benchmarks measure the time taken to provide the first
+output which correlates with how quickly the first interface elements may be drawn
 and should be a good proxy indicator of perceptual speed. Node is used
-to host the tests because as a minimalist platform it should give
-repeatable results, whereas browsers may be running any number of simultaneous
-background tasks.
+to host the tests because it is a minimalist platform and should give
+repeatable results, whereas browsers are less predictable and may be 
+running any number of simultaneous background tasks.
 Node also has the advantage
 that small changes in memory use are not overwhelmed by a memory hungry
 environment.
@@ -65,7 +66,7 @@ JSON.parse, the extra computation time needed by Oboe and Clarinet is
 shown to be relatively insignificant in comparison to the advantage of
 better I/O management. Reacting earlier using slower handlers is shown
 to be faster overall than reacting later with quicker ones. I feel
-that this finding vindicates the project focus on efficient management of I/O
+that this vindicates a project focus on efficient management of I/O
 over faster algorithms; much current programming takes a *hurry up and
 wait* approach by concentrating on algorithm micro-optimisation over
 performing tasks at the earliest possible time.
@@ -76,10 +77,10 @@ attributable to the large dependency tree brought in by the get-json
 library used in the JSON.parse client version. As expected, Clarinet has
 the smallest memory usage because it never stores a complete version of
 the parsed JSON.
-Clarinet's memory usage will remain roughly constant 
-as the resource's size increases while the other two will
+Clarinet's memory usage remains roughly constant 
+as the parsed resource increases in size while the other two will
 rise linearly. Node is popular on RaspberryPi type devices with
-constrained RAM; Clarinet might be preferable to Oboe where code clarity
+constrained RAM and Clarinet might be preferable to Oboe where code clarity
 is less important than a small memory footprint.
 
 Comparative developer ergonomics

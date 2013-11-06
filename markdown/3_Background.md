@@ -367,8 +367,8 @@ let town = subject.people[2].town
 let townSelector = "people[2].town"
 
 // We would be wise not to write overly-specific selectors.
-// JSONPath also provides an ancestor relationship which is not found in 
-// Javascript:
+// JSONPath also provides an ancestor notation which is not present
+// in Javascript:
 let betterTownSelector = "people[2]..town"
 ~~~~
 
@@ -385,7 +385,7 @@ Consider the resource below:
 ~~~~
 
 The JSONPath `people.*..town` may be applied against the above JSON and
-would continue to select correctly after a refactor to the version
+would continue to select correctly if the system were refactored to the version
 below:
 
 ~~~~ {.javascript}
@@ -410,15 +410,15 @@ below:
 Maintaining compatibility with unanticipated format revisions through
 selector languages is easier with JSON than XML. The XML metamodel
 contains overlapping representations of equivalent entities which a
-refactored format is liable to switch between. Each XML element has two
+format being refactored is liable to switch between. Each XML element has two
 distinct lists of child nodes, attribute children and node list
-children; from one perspective attributes are child nodes of their
+children. From one perspective attributes are child nodes of their
 parent element but they can alternatively be considered as data stored
 in the element. Because of this classification ambiguity an XML document
 can't be said to form a single correct n-way tree. XML attributes may only
 contain strings and have a lesser expressivity than child nodes which
 allow recursive structure; it is a common refactor to change from
-attributes to elements when a scalar value is upgraded to be a compound.
+attributes to elements when a scalar value is upgraded to a compound.
 XPath selectors written in the most natural way do not track this
 change.
 
@@ -429,7 +429,7 @@ change.
 ~~~~
 
 The XPath `//person@town` matches against the XML above but because of
-the switch from attribute to child element fails to match given the
+the switch from attribute to child element fails to match towns in the
 revised version below.
 
 ~~~~ {.xml}
@@ -448,18 +448,19 @@ revised version below.
 Reflecting its dual purpose for marking up documents or data, XML also
 invites ambiguous interpretation of the whitespace between tags.
 Whitespace is usually meaningful for documents but ignorable for data.
-Strictly, whitespace text nodes are a part of the document but in
+Strictly, whitespace text nodes are a part of the document model but in
 practice many tree walkers discard them as insignificant. In the XML
 above the `<person>` element may be enumerated as either the first or
 second child of `<people>` depending on whether the whitespace before it
 is considered. Likewise, the text inside `<name>` might be `'John'` or
-`'(newline)(tab)(tab)John'`. Inheriting from JSON's programming language
-ancestry, the space between tokens is never significant.
+`'(newline)(tab)(tab)John'`. Inheriting from its programming language
+ancestry, in JSON there is no ambiguity. The space between tokens is 
+never significant.
 
 Programming against a changing service is always going to present a
-moving target but it is easier to miss with XPATH than with JSON. In
-JSON each node has only one, unambiguous set of children so the
-metamodel does not give format authors a choice of logically equivalent
+moving target but it would be easier to miss with XPATH than with JSONPath. In
+the JSON metamodel each node has only one, unambiguous set of children so the
+format author is not given a choice of logically equivalent
 features that must be addressed through different mechanisms. If a
 scalar value is updated to a compound only the node itself changes, the
 addressing of the node is unaffected.

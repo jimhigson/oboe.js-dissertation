@@ -92,9 +92,9 @@ complete response, and then participate in a Barrier while the other
 requesters complete. Each thread consumes considerable resources but
 during its multi-second lifespan requires only a fraction of a
 millisecond on the CPU. It is unlikely that any two requests will return closely
-enough in time to be processed in parallel, loosing threading's 
-natural strength for simultaneously utilising multiple cores.
-Even if they do, the actual CPU time required in making an HTTP
+enough in time to be processed in parallel, shedding threading's 
+chief advantage, that it may process simultaneously utilising multiple cores.
+Even if requests do return proximately, the actual CPU time required in making an HTTP
 request is so short that any concurrent processing is a pyrrhic victory.
 
 Node builds on the model of event-based, asynchronous I/O that was
@@ -190,7 +190,7 @@ http.get(url)
 
 Following Node's lead, traditionally thread-based environments are
 beginning to embrace asynchronous, single-threaded servers. The Netty
-project [@netty] can be thought of as roughly the equivalent of Node
+project [@netty] can be thought of as roughly an equivalent of Node
 for the Java Virtual Machine.
 
 JSON and XML data transfer formats {#jsonxml}
@@ -486,7 +486,7 @@ example might be if we expanded our model to contain fuzzy knowledge:
 ~~~~
 
 Considering the general case, it will not be possible to safely track every
-refactoring of a service. By necessity a resource consumer
+refactoring which a service might undergo. By necessity a resource consumer
 should limit their ambitions to tracking ontology expansions which do
 not alter the existing concepts. In practice integration testing against
 the beta version of a service will be necessary to be pre-warned of
@@ -725,8 +725,8 @@ function nameOfFirstPerson( myJsonString, callbackFunction ){
 The developer pays a high price for progressive parsing, the SAX version
 is considerably longer and more difficult to read. SAX's low-level
 semantics require a lengthy expression and push onto the programmer the responsibility for
-managing state regarding the current position in the document and the
-nodes that have previously been seen. This
+managing state regarding the current position in the document and keeping the data
+extracted from previously seen nodes. This
 maintenance of state tends to be programmed once per usage rather than
 assembled as the composition of reusable parts. The ordering of the
 code under SAX is also quite unintuitive; event handlers cover multiple

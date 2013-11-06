@@ -255,7 +255,8 @@ enhancements to an existing architecture is more inviting than wholesale change.
 
 To reify the vision above a streaming client is the MVP. Although an
 explicitly streaming server would improve the situation further, because
-all network data transfer may be thought of as a stream it is
+all network data transfer may be thought of as a stream regardless of
+how it is sent, a streaming server is
 not required to start taking advantage of progressive REST. In the
 interest of creating something new, whilst HTTP servers capable of
 streaming are quite common even if they are not always programmed as

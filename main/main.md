@@ -285,7 +285,8 @@ enhancements to an existing architecture is more inviting than wholesale change.
 
 To reify the vision above a streaming client is the MVP. Although an
 explicitly streaming server would improve the situation further, because
-all network data transfer may be thought of as a stream it is
+all network data transfer may be thought of as a stream regardless of
+how it is sent, a streaming server is
 not required to start taking advantage of progressive REST. In the
 interest of creating something new, whilst HTTP servers capable of
 streaming are quite common even if they are not always programmed as
@@ -412,9 +413,9 @@ complete response, and then participate in a Barrier while the other
 requesters complete. Each thread consumes considerable resources but
 during its multi-second lifespan requires only a fraction of a
 millisecond on the CPU. It is unlikely that any two requests will return closely
-enough in time to be processed in parallel, loosing threading's 
-natural strength for simultaneously utilising multiple cores.
-Even if they do, the actual CPU time required in making an HTTP
+enough in time to be processed in parallel, shedding threading's 
+chief advantage, that it may process simultaneously utilising multiple cores.
+Even if requests do return proximately, the actual CPU time required in making an HTTP
 request is so short that any concurrent processing is a pyrrhic victory.
 
 Node builds on the model of event-based, asynchronous I/O that was
@@ -510,7 +511,7 @@ http.get(url)
 
 Following Node's lead, traditionally thread-based environments are
 beginning to embrace asynchronous, single-threaded servers. The Netty
-project [@netty] can be thought of as roughly the equivalent of Node
+project [@netty] can be thought of as roughly an equivalent of Node
 for the Java Virtual Machine.
 
 JSON and XML data transfer formats {#jsonxml}
@@ -806,7 +807,7 @@ example might be if we expanded our model to contain fuzzy knowledge:
 ~~~~
 
 Considering the general case, it will not be possible to safely track every
-refactoring of a service. By necessity a resource consumer
+refactoring which a service might undergo. By necessity a resource consumer
 should limit their ambitions to tracking ontology expansions which do
 not alter the existing concepts. In practice integration testing against
 the beta version of a service will be necessary to be pre-warned of
@@ -1045,8 +1046,8 @@ function nameOfFirstPerson( myJsonString, callbackFunction ){
 The developer pays a high price for progressive parsing, the SAX version
 is considerably longer and more difficult to read. SAX's low-level
 semantics require a lengthy expression and push onto the programmer the responsibility for
-managing state regarding the current position in the document and the
-nodes that have previously been seen. This
+managing state regarding the current position in the document and keeping the data
+extracted from previously seen nodes. This
 maintenance of state tends to be programmed once per usage rather than
 assembled as the composition of reusable parts. The ordering of the
 code under SAX is also quite unintuitive; event handlers cover multiple
@@ -1090,8 +1091,8 @@ known, without waiting for the remainder of the document to arrive.
 This approach combines most of the desirable
 properties from SAX and DOM parsers into a new, hybrid method.
 
-By this new design, identifying the interesting parts of a document before it
-is complete involves turning the established model for drilling-down
+The interesting parts of a document may be identified before it
+is complete if we turn the established model for drilling-down
 inside-out. Under asynchronous I/O the programmer's callback
 traditionally receives the whole resource and then, inside the callback,
 locates the sub-parts that are required for a particular task. Inverting
@@ -1101,16 +1102,17 @@ declare the cases in which the callback should be notified. The callback
 will receive complete fragments from the response once they have been
 selected according to this declaration.
 
-Javascript was chosen for implementing the software deliverables because it has good
+Javascript will be used to implement the software deliverables because it has good
 support for non-blocking I/O and covers both environments where this project
 will be most useful: web browser and web server.
 Focusing on the MVP, parsing will only be implemented for one
 mark-up language. Although this technique could be applied to any
 text-based, tree-shaped markup, JSON best meets the project goals
 because it is widely supported, easy to parse, and defines a single
-n-way tree, amenable to selectors which span multiple format versions.
+n-way tree, making it more amenable to selectors which span multiple 
+format versions.
 
-JSONPath is especially applicable to node selection as a document is
+JSONPath is well suited for selecting nodes as a document is
 read because it specifies only constraints on paths and 'contains'
 relationships. Because of the top-down serialisation order, on
 encountering any node in a serialised JSON stream we will have already
@@ -1134,20 +1136,21 @@ we know we are examining `/books/discount`, simply 'all books'. In
 creating a new JSONPath implementation the
 existing language is followed somewhat loosely, specialising the matching
 by adding features which are likely to be useful when detecting entities in REST resources
-while avoid writing unnecessary by dropping others. It is difficult to anticipate all
-real-world matching requirements but it is easier to find a core 20% of
+while avoid unnecessary code by dropping others. It is difficult to anticipate all
+real-world matching requirements but it should be possible to identify a core 20% of
 features that are likely to be useful in 80% of cases.
 For the time being any functionality which is not included may be
-implemented inside the callbacks themselves and later added to the
-selection language. For example, somebody wishing to filter on the price
-of books might use branching to further select inside their callback.
-As seen in the 'all books' example above, identifying sub-trees according to 
-their categorisation as higher-level types is an intuitive
-abstraction to support.
+implemented by registering a more permissive selection and then further 
+filtering programmatically from inside the callback. Patterns of
+programmatic filtering which arise from real use can later mined and 
+added to the selection language.
 
 Detecting types in JSON
 -----------------------
 
+As seen in the 'all books' example above, identifying sub-trees 
+according to their categorisation as higher-level types is an intuitive
+abstraction to support.
 JSON markup describes only a few basic types. On a certain level this is
 also true for XML -- most nodes are either of type Element or Text.
 However, the XML metamodel provides tagnames; essentially, a built-in
@@ -1243,7 +1246,7 @@ cardinality; `public Address getAddress()` or
 `public List<Address> getAddresses()`. This may pose a problem in some
 cases and it would be interesting in future to investigate a system such
 as Ruby on Rails that natively understands English pluralisation. Unions
-were also considered as a way to allow a pattern matching against singular or plural elements,
+were also considered as a way to allow pattern matching against singular or plural elements,
 resembling `address|addresses.*` but it was decided that
 until the usefulness is better demonstrated it is simpler to
 solve this problem outside of the JSONPath language by expecting the programmer
@@ -1293,14 +1296,14 @@ it is found. As discussed in section
 \ref{jsonpathxpath}, JSONPath's syntax is designed to resemble the
 equivalent Javascript accessors but Javascript has no syntax for a
 value-free list of object keys. The closest available Javascript notation is that for
-object literals so a duck-type syntax was derived from this by
+object literals so a derivative duck-type syntax was created by
 omitting the values, quotation marks, and commas. The address type
 described above would be written as `{number street town}`. Field order
 is insignificant so `{a b}` and `{b a}` are equivalent.
 
 It is difficult to generalise but when selecting items
-it is often useful if nodes which are covariant with the
-given type are also matched. We may consider that there is a root duck
+it is often useful if subtypes, nodes which are covariant with the
+given type, are also matched. We may consider that there is a root duck
 type `{}` which matches any node, that we create a sub-duck-type if we
 add to the list of required fields, and a super-duck-type if we remove
 from it. Because in OOP extended classes may add new fields, this idea
@@ -1328,7 +1331,7 @@ continues to work as before. The CSS selector
 important forms but `$form.important input.mandatory` selects important
 forms with mandatory fields.
 
-The new CSS4 capturing technique will be adapted for this project's JSONPath
+The CSS4 capturing technique will be incorporated into this project's JSONPath
 implementation. By
 duplicating a syntax which the majority of web developers should become
 familiar with over the next few years the learning curve
@@ -1352,7 +1355,7 @@ higher-level libraries they work very well -- most XML DOM parsers are
 built in this way. The pre-existing Clarinet project [@clarinet] is well tested,
 liberally licenced, and compact, meeting our needs perfectly. The name
 of this project, Oboe.js, was chosen in tribute to the value delivered
-by Clarinet.
+by Clarinet, itself named after the **Sax**ophone.
 
 API design
 ----------

@@ -223,7 +223,8 @@ Unfortunately in practice the ability to change often is hampered by
 tools which encourage programming against rigidly specified formats.
 When a data consumer is allowed to be tightly coupled to a data format
 it will resist changes to the programs which produce data in that
-format. Working in enterprise I have often seen the release of dozens of
+format. As an anecdote, working in enterprise I have often 
+seen the release of dozens of
 components cancelled because of a single unit that failed to meet
 acceptance criteria. By insisting on exact data formats, subsystems
 become tightly coupled and the perfect environment is created for

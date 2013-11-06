@@ -5,17 +5,20 @@ Benchmarking vs non-progressive REST
 ------------------------------------
 
 I feel it is important to experimentally answer the question, *is this
-way actually any faster?* To measure performance I have created a small
+way actually any faster?* To measure performance the Oboe repository
+contains a small
 benchmarking suite that runs under Node.js. One of the advantages
 suggested for incremental parsing was a perceptual improvement in speed.
-I am not focusing on user perception for this evaluation because it
-would be difficult to measure, requiring subjective judgement and human
-participants. I will be measuring the time taken to provide the first
-output which correlates with how quickly interface redrawing can start
-and should give a good indication as to perceptual speed. I chose Node
-to host the tests because it is a minimalist platform which should give
-more repeatable results than browsers which could be performing any
-number of simultaneous background tasks. Node also has the advantage
+The experiments do not direct measure user perception because it
+would require subjective judgement and human
+participants which could be a project in itself. 
+In lieu of perceptual experiments, the benchmarks measure the time taken to provide the first
+output which correlates with how quickly interface can be first drawn
+and should be a good proxy indicator of perceptual speed. Node is used
+to host the tests because as a minimalist platform it should give
+repeatable results, whereas browsers may be running any number of simultaneous
+background tasks.
+Node also has the advantage
 that small changes in memory use are not overwhelmed by a memory hungry
 environment.
 
@@ -50,8 +53,8 @@ In comparison with JSON.parse, Oboe shows a dramatic improvement of
 about 96% regarding the time taken for the first output to be produced
 and a smaller but significant improvement of about 40% in the total time
 required to create the aggregation. Oboe's aggregation on a good network
-is about 15% slower than Clarinet; since Oboe is built on Clarinet I did
-not expect it to be faster but I had hoped for the gap to be smaller.
+is about 15% slower than Clarinet; since Oboe is built on Clarinet it 
+could not be faster but I had hoped for the gap to be smaller.
 This is probably because Oboe encodes a more involved workflow than a
 raw SAX parser.
 
@@ -61,10 +64,10 @@ this offset by the ability to parse progressively. Compared to
 JSON.parse, the extra computation time needed by Oboe and Clarinet is
 shown to be relatively insignificant in comparison to the advantage of
 better I/O management. Reacting earlier using slower handlers is shown
-to be faster overall than reacting later with quicker ones. I believe
-that this vindicates the project focus on efficient management of I/O
-over faster algorithms; much current programming takes a "Hurry up and
-wait" approach by concentrating on algorithm micro-optimisation over
+to be faster overall than reacting later with quicker ones. I feel
+that this finding vindicates the project focus on efficient management of I/O
+over faster algorithms; much current programming takes a *hurry up and
+wait* approach by concentrating on algorithm micro-optimisation over
 performing tasks at the earliest possible time.
 
 Oboe shows an unexpected improvement in terms of memory usage compared
@@ -72,8 +75,9 @@ to JSON.parse. It is not clear why this would be but it may be
 attributable to the large dependency tree brought in by the get-json
 library used in the JSON.parse client version. As expected, Clarinet has
 the smallest memory usage because it never stores a complete version of
-the parsed JSON. As REST resource size increases I would expect
-Clarinet's memory usage to remain roughly constant while the other two
+the parsed JSON.
+Clarinet's memory usage will remain roughly constant 
+as the resource's size increases while the other two will
 rise linearly. Node is popular on RaspberryPi type devices with
 constrained RAM; Clarinet might be preferable to Oboe where code clarity
 is less important than a small memory footprint.
@@ -82,8 +86,8 @@ Comparative developer ergonomics
 --------------------------------
 
 Writing less code is not in itself a guarantee of a better developer
-ergonomics but I find it is a good indicator so long as the code isn't
-forced to be overly terse. The code sizes below report the quantity of
+ergonomics but it is a good indicator so long as the programmer isn't
+made to be overly terse. The code sizes below report the quantity of
 code required to implement the benchmark REST client under each
 strategy. Each version is written as the most natural expression for the
 library used.
@@ -135,15 +139,15 @@ would be useful when programming against evolving services.
 The Clarinet version of the code is too long to include here but may be
 seen [in the appendix](#header_benchmarkClient), on page
 \pageref{src_benchmarkClient}. By using SAX directly the code is more
-verbose and its purpose is obfuscated. I don't think a person looking at
-this source could deduce what is being done without thinking about it
-for some time. The functions receiving SAX events must handle several
+verbose and its purpose is obfuscated. A person looking at
+this source would find it difficult to deduce what is being done without 
+considering it for some time. The functions receiving SAX events must handle several
 different cases and so tend to have generic parameter names such as
 'key' or 'value' which represent the token type. By contrast, Oboe and
 JSON.parse both allow names such as 'record' or 'url' which are chosen
-according to the semantics of the value. I find this naming easier to
-interpret because it allows me to think in terms of the domain model
-rather than considering serialisation artifacts.
+according to the semantics of the value. This naming aids understandability
+because it allows the programmer to think in terms of the domain model
+rather than on the level of serialisation artifacts.
 
 Performance under various Javascript engines
 --------------------------------------------
@@ -192,10 +196,11 @@ style.
 
 Of these results I find only the performance under old versions of
 Internet Explorer poor enough to be concerning. Since this platform
-cannot progressively interpret an XHR response an improvement over
-traditional XHR was not possible, but I would have liked performance to
-have not degraded by so much. Adding three seconds to a REST call will
-unacceptably impair a webapp's user experience so it might be reasonable
+forbids progressively interpreting the XHR response an improvement over
+the traditional model was known not to be possible but it was not expected
+for performance to degrade by so much.
+Adding three seconds to a REST call will
+unacceptably impair the user experience of a webapp so it might be reasonable
 to conclude that for complex use cases Oboe is currently unsuited to
 legacy platforms. If we desired to improve performance on older
 platforms one solution might be to create a simpler, non-progressive
@@ -213,8 +218,8 @@ parameters to application callbacks even when the parameters are of
 secondary importance, such as the path and ancestor arrays that are
 created for every matching node, and will be predominantly ignored.
 Under a functional language these could be lazily evaluated without
-requiring any special effort by the application programmer. I think
-Javascript was a good choice of language, giving a very large number of
+requiring any special effort by the application programmer. The choice of
+Javascript gives a very large number of
 client- and server-side applications that may potentially adopt the
 library. However, server-side Oboe would be very amicable to
 implementation using a purer functional language and it would be
@@ -259,10 +264,10 @@ progressive, it consumes as much memory as a DOM parser. The nodes
 remain held so that all possible JSONPath expressions may later be
 tested. However, in most cases memory could be freed if the parsed
 content were stored only so far as is required to test against the
-patterns which have actually been registered. For typical use cases I
-expect this would allow large subtrees to be pruned, particularly once
-they have matched a pattern and have already been handed back to
-application callbacks. Likewise, the current implementation takes a
+patterns which have actually been registered. For selectors which match
+near the root this would allow large subtrees to be pruned, particularly after
+the patterns have matched and the nodes have already been handed back to
+the application. Likewise, the current implementation takes a
 rather brute force approach when examining nodes for pattern matches by
 checking every registered JSONPath expression against every node parsed
 from the JSON. For many expressions we should be able to say that there
@@ -277,8 +282,8 @@ Summing up
 
 The community reaction to Oboe has been overwhelmingly positive with
 several projects already adopting it and reporting performance gains
-which are large enough to be obvious. I feel that, while some attention
-should be given to optimisation under Firefox, this project meets all of
+which are large enough to be obvious. While some attention
+may be required for optimisation under Firefox, this project meets all of
 its intended aims, presenting a REST client library which in the best
 case allows the network to be used much more efficiently and in the
 worse case is as good as the previous best solution. At the same time

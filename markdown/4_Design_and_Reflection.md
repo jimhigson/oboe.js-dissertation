@@ -378,10 +378,10 @@ to be added at a time:
 oboe("resources/people.json")
    .node({  
       "person.name": function(personName, path, ancestors) {
-         console.log("Let me tell you about ", name, "...");
+         console.log("You will hear about ", name, "...");
       },
       "person.address.town": function(townName, path, ancestors) {
-         console.log("they live in ", townName);
+         console.log("...they live in ", townName);
       }
    });
 ~~~~

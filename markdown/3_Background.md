@@ -319,9 +319,8 @@ tuple, the code addressing the structure would also have to change just
 to continue to do the same thing. Although this kind of drill-down
 programming is commonly practiced and not generally recognised as a code
 smell, requiring knock-on changes when an unrelated system is refactored
-seems to me as undesirable in relation to format structures as it would
-be anywhere else.
-
+should perhaps be seen as undesirable in relation to format structures as it would
+be elsewhere.
 In the *Red Queen's race* it took "all the running you can do, to keep
 in the same place". Ideally a programmer should only have to expend effort 
 so that their code 

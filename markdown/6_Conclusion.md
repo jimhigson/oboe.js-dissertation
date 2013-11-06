@@ -87,8 +87,8 @@ Comparative developer ergonomics
 --------------------------------
 
 Writing less code is not in itself a guarantee of a better developer
-ergonomics but it is a good indicator so long as the programmer isn't
-made to be overly terse. The code sizes below report the quantity of
+ergonomics but it is a good indicator so long as the program isn't
+forced to be overly terse. The table below report the quantity of
 code required to implement the benchmark REST client under each
 strategy. Each version is written as the most natural expression for the
 library used.
@@ -148,7 +148,7 @@ different cases and so tend to have generic parameter names such as
 JSON.parse both allow names such as 'record' or 'url' which are chosen
 according to the semantics of the value. This naming aids understandability
 because it allows the programmer to think in terms of the domain model
-rather than on the level of serialisation artifacts.
+rather than working on the level of serialisation artifacts.
 
 Performance under various Javascript engines
 --------------------------------------------
@@ -198,8 +198,8 @@ style.
 Of these results I find only the performance under old versions of
 Internet Explorer poor enough to be concerning. Since this platform
 forbids progressively interpreting the XHR response an improvement over
-the traditional model was known not to be possible but it was not expected
-for performance to degrade by so much.
+the traditional model was known not to be possible but I did not expect
+the performance to degrade by so much.
 Adding three seconds to a REST call will
 unacceptably impair the user experience of a webapp so it might be reasonable
 to conclude that for complex use cases Oboe is currently unsuited to

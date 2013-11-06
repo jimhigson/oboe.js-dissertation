@@ -563,6 +563,17 @@
       "url":"http://underscorejs.org/#memoize",
       "issued": { "date-parts":[ [2008] ] },
       "type":"webpage"                  
+   },
+   
+   {
+      "id":"closure",
+      "title":"Google Closure Compiler",
+      "author":[         
+         { "family": "Google"}
+      ],
+      "url":"https://developers.google.com/closure/compiler/",
+      "issued": { "date-parts":[ [2009] ] },
+      "type":"webpage"                  
    }         
       
    

@@ -570,28 +570,9 @@ oboe( fs.createReadStream( "/home/me/secretPlans.json" ) )
    });
 ~~~~
 
-~~~~ {.javascript}
-fs.readFile("/home/me/secretPlans.json", function( err, plansJson ){     
-   if( err ) {
-      console.log("Drat! Foiled again!");
-      return;
-   }
-   var plans = JSON.parse(err, plansJson);
-   
-   plans.schemes.forEach(function( scheme ){
-      console.log("Aha! " + scheme);   
-   });   
-   plans.plottings.forEach(function(deviousPlot){
-      console.log("Hmmm! " + deviousPlot);
-   });
-      
-   console.log("*twiddles mustache*");   
-});
-~~~~
-
-While the behaviours intended by the programmer are similar, the
-accidents differ between the two. It is likely that most programmers
-would not be aware of these differences as they write. In the first
+While the behaviours intended by the programmer are similar, some
+accidental side-behaviours differ between the two. It is likely that most programmers
+would not think of these differences as they write. In the first
 example the order of the output for schemes and plans will match their
 order in the JSON, whereas for the second scheming is always done before
 plotting. The error behaviours are also different -- the first prints
@@ -599,9 +580,9 @@ until it has an error, the second prints if there are no errors. In the
 second example it is *almost mandatory* to check for errors before
 starting the output whereas in the first it feels most natural to
 register the error listener at the end of the chained calls. 
-It is unusual in describing a system's desirate behaviour to state the
-reaction to abnormal cases first so the first example in which the 
-normal case comes first follows a more natural ordering.
+It is unusual in describing a system's desirable behaviour to state the
+reaction to abnormal cases first so I find that the Oboe example follows 
+the more natural ordering.
 
 Considering the code style that is encouraged, the first example takes a
 more declarative form by specifying the items of interest using patterns

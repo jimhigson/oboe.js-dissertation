@@ -373,15 +373,15 @@ immutable data but employing the native Arrays without mutating
 would be very expensive because on each new path the whole array would
 have to be copied. During debugging, unpicking a stack trace holding immutable 
 data requires less mental stress because every value revealed is the value that has always
-occupied that space and the programmer does not t have to project along the time axis by
+occupied that space and the programmer does not have to project along the time axis by
 imagining which values were in the same space earlier or might be there
 later. The lack of side effects means that new
 commands may be tried during a pause in execution without worrying about breaking the
 working of the program. In terms of speed, array-type structures are
 poorly suited to frequent growing and shrinking so for
-tracking ascents whose length changes with every event arrays 
+tracking ascents whose length changes with every event received, arrays 
 are relatively unperformant. Taking into account the receiver of the ascent data,
-Lists are also very convenient as a format for the JSONPath engine to match against as will
+lists are also a convenient format for the JSONPath engine to match against as will
 be discussed in the next section. The Javascript file
 [lists.js](#header_lists) (Appendix p.\pageref{src_lists}) implements
 various list functions: `cons`, `head`, `tail`, `map`, `foldR`, `all`,

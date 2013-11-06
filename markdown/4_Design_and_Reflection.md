@@ -259,7 +259,7 @@ continues to work as before. The CSS selector
 important forms but `$form.important input.mandatory` selects important
 forms with mandatory fields.
 
-The CSS4 capturing technique will be incorporated into this project's JSONPath
+CSS4 selector capturing will be incorporated into this project's JSONPath
 implementation. By
 duplicating a syntax which the majority of web developers should become
 familiar with over the next few years the learning curve
@@ -314,7 +314,7 @@ style for making an AJAX GET request is as follows:
 ~~~~ {.javascript}
 jQuery.ajax("resources/shortMessage.txt")
    .done(function( text ) {
-      console.log( "Got the text: ", text ); 
+      console.log( "Got the text:", text ); 
    }).
    .fail(function() {
       console.log( "the request failed" );      
@@ -357,33 +357,32 @@ parsing, we arrive at the following Oboe public API:
 ~~~~ {.javascript}
 oboe("resources/people.json")
    .node( "person.name", function(name, path, ancestors) {
-      console.log("There is somebody called ", name);   
+      console.log("There is somebody called", name);   
    })
    .done( function( wholeJson ) {
       console.log("That is everyone!");
    })
    .fail( function() {
-      console.log("Actually, the download failed. There may be more ",
+      console.log("Actually, the download failed. There may be more",
                   "people but we don't know who they are yet.");
    });
 ~~~~
 
-In jQuery only one `done` handler is usually added to a request; the
-whole content is always given so there is only one thing to receive.
+In jQuery the whole content is given back at once so 
+usually only one `done` handler is usually added to a request.
 Under Oboe each separately addressed area of
-interest inside the JSON resource requires its own handler so the design must
-accommodate adding multiple as the typical use case.
-A shortcut style is provided which allows several selector-handler pairs 
-to be added at a time:
+interest inside the JSON resource requires its own handler so it is helpful
+to provide streamlined support for adding several selector-handler pairs at a time.
+A shortcut style is provided:
 
 ~~~~ {.javascript}
 oboe("resources/people.json")
    .node({  
       "person.name": function(personName, path, ancestors) {
-         console.log("You will hear about ", name, "...");
+         console.log("You will hear about", name, "...");
       },
       "person.address.town": function(townName, path, ancestors) {
-         console.log("...they live in ", townName);
+         console.log("...they live in", townName);
       }
    });
 ~~~~
@@ -419,8 +418,8 @@ the ancestor list will have been only partially parsed.
 oboe("resources/someJson.json")
    .node( "medalWinners.*", function(person, path) {
       let metal = lastOf(path);
-      console.log( person.name, " won the ", metal, 
-        " medal with a time of ", person.time );
+      console.log( person.name, "won the", metal, 
+        "medal with a time of ", person.time );
    });
 ~~~~
 
@@ -441,15 +440,14 @@ design also allows events to be added as:
 oboe("resources/someJson.json")
    .on( "node", "medalWinners.*", function(person) {
    
-      console.log( "Well done ", person.name );
+      console.log( "Well done", person.name );
    });
 ~~~~
 
 While allowing both styles creates an API which is larger than it needs
-to be, creating a library which is targeted at both the client and
-server side is a balance between a consistent call syntax spanning
-environments and consistency with the environment. Hopefully the dual
-interface will help adoption by either camp. The two styles are similar
+to be, the dual
+interface is designed to encourage adoption one the client and server
+side. The two styles are similar
 enough that a person familiar with one should be able to work with the
 other without difficulty. Implementing the duplicative parts of the
 API should require only a minimal degree of extra coding because they
@@ -519,15 +517,11 @@ actual resources. Being unaddressable, the data in the stream is also
 uncacheable: an event which is streamed live cannot later, when it is
 historic, be retrieved from a cache which was populated by the stream.
 Like SOAP, these frameworks use HTTP as the underlying transport but do
-not follow HTTP's principled design. Although these techniques might otherwise be
-used where the browser's XHR makes streaming 
-impossible, because of these concerns Oboe in the browser will only support 
-resource transfer by XHRs.
+not follow HTTP's principled design.
 
-Although Oboe is currently intended as a client for ordinary REST resources and
-not designed for receiving live events, it is
+Although Oboe is not being designed for live events, it is
 interesting to speculate whether it could be used as a REST-compatible
-bridge to unify live and static data. Consider a REST service which
+bridge to unify live-ongoing feeds with ordinary REST resources. Consider a REST service which
 gives results per-constituency for UK general elections. When
 requesting historic results the data is delivered in JSON format much as
 usual. Requesting the results for the current year on the night of the

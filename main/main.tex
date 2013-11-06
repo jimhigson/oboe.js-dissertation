@@ -1481,7 +1481,7 @@ inputs inside important forms but
 \texttt{\$form.important input.mandatory} selects important forms with
 mandatory fields.
 
-The CSS4 capturing technique will be incorporated into this project's
+CSS4 selector capturing will be incorporated into this project's
 JSONPath implementation. By duplicating a syntax which the majority of
 web developers should become familiar with over the next few years the
 learning curve should appear more gradual. Taking on this feature, the
@@ -1534,7 +1534,7 @@ style for making an AJAX GET request is as follows:
 \begin{Highlighting}[]
 \OtherTok{jQuery}\NormalTok{.}\FunctionTok{ajax}\NormalTok{(}\StringTok{"resources/shortMessage.txt"}\NormalTok{)}
    \NormalTok{.}\FunctionTok{done}\NormalTok{(}\KeywordTok{function}\NormalTok{( text ) \{}
-      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{( }\StringTok{"Got the text: "}\NormalTok{, text ); }
+      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{( }\StringTok{"Got the text:"}\NormalTok{, text ); }
    \NormalTok{\}).}
    \NormalTok{.}\FunctionTok{fail}\NormalTok{(}\KeywordTok{function}\NormalTok{() \{}
       \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{( }\StringTok{"the request failed"} \NormalTok{);      }
@@ -1581,34 +1581,34 @@ parsing, we arrive at the following Oboe public API:
 \begin{Highlighting}[]
 \FunctionTok{oboe}\NormalTok{(}\StringTok{"resources/people.json"}\NormalTok{)}
    \NormalTok{.}\FunctionTok{node}\NormalTok{( }\StringTok{"person.name"}\NormalTok{, }\KeywordTok{function}\NormalTok{(name, path, ancestors) \{}
-      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{"There is somebody called "}\NormalTok{, name);   }
+      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{"There is somebody called"}\NormalTok{, name);   }
    \NormalTok{\})}
    \NormalTok{.}\FunctionTok{done}\NormalTok{( }\KeywordTok{function}\NormalTok{( wholeJson ) \{}
       \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{"That is everyone!"}\NormalTok{);}
    \NormalTok{\})}
    \NormalTok{.}\FunctionTok{fail}\NormalTok{( }\KeywordTok{function}\NormalTok{() \{}
-      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{"Actually, the download failed. There may be more "}\NormalTok{,}
+      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{"Actually, the download failed. There may be more"}\NormalTok{,}
                   \StringTok{"people but we don't know who they are yet."}\NormalTok{);}
    \NormalTok{\});}
 \end{Highlighting}
 \end{Shaded}
 
-In jQuery only one \texttt{done} handler is usually added to a request;
-the whole content is always given so there is only one thing to receive.
-Under Oboe each separately addressed area of interest inside the JSON
-resource requires its own handler so the design must accommodate adding
-multiple as the typical use case. A shortcut style is provided which
-allows several selector-handler pairs to be added at a time:
+In jQuery the whole content is given back at once so usually only one
+\texttt{done} handler is usually added to a request. Under Oboe each
+separately addressed area of interest inside the JSON resource requires
+its own handler so it is helpful to provide streamlined support for
+adding several selector-handler pairs at a time. A shortcut style is
+provided:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{oboe}\NormalTok{(}\StringTok{"resources/people.json"}\NormalTok{)}
    \NormalTok{.}\FunctionTok{node}\NormalTok{(\{  }
       \StringTok{"person.name"}\NormalTok{: }\KeywordTok{function}\NormalTok{(personName, path, ancestors) \{}
-         \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{"You will hear about "}\NormalTok{, name, }\StringTok{"..."}\NormalTok{);}
+         \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{"You will hear about"}\NormalTok{, name, }\StringTok{"..."}\NormalTok{);}
       \NormalTok{\},}
       \StringTok{"person.address.town"}\NormalTok{: }\KeywordTok{function}\NormalTok{(townName, path, ancestors) \{}
-         \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{"...they live in "}\NormalTok{, townName);}
+         \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{"...they live in"}\NormalTok{, townName);}
       \NormalTok{\}}
    \NormalTok{\});}
 \end{Highlighting}
@@ -1649,8 +1649,8 @@ ancestor list will have been only partially parsed.
 \FunctionTok{oboe}\NormalTok{(}\StringTok{"resources/someJson.json"}\NormalTok{)}
    \NormalTok{.}\FunctionTok{node}\NormalTok{( }\StringTok{"medalWinners.*"}\NormalTok{, }\KeywordTok{function}\NormalTok{(person, path) \{}
       \KeywordTok{let} \NormalTok{metal = }\FunctionTok{lastOf}\NormalTok{(path);}
-      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{( }\OtherTok{person}\NormalTok{.}\FunctionTok{name}\NormalTok{, }\StringTok{" won the "}\NormalTok{, metal, }
-        \StringTok{" medal with a time of "}\NormalTok{, }\OtherTok{person}\NormalTok{.}\FunctionTok{time} \NormalTok{);}
+      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{( }\OtherTok{person}\NormalTok{.}\FunctionTok{name}\NormalTok{, }\StringTok{"won the"}\NormalTok{, metal, }
+        \StringTok{"medal with a time of "}\NormalTok{, }\OtherTok{person}\NormalTok{.}\FunctionTok{time} \NormalTok{);}
    \NormalTok{\});}
 \end{Highlighting}
 \end{Shaded}
@@ -1673,21 +1673,19 @@ design also allows events to be added as:
 \FunctionTok{oboe}\NormalTok{(}\StringTok{"resources/someJson.json"}\NormalTok{)}
    \NormalTok{.}\FunctionTok{on}\NormalTok{( }\StringTok{"node"}\NormalTok{, }\StringTok{"medalWinners.*"}\NormalTok{, }\KeywordTok{function}\NormalTok{(person) \{}
    
-      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{( }\StringTok{"Well done "}\NormalTok{, }\OtherTok{person}\NormalTok{.}\FunctionTok{name} \NormalTok{);}
+      \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{( }\StringTok{"Well done"}\NormalTok{, }\OtherTok{person}\NormalTok{.}\FunctionTok{name} \NormalTok{);}
    \NormalTok{\});}
 \end{Highlighting}
 \end{Shaded}
 
 While allowing both styles creates an API which is larger than it needs
-to be, creating a library which is targeted at both the client and
-server side is a balance between a consistent call syntax spanning
-environments and consistency with the environment. Hopefully the dual
-interface will help adoption by either camp. The two styles are similar
-enough that a person familiar with one should be able to work with the
-other without difficulty. Implementing the duplicative parts of the API
-should require only a minimal degree of extra coding because they may be
-expressed in common using partial completion. Because \texttt{'!'} is
-the JSONPath for the root of the document, for some callback \texttt{c},
+to be, the dual interface is designed to encourage adoption one the
+client and server side. The two styles are similar enough that a person
+familiar with one should be able to work with the other without
+difficulty. Implementing the duplicative parts of the API should require
+only a minimal degree of extra coding because they may be expressed in
+common using partial completion. Because \texttt{'!'} is the JSONPath
+for the root of the document, for some callback \texttt{c},
 \texttt{.done(c)} is a equal to \texttt{.node('!', c)}. Likewise,
 \texttt{.node} is easily expressible as a partial completion of
 \texttt{.on} with \texttt{'node'}.
@@ -1757,24 +1755,22 @@ unaddressable, the data in the stream is also uncacheable: an event
 which is streamed live cannot later, when it is historic, be retrieved
 from a cache which was populated by the stream. Like SOAP, these
 frameworks use HTTP as the underlying transport but do not follow HTTP's
-principled design. Although these techniques might otherwise be used
-where the browser's XHR makes streaming impossible, because of these
-concerns Oboe in the browser will only support resource transfer by
-XHRs.
+principled design. Because they are not REST these streaming frameworks
+are not suitable even as a fallback when running on legacy platforms and
+will not be used.
 
-Although Oboe is currently intended as a client for ordinary REST
-resources and not designed for receiving live events, it is interesting
+Although Oboe is not being designed for live events, it is interesting
 to speculate whether it could be used as a REST-compatible bridge to
-unify live and static data. Consider a REST service which gives results
-per-constituency for UK general elections. When requesting historic
-results the data is delivered in JSON format much as usual. Requesting
-the results for the current year on the night of the election, an
-incomplete JSON with the constituencies known so far would be
-immediately sent, followed by the remainder dispatched individually as
-the results are called. When all results are known the JSON would
-finally close leaving a complete resource. A few days later, somebody
-wishing to fetch the results would use the \emph{same URL for the
-historic data as was used on the night for the live data}. This is
+unify live-ongoing feeds with ordinary REST resources. Consider a REST
+service which gives results per-constituency for UK general elections.
+When requesting historic results the data is delivered in JSON format
+much as usual. Requesting the results for the current year on the night
+of the election, an incomplete JSON with the constituencies known so far
+would be immediately sent, followed by the remainder dispatched
+individually as the results are called. When all results are known the
+JSON would finally close leaving a complete resource. A few days later,
+somebody wishing to fetch the results would use the \emph{same URL for
+the historic data as was used on the night for the live data}. This is
 possible because the URL refers only to the data that is required, not
 to whether it is current or historic. Because it eventually formed a
 complete HTTP response, the data that was streamed is not incompatible

@@ -25,7 +25,7 @@ inside-out. Under asynchronous I/O the programmer's callback
 traditionally receives the whole resource and then, inside the callback,
 locates the sub-parts that are required for a particular task. Inverting
 this process, the locating logic currently found
-inside the callback is extracted from it, expressed as a selector language, and used it to
+inside the callback can be extracted from it, expressed as a selector language, and used it to
 declare the cases in which the callback should be notified. The callback
 will receive complete fragments from the response once they have been
 selected according to this declaration.

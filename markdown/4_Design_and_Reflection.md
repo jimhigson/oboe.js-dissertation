@@ -40,7 +40,7 @@ because it is widely supported, easy to parse, and defines a single
 n-way tree, making it more amenable to selectors which span multiple 
 format versions.
 
-JSONPath is well suited for selecting nodes as a document is
+JSONPath is well suited for selecting nodes while the document is being
 read because it specifies only constraints on paths and 'contains'
 relationships. Because of the top-down serialisation order, on
 encountering any node in a serialised JSON stream we will have already
@@ -50,14 +50,14 @@ is no similar guarantee of having seen other nodes on the same level
 when any particular node is encountered. A new implementation of the
 language is required because the existing JSONPath library is
 implemented only as a means to search through already gathered objects
-and is too narrow in applicability to be useful in our context.
+and is too narrow in applicability to be useful in a streaming context.
 
-If we consider we are selecting specifically inside a REST resource not
-all of the JSONPath language is well suited. Given this context it is
-likely that we will not be examining a full model but rather a subset
+Given that we are selecting specifically inside a REST resource it is
+unlikely that we will be examining a full model.
+Rather, the selectors will be applied to a subset
 that we requested and was assembled on our behalf according to
 parameters that we supplied. We can expect to be interested in all of
-the content so search-style selections such as 'books costing less than
+the content belonging to a particular category so search-style selections such as 'books costing less than
 X' are less useful than queries which identify nodes because of their
 type and position such as 'all books in the discount set', or, because
 we know we are examining `/books/discount`, simply 'all books'. In
@@ -70,15 +70,14 @@ features that are likely to be useful in 80% of cases.
 For the time being any functionality which is not included may be
 implemented by registering a more permissive selection and then further 
 filtering programmatically from inside the callback. Patterns of
-programmatic filtering which arise from real use can later mined and 
+programmatic filtering which arise from use in the wild can later mined and 
 added to the selection language.
 
 Detecting types in JSON
 -----------------------
 
-As seen in the 'all books' example above, identifying sub-trees 
-according to their categorisation as higher-level types is an intuitive
-abstraction to support.
+As seen in the 'all books' example above, it is intuitive to support 
+identifying sub-trees according to a categorisation by higher-level types.
 JSON markup describes only a few basic types. On a certain level this is
 also true for XML -- most nodes are either of type Element or Text.
 However, the XML metamodel provides tagnames; essentially, a built-in

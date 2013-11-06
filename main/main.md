@@ -31,11 +31,12 @@ abstract: |
 Introduction
 ============
 
-REST [@rest] is the use of HTTP much as it was originally designed but
-with the scope extended to include the transfer of data resources as well
-as hypertext documents. Whereas the rival technology SOAP [@soap]
+HTTP was originally designed for the transfer of hypertext documents. 
+REST [@rest] introduces no fundamentally new methods but extends the scope
+of HTTP to include the transfer of arbitrary data.
+Whereas the rival technology SOAP [@soap]
 largely disregards HTTP's principled design by adopting the protocol as
-a transport on which it bootstraps its own semantics, REST adopts all of
+a transport on which to bootstrap its own semantics, REST adopts all of
 HTTP's core phrasing. This includes the HTTP methods for fetching,
 creating and modifying resources: GET, POST, PUT, PATCH, DELETE, and the
 locating of resources using URLs. Under HTTP's original design
@@ -46,7 +47,7 @@ HTTP, REST is stateless and therefore cacheable, allowing large-scale
 content distribution networks to be built. Because HTTP's inbuilt
 headers for content type, language negotiation, and resource expiry are
 used according to the originally intended meanings [@headers], existing
-HTTP intermediaries such as load balancing proxies, gateways, and caches
+intermediaries such as load balancing proxies, gateways, and caches
 need make no special accommodation for REST resources.
 
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
@@ -57,19 +58,19 @@ reasonable distinction between acting *earlier* and being *quicker*. In
 the interest of creating efficient software we should use data
 at the first possible opportunity: examining content *while it streams*
 rather than holding it unexamined until it is wholly available. The
-purpose of this dissertation is to explore tangible benefits that may be
-realised by folding HTTP streaming into the REST paradigm.
+purpose of this dissertation is to explore tangible benefits which may be
+realised if we fold HTTP streaming into the REST paradigm.
 
 Natural languages encourage our thinking to follow patterns that they
 easily support [@whorf56]. This idea has been applied to programming,
 for example Ruby is intentionally designed to discourage global variables
 by using a less attractive notation [@rubylang].
-It may be useful when looking for new techniques to
+It may be useful when exploring new techniques to
 question which established constructs are as they are because of
 languages which unintentionally suggest that formulation; it is perhaps
 significant that REST clients tend to style the calling of remote
 resources similarly to the call style of the host programming language.
-In practice one of two schemas are generally followed: a synchronous,
+In practice one of two schemas is generally followed: a synchronous,
 blocking style in which an invocation halts execution for the duration
 of the request before evaluating to the fetched resource; or an
 asynchronous, non-blocking form in which some logic is specified to be
@@ -82,34 +83,31 @@ programming the language limits the patterns that we readily see and
 the schemes which map most easily onto our languages are not
 necessarily the best possible organisation. For any multi-packet message
 sent via a network some parts will arrive before others, at least
-approximately in-order but viewed from inside a language whose phasing
+approximately in-order, but viewed from inside a language whose phasing
 encourages 
 statements to yield single, wholly evaluated results it is comfortable to
 conceptualise the REST response as a discrete event. This establishment of a
 'limiting comfort' extends to graphical notations such as UML whose
-constructs strongly reflect the textual programming languages of the day. 
+constructs strongly reflect the textual languages of the day. 
 UML sequence diagrams include the syntax for instantaneously delivered return
 values but, despite being commonly used to draw network data transfer, 
 provide no corresponding notation for a resource whose
 data is progressively revealed.
 
-While the coining of the term REST represented a shift in how we think
-about HTTP, away from the transfer of hypertext documents to that of
-arbitrary data, it introduced no fundamentally new methods. Similarly
-building on previous ideas, no new computing techniques need be invented
-before this dissertation may be implemented. As a minimum it requires an
+No new computing techniques need be invented
+before this dissertation can be implemented. As a minimum it requires an
 HTTP client which reveals the response whilst it is in progress and a
 parser which can begin to interpret that response before it sees all of
 it. Nor is it novel to use these parts together to produce a streaming
-resource interpretation. Every current web browser already implements
-such a schema. Load any complex webpage -- essentially an aggregation of
+interpretation. Every current web browser already implements
+a similar pattern. Load any complex webpage -- essentially an aggregation of
 hypertext and other resources -- and the HTML will be parsed and
 displayed incrementally while it is downloading, with resources such as
 images requested in parallel as soon as they are referenced. In the case
 of progressive JPEG or SVG[^2_Introduction1] the images themselves will also be
 presented incrementally. This incremental display is achieved through
-optimised software created for the single task of displaying web pages.
-The new contribution of this dissertation is to provide a generic
+software created for a single purpose, to display web pages.
+The contribution of this dissertation is to provide a generic
 analogue, applicable to any problem domain.
 
 REST aggregation could be faster
@@ -118,19 +116,17 @@ REST aggregation could be faster
 ![**Sequence diagram showing the aggregation of low-level REST resources
 by an intermediary.** A client fetches an author's publication list and
 then their first three articles. This sequence represents the most
-commonly used technique in which the client does not react to the
-response until it is complete. In this example the second wave of
-requests cannot be made until the original response is complete, at
-which time they are issued in quick succession.
+commonly used technique in which the client does not react util the
+response is complete.
 \label{rest_timeline_1}](images/rest_timeline_1.png)
 
-![**Revised aggregation sequence for a client capable of progressively
-interpreting the resources.** Because arrows in UML sequence diagrams
+![**Revised aggregation sequence showing a client which progressively
+interprets the resources.** Because the arrows in a UML sequence diagrams
 draw returned values as a one-off happening rather than a continuous
 process, the lighter arrow notation is added to represent
 fragments of an incremental response. Each request for an individual
 publication is made as soon as its URL can be extracted from the
-publications list and once all required data has been read from the
+publications list and once all required links have been read from the
 original response it is aborted rather than continuing to download
 unnecessary data. \label{rest_timeline_2}](images/rest_timeline_2.png)
 
@@ -161,15 +157,16 @@ web page on the server-side to be displayed by the client's browser, the
 same perceptual speed improvements apply because of HTTP chunked
 encoding [@perceptionHttpChunkedSpeed]. If this layer were a remote
 aggregation service, starting to write out the aggregated response early
-provides much the same benefits for a client able to interpret it
+provides much the same benefits to the client able to interpret it
 progressively and, even if it is not, the overall delivery remains
 faster.
 
 Stepping outside the big-small tradeoff
 ---------------------------------------
 
-Where a domain model is requestable via REST and contains data in a
-series with continuous ranges there is often a tradeoff in client
+Where a domain model contains a
+series of data from which continuous ranges are requestable via REST
+there is often a tradeoff in the client
 design with regards to how much should be requested with each call.
 Because at any time it shows only a small window into a much larger
 model, the social networking site Twitter might be a good example. The
@@ -193,7 +190,7 @@ individual tweets to the page as they are incrementally parsed out of
 the ongoing response. With a streaming transport, the time taken to
 receive the first tweet should not vary depending on the total number
 that are also being sent so there is no relationship between the size of
-the request made and the time required to first update the interface.
+the request and the interval before the interface starts updating.
 
 Staying fast on a fallible network
 ----------------------------------
@@ -211,7 +208,7 @@ For example, the popular AJAX library jQuery automatically parses JSON
 or XML responses before passing back to the application but given an
 early disconnection there is no attempt to hand over the partial
 response. To the programmer who knows where to look the partial
-responses are extractable as raw text but handling them involves writing
+responses can be extracted as raw text but handling them involves writing
 a special case and is not possible using standard parsers which are not
 amenable to incomplete markup. Because of this difficulty the canonical webapp
 drops partial messages without inspection. For
@@ -221,7 +218,7 @@ it received none and show her nothing. Later, when the network is
 available the inbox will be downloaded from scratch including the
 90% which has already been successfully delivered. A more efficient system
 would allow the 90% from the aborted first request to be used straight away 
-and when signal later returns fetch only the lost 10%. 
+and when the signal later returns fetch only the lost 10%. 
 
 The delivered part of a partially successful message may be used if we
 turn away from this polarised view of
@@ -232,7 +229,7 @@ part will also arrive.
 As well as allowing partially successful messages to be used,
 seeing the resource as a stream of small parts allows those parts
 to be used earlier if they are made available to the application 
-as soon as they arrive, while the streaming is ongoing.
+while the streaming is ongoing.
 Should an early disconnection occur, the
 content delivered up to that point will have already been handled so no
 special case is required to salvage it. In most cases the only recovery
@@ -240,15 +237,15 @@ necessary will be to make a new request for just the part that was
 missed. This approach is not incompatible with a problem domain where
 the usefulness of an earlier part is dependent on the correct delivery
 of the whole providing optimistic locking is used. In this case earlier
-parts may be used immediately but their effect rolled back should a
-notification of failure be received.
+parts may be used immediately but their effect rolled back should the
+transfer later fail.
 
 Agile methodologies, frequent deployments, and compatibility today with versions tomorrow
 -----------------------------------------------------------------------------------------
 
 In most respects a SOA architecture fits well with the fast release
 cycle encouraged by Agile methodologies. Because in SOA we may consider
-that all data is local rather than global and that the components are
+that all data is local and that the components are
 loosely coupled and autonomous, frequent releases of any particular
 sub-system shouldn't pose a problem to the correct operation of the
 whole. In allowing a design to emerge organically it should be possible
@@ -256,7 +253,7 @@ for the structure of resource formats to be realised slowly and
 iteratively while a greater understanding of the problem is gained.
 Unfortunately in practice the ability to change often is hampered by
 tools which encourage programming against rigidly specified formats.
-When a data consumer is allowed to be tightly coupled to a data format
+If a data consumer is tightly coupled to the format it consumes
 it will resist changes to the programs which produce data in that
 format. As an anecdote, working in enterprise I have seen the release of dozens of
 components cancelled because of a single unit that failed to meet
@@ -264,10 +261,9 @@ acceptance criteria. By insisting on exact data formats, subsystems
 become tightly coupled and the perfect environment is created for
 contagion whereby the updating of any single unit may only be done as
 part of the updating of the whole.
-
-An effective response to this problem would be to integrate into a REST
-client programs the ability to use a resource whilst being only loosely
-coupled to the overall *shape* of the message.
+An effective response to this problem would be REST
+clients which are able to use a resource whilst being only loosely
+coupled to the overall shape of the message.
 
 Deliverables
 ------------
@@ -279,19 +275,21 @@ badly. Amongst commentators on start-up companies this is known as a
 *zoom-in pivot* [@lean p172] and the work it produces should be the
 *Minimum Viable Product* or MVP [@lean p106-110]. 
 It would not be feasible to deliver a full stack so we are obliged to 
-focus on solutions which interoperate with existing deployments. This is
-advantageous; to a third party adding small
-enhancements to an existing architecture is more inviting than wholesale change.
+focus on solutions which interoperate with existing deployments. 
+To a third party wishing to adopt the technology
+it is also more inviting to add small enhancements to the existing architecture
+than to action a shift which requires wholesale change.
 
-To reify the vision above a streaming client is the MVP. Although an
+Although an
 explicitly streaming server would improve the situation further, because
-all network data transfer may be thought of as a stream regardless of
-how it is sent, a streaming server is
-not required to start taking advantage of progressive REST. In the
+all network data transfer may be thought of as a stream, it is
+not required to start taking advantage of progressive REST.
+In the
 interest of creating something new, whilst HTTP servers capable of
 streaming are quite common even if they are not always programmed as
 such, there seems to be no published general-purpose, streaming-receptive
 REST client library.
+A streaming client is the MVP and is the code deliverable of this project.
 
 Criteria for success
 --------------------
@@ -300,8 +298,8 @@ In evaluating this project we may say it has been a success if
 non-trivial improvements in speed can be made without a corresponding
 increase in the difficulty of programming the client. This improvement
 may be in terms of the absolute total time required to complete a
-representative task or in a user's perception of the application
-responsiveness while performing the task. Because applications in the
+representative task or in a user's perception of application
+responsiveness. Because applications in the
 target domain are much more I/O-bound than CPU-bound, optimisation in
 terms of the execution time of algorithms will be de-emphasised unless
 especially egregious. Additionally, there will be a consideration of how 
@@ -322,15 +320,13 @@ to be loosely coupled to the formats that they consume.
 Background
 ==========
 
-![**Labelling nodes in an n-tier architecture**. Regardless of where a
-node is located, REST may be used as the means of communication. By
-focusing on REST clients, nodes in the middle tier and presentation layer
-fall in our scope. Although network topology is often split about client
+![**Labelling nodes in an n-tier architecture**. By
+Although network topology is often split about client
 and server side, for our purposes categorisation as data, middle,
 and presentation tier is the more meaningful distinction. According to this
-split the client-side presentation layer and server-side presentation
+split the client- and server-side presentation
 layer serve the same purpose, generating mark-up based on aggregated
-data prepared by the middle tier
+data prepared by the middle tier.
 \label{architecture}](images/architecture.png)
 
 The web as an application platform
@@ -342,7 +338,7 @@ document viewing system to the preferred application platform for all
 but the most specialised interfaces, the web perpetuates this narrative
 by resisting categorisation as either mode.
 
-While the trend is generally for more client scripting and for many
+While the trend is generally towards more client scripting and for many
 sites a Javascript runtime is now requisite, there are also
 counter-trends. In 2012 Twitter reduced load times to one fifth of their
 previous design by moving much of their rendering back to the
@@ -362,7 +358,7 @@ decisions should be taken here. A banking site should not allow loan
 approval to take place in the browser because for the knowledgeable user
 any decision would be possible. Separated from data stores by the public
 internet, the client is also a poor place to perform data aggregation or
-examine large data sets. For non-trivial applications these restrictions
+examine large data sets. In non-trivial applications these restrictions
 encourage a middle tier to execute business logic and produce aggregate
 data.
 
@@ -380,9 +376,7 @@ layer which wraps the data store. This suggests three uses:
 
 Fortunately, each of these contexts requires a similar performance
 profile. The work done is computationally light and answering a request
-involves more time waiting than processing. The node is essentially
-acting as a data router serving messages containing a small subset of
-the data from a larger model. As a part of an interactive system low
+involves more time waiting than processing. As a part of an interactive system low
 latency is important whereas throughput can be increased relatively
 cheaply by adding more hardware, especially in a cloud hosted
 environment. As demand for the system increases the total work required
@@ -396,18 +390,18 @@ Node.js
 Node.js [@nodejs] is a general purpose tool for executing Javascript outside of a
 browser. It has the aim of low-latency I/O and is used mostly for server
 applications and command line tools. It is difficult to judge to what
-degree Javascript is a distraction from Node's principled design and to
+degree Javascript is a distraction from Node's design as a tool for I/O and to
 what degree the language defines the platform.
 
 For most imperative languages the thread is the basic unit of
 concurrency, whereas Node presents the programmer with a single-threaded
 abstraction. Threads are an effective means to share parallel
 computation over multiple cores but are less well suited to scheduling
-concurrent tasks which are mostly I/O dependent. Programming threads
-safely with shared access to mutable objects requires great care and
+concurrent tasks which are mostly I/O dependent. Safely programming threads
+to share mutable objects requires great care and
 experience, otherwise the programmer is liable to create race
 conditions. Consider for example a Java HTTP aggregator; because we wish
-to fetch in parallel each HTTP request is assigned to a thread. These
+to fetch in parallel each request is assigned to a thread. These
 'requester' tasks are computationally simple: make a request, wait for a
 complete response, and then participate in a Barrier while the other
 requesters complete. Each thread consumes considerable resources but
@@ -418,8 +412,8 @@ chief advantage, that it may process simultaneously utilising multiple cores.
 Even if requests do return proximately, the actual CPU time required in making an HTTP
 request is so short that any concurrent processing is a pyrrhic victory.
 
-Node builds on the model of event-based, asynchronous I/O that was
-established by web browser Javascript execution. Although Javascript in
+Node builds on a model of event-based, asynchronous I/O which was
+established by browser Javascript execution. Although Javascript in
 a browser may be performing multiple tasks simultaneously, for example
 requesting several resources from the server side, it does so from
 within a single-threaded virtual machine. Node facilitates concurrency
@@ -433,7 +427,9 @@ non-blocking I/O available each task naturally exits quickly without any
 special effort. Accidental non-terminating loops or heavy
 number-crunching aside, with no reason for a task to wait it is
 difficult to write a node program in which the tasks do not complete
-quickly.
+quickly. In production environments Node deployments usually take advantage of
+multiple cores by creating one Node instance per processor code. The separate
+instances act independently and do not normally use shared RAM.
 
 Each task in Node is simply a Javascript function. Node is able to swap
 its single Javascript thread between these tasks efficiently while
@@ -450,7 +446,7 @@ which are very short and exit quickly allowing Node to finely interlace
 them between other concurrent concerns. The `on` method is used to
 attach functions as listeners to streams. However sophisticated and
 performant this style of programming, to the developer it is hardly any
-more difficult an expression than if I/O were used. It is certainly
+more difficult an expression than if blocking I/O were used. It is certainly
 harder to make mistakes programming in this way than managing
 synchronised access to mutable objects that are shared between threads.
 
@@ -467,13 +463,13 @@ function printResourceToConsole(url) {
          // Because it is captured by a closure we are able to 
          // reference the URL parameter after the scope that 
          // declared it has finished.            
-         console.log("The response has started for ", url);
+         console.log("The response has started for", url);
       
          response.on('data', function(chunk) {      
             // This function is called each time some data is
             // received from the HTTP request. The task writes
             // the response to the console and quickly exits.
-            console.log('Got some response ', chunk);
+            console.log('Got some response', chunk);
                    
          }).on('end', function(){
             console.log('The response is complete');
@@ -481,7 +477,7 @@ function printResourceToConsole(url) {
          
       }).on("error", function(e){
          
-         console.log("There was an error: " + e.message);
+         console.log("There was an error", e.message);
       });      
    console.log("The request has been made");
 }   
@@ -494,9 +490,10 @@ function printResourceToConsole(url) {
 
 In Node I/O is performed using a unified data streaming interface
 regardless of the source. The streams fit comfortably with the wider
-event-driven model by implementing Node's EventEmitter interface, a
-generic Observer pattern API. Although the abstraction provided by
-streams is quite a thin layer on top of the host system's socket, it
+event-driven model by implementing Node's EventEmitter interface,
+a generic dispatcher capable of supporting any event type.
+Although the abstraction provided by
+streams is quite a thin layer on top of the host system's sockets, it
 forms a powerful and intuitive interface. For many tasks it is
 preferable to program in a 'plumbing' style by joining one stream's
 output to another's input. In the example below a resource from the
@@ -526,7 +523,7 @@ Javascript's syntax for literal values into a stand-alone serialisation
 language. For the graduate tackling JSON parsing the task is simpler
 still, being expressible as fifteen context free grammars.
 
-Whereas XML's design can be traced to document formats, JSON's lineage
+Whereas XML's markup can be traced to document formats, JSON's lineage
 is in a programming language. From these roots it isn't surprising that
 JSON maps more directly to the metamodel that most programmers think in.
 XML parsers produce Elements, Text, Attributes, ProcessingInstruction
@@ -554,13 +551,14 @@ while expressed as text the encoding is inevitably written according to
 some serialisation order. XML specifically states that the order of
 attributes is not significant [@xmlorder], JSON has no such detailed
 specification but a similar order insignificance seems to be implied by
-the JSON object's likeness to Javascript objects. In the example above,
-the people objects would probably have been written as a representation
-of either a class with two public properties or a hash map. On receiving
+the JSON object's likeness to Javascript objects whose iteration order
+is indeterminate [@ecma3 4.3.3]. In the example above
+the people objects would probably have been written based on
+either a class with two public properties or a hash map. On receiving
 this data the text would be demarshalled into similar orderless
 structures and that the data found an ordered expression during
-transport would be quickly forgotten. When viewing a document through a
-streaming lens and interpreting while still incomplete it is easier to
+transport would be quickly forgotten. When viewing a document as a
+stream and interpreting while still incomplete it is easier to
 mistakenly react differently according to field order. If nodes from the
 example above were used when only the first field has arrived Sally
 would find a different handling than John or Jack. Because the
@@ -576,7 +574,7 @@ For languages such as Javascript or Clojure which use a loosely-typed
 representation of objects as generic key-value pairs, when a JSON REST
 resource is received the output from the parser resembles the normal
 object types closely enough that it is acceptable to use it directly
-throughout the program. For XML this is not the case for any language
+throughout the program. For XML this is not the case in any language
 and some marshaling is required. In more strongly typed OO languages
 such as Java or C\#, JSON's classless, relatively freeform objects are
 less convenient. To smoothly integrate the example JSON from the
@@ -589,12 +587,12 @@ serialisation, either completely automatically or based on a declarative
 specification. It is common in strongly typed languages for REST client
 libraries to automatically demarshal as part of receiving a fetched REST
 response. From the programmer's vantage it is as if the domain objects
-themselves had been fetched. Adding an additional layer, another common
+themselves had been fetched. Another common
 design pattern intended to give a degree of isolation between remote
 resources and the local domain model is to demarshal automatically only
 so far as *Data Transfer Objects* (DTOs). DTOs are instances of classes
-which implement no logic other than storage, and from these DTOs the
-domain model objects may be programmatically instantiated. DTOs are more
+which implement no logic other than storage, and from these DTOs an additional 
+layer programmatically instantiates the local domain model objects. DTOs are more
 necessary when using XML. Reading resources encoded as JSON we might say
 that the JSON objects are already DTOs.
 
@@ -602,8 +600,8 @@ The degree of marshaling that is used generally changes only the types
 of the entities that the REST client library hands over to the
 application developer without affecting the overall structure of the
 message. Regardless of the exact types, having received the response
-model the developer will usually start by addressing in pertinent parts
-of the response by drilling down into the structures using the
+model the developer will usually start by locating the pertinent parts
+of the response by drilling down into its structure using the
 programming language itself.
 
 ~~~~ {.java}
@@ -631,8 +629,8 @@ function handleResponse( response ){
 }
 ~~~~
 
-One weakness in this means of drilling down is that the code making the
-inspection is quite tightly coupled to the precise structure of the
+One weakness of this method for locating resource parts is that the code making the
+inspection is coupled to the precise structure of the
 thing that it is inspecting. Taking the above example, if the resource
 being fetched were later refactored such that the town concept were
 changed to a fuller address structure as a street-town-county-country
@@ -641,14 +639,16 @@ to continue to do the same thing. Although this kind of drill-down
 programming is commonly practiced and not generally recognised as a code
 smell, requiring knock-on changes when an unrelated system is refactored
 should perhaps be seen as undesirable in relation to format structures as it would
-be elsewhere.
+be elsewhere. DTOs limit the spread of refactoring inside the client because only
+the translation from DTO to domain object must be updated but do not avoid
+change altogether if a service format is refactored.
 In the *Red Queen's race* it took "all the running you can do, to keep
 in the same place". Ideally a programmer should only have to expend effort 
 so that their code 
 does something new, or performs better something that it
 already did, not to stay still. Following an object oriented
 encapsulation of data such that a caller does not have to concern itself
-with the data structures behind an interface, the internal
+with the data structures behind an interface the internal
 implementation may be changed without disruptions to the rest of the
 code base. However, when the structure of the inter-object composition
 is revised, isolation from the changes is less often recognised as a
@@ -656,10 +656,10 @@ desirable trait. A method of programming which truly embraced extreme
 programming would allow structural refactoring to occur without
 disparate parts having to be modified in parallel.
 
-Extraneous changes also dilute a VCS changelog, making it less easy to
-later follow a narrative of code changes which are intrinsic to the
-update in logic expressed by the program, and therefore harder to later
-understand the thinking behind the change and the reason for the change.
+Extraneous changes also dilute a VCS changelog, making it difficult to
+later follow a narrative of updates to the logic expressed by the program.
+It is therefore harder to later understand the thinking behind a change or
+the reason for the change.
 
 JSONPath and XPath selector languages
 -------------------------------------
@@ -686,8 +686,8 @@ let town = subject.people[2].town
 let townSelector = "people[2].town"
 
 // We would be wise not to write overly-specific selectors.
-// JSONPath also provides an ancestor relationship which is not found in 
-// Javascript:
+// JSONPath also provides an ancestor notation which is not present
+// in Javascript:
 let betterTownSelector = "people[2]..town"
 ~~~~
 
@@ -704,7 +704,7 @@ Consider the resource below:
 ~~~~
 
 The JSONPath `people.*..town` may be applied against the above JSON and
-would continue to select correctly after a refactor to the version
+would continue to select correctly if the system were refactored to the version
 below:
 
 ~~~~ {.javascript}
@@ -729,15 +729,15 @@ below:
 Maintaining compatibility with unanticipated format revisions through
 selector languages is easier with JSON than XML. The XML metamodel
 contains overlapping representations of equivalent entities which a
-refactored format is liable to switch between. Each XML element has two
+format being refactored is liable to switch between. Each XML element has two
 distinct lists of child nodes, attribute children and node list
-children; from one perspective attributes are child nodes of their
+children. From one perspective attributes are child nodes of their
 parent element but they can alternatively be considered as data stored
 in the element. Because of this classification ambiguity an XML document
 can't be said to form a single correct n-way tree. XML attributes may only
 contain strings and have a lesser expressivity than child nodes which
 allow recursive structure; it is a common refactor to change from
-attributes to elements when a scalar value is upgraded to be a compound.
+attributes to elements when a scalar value is upgraded to a compound.
 XPath selectors written in the most natural way do not track this
 change.
 
@@ -748,7 +748,7 @@ change.
 ~~~~
 
 The XPath `//person@town` matches against the XML above but because of
-the switch from attribute to child element fails to match given the
+the switch from attribute to child element fails to match towns in the
 revised version below.
 
 ~~~~ {.xml}
@@ -767,30 +767,31 @@ revised version below.
 Reflecting its dual purpose for marking up documents or data, XML also
 invites ambiguous interpretation of the whitespace between tags.
 Whitespace is usually meaningful for documents but ignorable for data.
-Strictly, whitespace text nodes are a part of the document but in
+Strictly, whitespace text nodes are a part of the document model but in
 practice many tree walkers discard them as insignificant. In the XML
 above the `<person>` element may be enumerated as either the first or
 second child of `<people>` depending on whether the whitespace before it
 is considered. Likewise, the text inside `<name>` might be `'John'` or
-`'(newline)(tab)(tab)John'`. Inheriting from JSON's programming language
-ancestry, the space between tokens is never significant.
+`'(newline)(tab)(tab)John'`. Inheriting from its programming language
+ancestry, in JSON there is no ambiguity. The space between tokens is 
+never significant.
 
 Programming against a changing service is always going to present a
-moving target but it is easier to miss with XPATH than with JSON. In
-JSON each node has only one, unambiguous set of children so the
-metamodel does not give format authors a choice of logically equivalent
+moving target but it would be easier to miss with XPATH than with JSONPath. In
+the JSON metamodel each node has only one, unambiguous set of children so the
+format author is not given a choice of logically equivalent
 features that must be addressed through different mechanisms. If a
-scalar value is updated to a compound only the node itself changes, the
+scalar value is updated to a compound only the node changes, the
 addressing of the node is unaffected.
 
 Generally in descriptive hierarchical data there is a trend for
-ancestorship to denote the same relationship between concepts regardless
+ancestorship to signify the same relationship regardless
 of the number of intermediate generations. In the example above, `town`
 transitioned from a child to grandchild of `person` without disturbing
 the implicit 'lives in' relationship. In JSONPath the `..` operator
 provides matching through zero or more generations, unperturbed when
-extra levels are added. Of course, this trend will not hold for every
-conceivable way of building message semantics because it is possible
+extra levels are added. This trend does not hold for every
+way that message semantics may be built because it is possible
 that an intermediate node on the path from ancestor to descendant will
 change the nature of the expressed relationship. A slightly contrived
 example might be if we expanded our model to contain fuzzy knowledge:
@@ -807,13 +808,13 @@ example might be if we expanded our model to contain fuzzy knowledge:
 ~~~~
 
 Considering the general case, it will not be possible to safely track every
-refactoring which a service might undergo. By necessity a resource consumer
+refactoring. By necessity a resource consumer
 should limit their ambitions to tracking ontology expansions which do
-not alter the existing concepts. In practice integration testing against
+not change the meanings of existing concepts. In practice integration testing against
 the beta version of a service will be necessary to be pre-warned of
 upcoming, incompatible changes. If an incompatibility is found the
 ability to then create an expression which is compatible with a
-present and known future version remains a valuable tool because it
+present and known future version would remain a valuable tool because it
 decouples the consumer and provider update schedules, removing the need
 for the client to march perfectly in sync with the service.
 
@@ -849,7 +850,7 @@ and *"elegant APIs around the clumsy interfaces of Ajax"*. Written
 against the unadorned browser, Javascript applications read as a maze of
 platform detection and special cases. Once applications were built using
 abstractions over the underlying platform differences they could be
-written purposefully and were able to express more complex ideas.
+written purposefully and programmers were able to express more complex ideas.
 
 Today JSON is generally the preferred format, especially for resources
 transmitted to client-side web applications.
@@ -874,7 +875,7 @@ ajax('http://example.com/people.json', function( people ) {
    // feels so natural that it is easy to forget from looking 
    // at the code that parsing happens at all. 
    
-   alert('the first person is called ' + people[0].name);
+   console.log('the first person is called', people[0].name);
 });
 ~~~~
 
@@ -924,8 +925,8 @@ XHR2 enables downloads to be viewed as streams but does not
 otherwise disrupt the sequence of HTTP's request-response model,
 streaming frameworks facilitate an entirely different sequence, that of
 perpetual data. Consider a webmail interface; initially the user's inbox
-is downloaded via REST and a streaming download might be used to make
-its display more responsive. Regardless, the inbox download is a
+is downloaded via REST and although a streaming download might be used to make
+its display more responsive, the inbox download is a
 standard REST call and shares little in common with the push events
 which follow to provide instant notification as new messages arrive.
 
@@ -936,10 +937,10 @@ frame's content is served as an HTML page containing a table that never
 completes, fed by a connection that never closes. When the server wishes
 to push a message to the client it writes a new row to the table which
 is then noticed by Javascript monitoring the iframe on the client. More
-recently, **Websockets** is a new standard that builds a standardised
+recently, **Websockets** provides a standardised
 streaming transport on top of HTTP's chunked mode. Websockets requires
 browser implementation and cannot be retrofitted to older browsers
-through Javascript. Websockets is a promising technology but for the
+through Javascript. It is a promising technology but for the
 time being patchy support means it cannot be used without a suitable
 fallback.
 
@@ -966,15 +967,15 @@ DOM by far the more popular. Both styles of parsers are also available
 for JSON. DOM performs a parse as a single evaluation and returns an
 object model representing the whole of the document. Conversely, SAX
 parsers are probably better considered as enhanced tokenisers, providing
-a very low-level event driven interface following the Observer pattern
+a very low-level event driven interface
 that notifies the programmer of each token separately as it is found.
 Working with DOM's level of abstraction the markup syntax is a distant
-concern whereas for SAX each element's opening and closing is noted so
+concern whereas for SAX each element's opening and closing must be noted so
 the developer may not put the data's serialisation aside. SAX comes with
 the advantages that it may read a document progressively and has lower
 memory requirements because it does not store the parsed tree.
 Correspondingly, it it popular for embedded systems running on
-constrained hardware which need to handle documents larger than the
+constrained hardware and may be used to handle documents larger than the
 available RAM.
 
 Suppose we have some JSON representing people and want to extract the
@@ -1010,8 +1011,7 @@ function nameOfFirstPerson( myJsonString, callbackFunction ){
    clarinet.onopenarray = function(){
       // For brevity we'll cheat by assuming there is only one
       // array in the document. In practice this would be overly
-      // brittle.
-      
+      // brittle.      
       inPeopleArray = true; 
    };
    
@@ -1046,7 +1046,7 @@ function nameOfFirstPerson( myJsonString, callbackFunction ){
 The developer pays a high price for progressive parsing, the SAX version
 is considerably longer and more difficult to read. SAX's low-level
 semantics require a lengthy expression and push onto the programmer the responsibility for
-managing state regarding the current position in the document and keeping the data
+managing state regarding the current position in the document and storing data
 extracted from previously seen nodes. This
 maintenance of state tends to be programmed once per usage rather than
 assembled as the composition of reusable parts. The ordering of the
@@ -1061,7 +1061,7 @@ handler.
 
 While SAX addresses many of the problems raised in this dissertation, 
 its unfriendly developer ergonomics have presented too high a barrier for
-adoption in all but fringe uses.
+adoption for all but fringe use cases.
 
 [^3_Background1]: See
     <http://jackson.codehaus.org/1.0.1/javadoc/org/codehaus/jackson/node/NullNode.html>
@@ -1097,7 +1097,7 @@ inside-out. Under asynchronous I/O the programmer's callback
 traditionally receives the whole resource and then, inside the callback,
 locates the sub-parts that are required for a particular task. Inverting
 this process, the locating logic currently found
-inside the callback is extracted from it, expressed as a selector language, and used it to
+inside the callback can be extracted from it, expressed as a selector language, and used it to
 declare the cases in which the callback should be notified. The callback
 will receive complete fragments from the response once they have been
 selected according to this declaration.
@@ -1112,7 +1112,7 @@ because it is widely supported, easy to parse, and defines a single
 n-way tree, making it more amenable to selectors which span multiple 
 format versions.
 
-JSONPath is well suited for selecting nodes as a document is
+JSONPath is well suited for selecting nodes while the document is being
 read because it specifies only constraints on paths and 'contains'
 relationships. Because of the top-down serialisation order, on
 encountering any node in a serialised JSON stream we will have already
@@ -1122,14 +1122,14 @@ is no similar guarantee of having seen other nodes on the same level
 when any particular node is encountered. A new implementation of the
 language is required because the existing JSONPath library is
 implemented only as a means to search through already gathered objects
-and is too narrow in applicability to be useful in our context.
+and is too narrow in applicability to be useful in a streaming context.
 
-If we consider we are selecting specifically inside a REST resource not
-all of the JSONPath language is well suited. Given this context it is
-likely that we will not be examining a full model but rather a subset
+Given that we are selecting specifically inside a REST resource it is
+unlikely that we will be examining a full model.
+Rather, the selectors will be applied to a subset
 that we requested and was assembled on our behalf according to
 parameters that we supplied. We can expect to be interested in all of
-the content so search-style selections such as 'books costing less than
+the content belonging to a particular category so search-style selections such as 'books costing less than
 X' are less useful than queries which identify nodes because of their
 type and position such as 'all books in the discount set', or, because
 we know we are examining `/books/discount`, simply 'all books'. In
@@ -1142,15 +1142,14 @@ features that are likely to be useful in 80% of cases.
 For the time being any functionality which is not included may be
 implemented by registering a more permissive selection and then further 
 filtering programmatically from inside the callback. Patterns of
-programmatic filtering which arise from real use can later mined and 
+programmatic filtering which arise from use in the wild can later mined and 
 added to the selection language.
 
 Detecting types in JSON
 -----------------------
 
-As seen in the 'all books' example above, identifying sub-trees 
-according to their categorisation as higher-level types is an intuitive
-abstraction to support.
+As seen in the 'all books' example above, it is intuitive to support 
+identifying sub-trees according to a categorisation by higher-level types.
 JSON markup describes only a few basic types. On a certain level this is
 also true for XML -- most nodes are either of type Element or Text.
 However, the XML metamodel provides tagnames; essentially, a built-in

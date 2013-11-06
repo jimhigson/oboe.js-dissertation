@@ -31,11 +31,11 @@ abstract: |
 Introduction
 ============
 
-REST [@rest] is the use of HTTP much as it was originally intended but
+REST [@rest] is the use of HTTP much as it was originally designed but
 with the scope extended to include the transfer of data resources as well
 as hypertext documents. Whereas the rival technology SOAP [@soap]
 largely disregards HTTP's principled design by adopting the protocol as
-a transport for bootstrapping its own semantics, REST adopts all of
+a transport on which it bootstraps its own semantics, REST adopts all of
 HTTP's core phrasing. This includes the HTTP methods for fetching,
 creating and modifying resources: GET, POST, PUT, PATCH, DELETE, and the
 locating of resources using URLs. Under HTTP's original design
@@ -50,11 +50,11 @@ HTTP intermediaries such as load balancing proxies, gateways, and caches
 need make no special accommodation for REST resources.
 
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
-documents are often interpreted in a streaming fashion, to date REST
+documents received over the web are often interpreted in a streaming fashion, to date REST
 resources are not commonly examined in this way. For most practical
 cases where we wish to be increase the speed of a system there is no
 reasonable distinction between acting *earlier* and being *quicker*. In
-the interest of creating efficient software we should prefer to use data
+the interest of creating efficient software we should use data
 at the first possible opportunity: examining content *while it streams*
 rather than holding it unexamined until it is wholly available. The
 purpose of this dissertation is to explore tangible benefits that may be
@@ -62,8 +62,9 @@ realised by folding HTTP streaming into the REST paradigm.
 
 Natural languages encourage our thinking to follow patterns that they
 easily support [@whorf56]. This idea has been applied to programming,
-for example Whorfianism was influential in the design of Ruby
-[@rubylang]. It may be useful when looking for new techniques to
+for example Ruby is intentionally designed to discourage global variables
+by using a less attractive notation [@rubylang].
+It may be useful when looking for new techniques to
 question which established constructs are as they are because of
 languages which unintentionally suggest that formulation; it is perhaps
 significant that REST clients tend to style the calling of remote
@@ -76,18 +77,20 @@ applied to the response once it is available. Languages which promote
 concurrency though threading generally consider blocking in a single
 thread to be acceptable and will prefer the synchronous mode whereas
 languages with first class functions are naturally conversant in
-callbacks and will prefer asynchronous I/O. We should remember that in
-programming our languages limit the patterns that we readily see and
-that the schemes which map most easily onto our languages are not
+callbacks and will prefer asynchronous I/O. In
+programming the language limits the patterns that we readily see and
+the schemes which map most easily onto our languages are not
 necessarily the best possible organisation. For any multi-packet message
 sent via a network some parts will arrive before others, at least
-approximately in-order but viewed from inside a language whose
-statements invariably yield single, discrete values it is comfortable to
-conceptualise the REST response as a discrete event. This tendency for a
+approximately in-order but viewed from inside a language whose phasing
+encourages 
+statements to yield single, wholly evaluated results it is comfortable to
+conceptualise the REST response as a discrete event. This establishment of a
 'limiting comfort' extends to graphical notations such as UML whose
-constructs strongly reflect the programming languages of the day. UML
-sequence diagrams provide a syntax for instantaneously delivered return
-values, with no corresponding notation available for a resource whose
+constructs strongly reflect the textual programming languages of the day. 
+UML sequence diagrams include the syntax for instantaneously delivered return
+values but, despite being commonly used to draw network data transfer, 
+provide no corresponding notation for a resource whose
 data is progressively revealed.
 
 While the coining of the term REST represented a shift in how we think
@@ -99,7 +102,7 @@ HTTP client which reveals the response whilst it is in progress and a
 parser which can begin to interpret that response before it sees all of
 it. Nor is it novel to use these parts together to produce a streaming
 resource interpretation. Every current web browser already implements
-such a schema; load any complex webpage -- essentially an aggregation of
+such a schema. Load any complex webpage -- essentially an aggregation of
 hypertext and other resources -- and the HTML will be parsed and
 displayed incrementally while it is downloading, with resources such as
 images requested in parallel as soon as they are referenced. In the case
@@ -124,7 +127,7 @@ which time they are issued in quick succession.
 ![**Revised aggregation sequence for a client capable of progressively
 interpreting the resources.** Because arrows in UML sequence diagrams
 draw returned values as a one-off happening rather than a continuous
-process, the lighter arrow notation is added to represent the
+process, the lighter arrow notation is added to represent
 fragments of an incremental response. Each request for an individual
 publication is made as soon as its URL can be extracted from the
 publications list and once all required data has been read from the
@@ -209,16 +212,16 @@ or XML responses before passing back to the application but given an
 early disconnection there is no attempt to hand over the partial
 response. To the programmer who knows where to look the partial
 responses are extractable as raw text but handling them involves writing
-a special case and is difficult because standard parsers are not
-suited to interpreting incomplete markup. Because of this difficulty
-partial messages are dropped without inspection. For
+a special case and is not possible using standard parsers which are not
+amenable to incomplete markup. Because of this difficulty the canonical webapp
+drops partial messages without inspection. For
 the user checking her email, even if 90% of her inbox had been retrieved
 before the signal was lost, the web application will behave as if
 it received none and show her nothing. Later, when the network is
-available again the inbox will be downloaded from scratch including the
+available the inbox will be downloaded from scratch including the
 90% which has already been successfully delivered. A more efficient system
 would allow the 90% from the aborted first request to be used straight away 
-and then later fetch only the lost 10%. 
+and when signal later returns fetch only the lost 10%. 
 
 The delivered part of a partially successful message may be used if we
 turn away from this polarised view of
@@ -226,8 +229,10 @@ wholly successful/unsuccessful requests and conceptualise the message as
 having many parts which are useful in themselves, in which the successful 
 delivery of each part is handled independently without knowing if the next will
 part will also arrive. 
-These parts can be used earlier if they are made available to the application 
-when soon as they arrive, while the streaming is ongoing.
+As well as allowing partially successful messages to be used,
+seeing the resource as a stream of small parts allows those parts
+to be used earlier if they are made available to the application 
+as soon as they arrive, while the streaming is ongoing.
 Should an early disconnection occur, the
 content delivered up to that point will have already been handled so no
 special case is required to salvage it. In most cases the only recovery
@@ -253,8 +258,7 @@ Unfortunately in practice the ability to change often is hampered by
 tools which encourage programming against rigidly specified formats.
 When a data consumer is allowed to be tightly coupled to a data format
 it will resist changes to the programs which produce data in that
-format. As an anecdote, working in enterprise I have often 
-seen the release of dozens of
+format. As an anecdote, working in enterprise I have seen the release of dozens of
 components cancelled because of a single unit that failed to meet
 acceptance criteria. By insisting on exact data formats, subsystems
 become tightly coupled and the perfect environment is created for

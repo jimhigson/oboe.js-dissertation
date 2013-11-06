@@ -255,8 +255,8 @@ outside the closure the values are not only protected as private as
 would be seen in an OO model, they are inherently unaddressable.
 
 Although not following an established object-oriented metamodel, the
-high-level componentisation hasn't departed very far from how it would
-be split following that style and OO design patterns have influenced
+high-level componentisation hasn't departed very far from how the project
+might be divided following that style and OO design patterns have influenced
 the layout considerably. If we wished to think in terms of the OO
 paradigm we might say that values trapped inside closures are private
 attributes and that the handlers registered on the event bus are public

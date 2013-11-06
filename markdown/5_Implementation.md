@@ -226,10 +226,11 @@ techniques such as reducing scoped symbols to a single character or
 deleting the comments. For Oboe the popular minifier library *Uglify*
 was chosen. Uglify performs only surface optimisations, concentrating
 mostly on producing compact syntax by manipulating the code's abstract
-syntax tree. An alternative option would have been Google Closure 
+syntax tree. Google Closure 
 Compiler [@closure],
 a more sophisticated optimiser which leverages a deeper understanding
-of the program. Unfortunately, proving equivalence in highly
+of the program, would be an alternative option.
+Unfortunately, proving equivalence in highly
 dynamic languages is often impossible and Closure Compiler is only safe
 given a well-advised subset of Javascript. It delivers no reasonable
 guarantee of equivalence if code is not written as the Closure team

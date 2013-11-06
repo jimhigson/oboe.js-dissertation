@@ -522,11 +522,13 @@ is to work with only one language, removing the
 peculiarities of the language from the test would only decrease their effectiveness
 as an indicator of correct interpretation.
 
-One limitation of Oboe's JSONPath integration is that it can only 
-support selections which are decidable at the time when the candidate node is found.
+One limitation is that Oboe currently only supports
+selections which are decidable at the time that the candidate node is 
+discovered.
 This forbids some seemingly simple selections such as *the last element of the array*
-because when an element is found, without looking ahead to possibly find
-an array closing it is not knowable if it is the last element. Removing this
+because when an element is found, without looking ahead and possibly finding
+an array closing token we cannot know if our node is the last element.
+Removing this
 restriction would require a fairly substantial rewrite of the JSONPath engine. 
 One strategy would be
 to take an event-driven approach to the matching. At present matching is triggered
@@ -539,7 +541,7 @@ the time that it is called, handing the result immediately to the callback.
 However, for cases where more of the document
 must be revealed before a match can be decided the term evaluators would have
 the option of listening to the parse until further document nodes are 
-revealed, replying later when the required information is available.  
+revealed, replying when the required information is later available.  
 
 Differences in the working of programs that can be easily written using Oboe.js
 -------------------------------------------------------------------------------

@@ -486,8 +486,7 @@ parent element many times, always with the same result. Although
 Javascript doesn't come with functional caching, it can be added using
 the language itself, probably the best known example being `memoize`
 from Underscore.js [@underscore_memo]. It is likely however that hashing the function
-parameters would be slower than performing the matching, especially for
-very wide or deep sub-trees. Although the
+parameters would be slower than performing the matching. Although the
 parameters are all immutable and could in theory be hashed by object
 identity, in practice there is no way to access an object ID from inside
 the language so any hash function for a node parsed out of JSON would
@@ -514,15 +513,14 @@ p.\pageref{testpyramid}) to be split into two further sub-layers.
 Arguably, the upper of these sub-layers is not a unit test because it is
 verifying more than one unit, the tokeniser and the compiler, and there
 is some redundancy since the tokenisation is tested both independently
-and through a proxy. This would certainly be a desirable test if a general
-purpose compiler generator were being implemented but since the compiler
-needs only to support one language there is no benefit to be gained by
-testing the results of the generated output in the absence of real
-tokenisation. A more purist approach would require a lot of effort
-stubbing out the tokeniser functions before testing
-the compiled JSONPath expressions and, since JSONPath is the sole supported
-language, more widely applicable test conclusions 
-would not improve the rigor of the JSONPath specification.
+and through a proxy. A more purist approach would 
+stub out the tokeniser functions before testing
+the compiled JSONPath expressions.
+This would certainly be a desirable if a general
+purpose compiler generator were being implemented but since the aim of the code
+is to work with only one language, removing the
+peculiarities of the language from the test would only decrease their effectiveness
+as an indicator of correct interpretation.
 
 One limitation of Oboe's JSONPath integration is that it can only 
 support selections which are decidable at the time when the candidate node is found.

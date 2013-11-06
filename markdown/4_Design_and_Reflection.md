@@ -8,41 +8,41 @@ developer ergonomics because it is not usually convenient to think on
 the markup's level of abstraction. Using SAX, a programmer may only
 operate on a convenient abstraction after inferring it from a lengthy
 series of callbacks. In terms of ease of use, DOM is generally preferred
-because it provides the resource whole and in a convenient form. My
-design aims to duplicate this convenience and combine it with
+because it provides the resource whole and in a convenient form. 
+It is possible to duplicate this convenience and combine it with
 progressive interpretation by removing one restriction: that the node
 which is given is always the document root. From a hierarchical markup
 such as XML or JSON, when read in order, sub-trees are fully known
 before we fully know their parent tree. We may select pertinent parts of
 a document and deliver them as fully-formed entities as soon as they are
-known, without waiting for the remainder of the document to arrive. In
-this way I propose that it is possible to combine most of the desirable
-properties from SAX and DOM parsers into a new method.
+known, without waiting for the remainder of the document to arrive. 
+This approach combines most of the desirable
+properties from SAX and DOM parsers into a new, hybrid method.
 
-By my design, identifying the interesting parts of a document before it
+By this new design, identifying the interesting parts of a document before it
 is complete involves turning the established model for drilling-down
 inside-out. Under asynchronous I/O the programmer's callback
 traditionally receives the whole resource and then, inside the callback,
 locates the sub-parts that are required for a particular task. Inverting
-this process, I propose extracting the locating logic currently found
-inside the callback, expressing as a selector language, and using it to
+this process, the locating logic currently found
+inside the callback is extracted from it, expressed as a selector language, and used it to
 declare the cases in which the callback should be notified. The callback
 will receive complete fragments from the response once they have been
 selected according to this declaration.
 
-I will be implementing using the Javascript language because it has good
-support for non-blocking I/O and covers both contexts where this project
-will be most useful: in-browser programming and server programming.
-Focusing on the MVP, I will only be implementing the parsing of one
+Javascript was chosen for implementing the software deliverables because it has good
+support for non-blocking I/O and covers both environments where this project
+will be most useful: web browser and web server.
+Focusing on the MVP, parsing will only be implemented for one
 mark-up language. Although this technique could be applied to any
-text-based, tree-shaped markup, I find that JSON best meets my goals
+text-based, tree-shaped markup, JSON best meets the project goals
 because it is widely supported, easy to parse, and defines a single
 n-way tree, amenable to selectors which span multiple format versions.
 
 JSONPath is especially applicable to node selection as a document is
 read because it specifies only constraints on paths and 'contains'
 relationships. Because of the top-down serialisation order, on
-encountering any node in a serialised JSON stream, I will have already
+encountering any node in a serialised JSON stream we will have already
 seen enough of the prior document to know its full path. JSONPath would
 not be so amenable if it expressed sibling relationships because there
 is no similar guarantee of having seen other nodes on the same level
@@ -60,18 +60,19 @@ the content so search-style selections such as 'books costing less than
 X' are less useful than queries which identify nodes because of their
 type and position such as 'all books in the discount set', or, because
 we know we are examining `/books/discount`, simply 'all books'. In
-creating a new JSONPath implementation I have chosen to follow the
-existing language somewhat loosely, thereby specialising the matching
-and avoiding unnecessary code. It is difficult to anticipate what the
-real-world matching requirements will be but if I deliver now the 20% of
-possible features that I'm reasonably sure will be used for 80% of
-tasks, for the time being any functionality which is not covered may be
+creating a new JSONPath implementation the
+existing language is followed somewhat loosely, specialising the matching
+by adding features which are likely to be useful when detecting entities in REST resources
+while avoid writing unnecessary by dropping others. It is difficult to anticipate all
+real-world matching requirements but it is easier to find a core 20% of
+features that are likely to be useful in 80% of cases.
+For the time being any functionality which is not included may be
 implemented inside the callbacks themselves and later added to the
 selection language. For example, somebody wishing to filter on the price
-of books might use branching to further select inside their callback. I
-anticipate that the selections will frequently be on high-level types so
-it is useful to analyse the nature of type imposition with regards to
-JSON.
+of books might use branching to further select inside their callback.
+As seen in the 'all books' example above, identifying sub-trees according to 
+their categorisation as higher-level types is an intuitive
+abstraction to support.
 
 Detecting types in JSON
 -----------------------
@@ -170,11 +171,11 @@ keys are based on getters whose name typically reflects their
 cardinality; `public Address getAddress()` or
 `public List<Address> getAddresses()`. This may pose a problem in some
 cases and it would be interesting in future to investigate a system such
-as Ruby on Rails that natively understands English pluralisation. I
-considered introducing unions as an easy way to cover this situation,
-allowing expressions resembling `address|addresses.*` but decided that
-until I am sure of its usefulness it is simpler if this problem is
-solved outside of the JSONPath language by simply asking the programmer
+as Ruby on Rails that natively understands English pluralisation. Unions
+were also considered as a way to allow a pattern matching against singular or plural elements,
+resembling `address|addresses.*` but it was decided that
+until the usefulness is better demonstrated it is simpler to
+solve this problem outside of the JSONPath language by expecting the programmer
 to register two selection specifications against the same handler
 function.
 
@@ -205,9 +206,9 @@ Here, the keys which map onto addresses are named by the relationship
 between the parent and child nodes rather than by the type of the child.
 The type classification problem could be solved using an ontology with
 'address' subtypes 'residence', 'premises', and 'office' but this
-solution feels quite heavyweight for a simple selection language. I
-chose instead to import the idea of *duck typing* from Python
-programing, as named in a 2000 usenet discussion:
+solution feels quite heavyweight for a simple selection language. 
+Instead the idea of *duck typing* was imported from Python, as 
+named in a 2000 usenet discussion:
 
 > In other words, don't check whether it IS-a duck: check whether it
 > QUACKS-like-a duck, WALKS-like-a duck, etc, etc, depending on exactly
@@ -217,18 +218,17 @@ An address 'duck-definition' for the above JSON would say that any
 object which has number, street, and town properties is an address.
 Applied to JSON, duck typing takes an individualistic approach by
 deriving type from the node in itself rather than the situation in which
-it is found. Because I find this selection technique simple and powerful
-I decided to add it to my JSONPath variant. As discussed in section
+it is found. As discussed in section
 \ref{jsonpathxpath}, JSONPath's syntax is designed to resemble the
 equivalent Javascript accessors but Javascript has no syntax for a
-value-free list of object keys. The closest available notation is for
-object literals so I created a duck-type syntax derived from this by
+value-free list of object keys. The closest available Javascript notation is that for
+object literals so a duck-type syntax was derived from this by
 omitting the values, quotation marks, and commas. The address type
 described above would be written as `{number street town}`. Field order
 is insignificant so `{a b}` and `{b a}` are equivalent.
 
-It is difficult to generalise but when selecting items from a document I
-believe it will often be useful if nodes which are covariant with the
+It is difficult to generalise but when selecting items
+it is often useful if nodes which are covariant with the
 given type are also matched. We may consider that there is a root duck
 type `{}` which matches any node, that we create a sub-duck-type if we
 add to the list of required fields, and a super-duck-type if we remove
@@ -260,8 +260,8 @@ forms with mandatory fields.
 The new CSS4 capturing technique will be adapted for this project's JSONPath
 implementation. By
 duplicating a syntax which the majority of web developers should become
-familiar with over the next few years I hope that the learning curve
-can be made more gradual. Taking on this feature, the selector
+familiar with over the next few years the learning curve
+should appear more gradual. Taking on this feature, the selector
 `person.$address.town` would identify an address node with a town child,
 or `$people.{name, dob}` can be used to locate the same people array
 repeatedly whenever a new person is added to it. Javascript frameworks
@@ -361,17 +361,18 @@ oboe("resources/people.json")
       console.log("That is everyone!");
    })
    .fail( function() {
-      console.log("Actually, the download failed. Please forget ", 
-                  "the people I just told you about");
+      console.log("Actually, the download failed. There may be more ",
+                  "people but we don't know who they are yet.");
    });
 ~~~~
 
 In jQuery only one `done` handler is usually added to a request; the
 whole content is always given so there is only one thing to receive.
-Under Oboe there will usually be several separately selected areas of
-interest inside a JSON document so I anticipate that typically multiple
-node handlers will be added. Consequently, a shortcut style is provided
-for adding several selector-handler pairs at a time:
+Under Oboe each separately addressed area of
+interest inside the JSON resource requires its own handler so the design must
+accommodate adding multiple as the typical use case.
+A shortcut style is provided which allows several selector-handler pairs 
+to be added at a time:
 
 ~~~~ {.javascript}
 oboe("resources/people.json")
@@ -431,8 +432,8 @@ be given.
 
 Under Node.js the code style is more obviously event-based. Listeners
 are normally added using an `.on` method where the event name is a
-string given as the first argument. Adopting this style, my API design
-for oboe.js also allows events to be added as:
+string given as the first argument. Adopting this style, Oboe's API
+design also allows events to be added as:
 
 ~~~~ {.javascript}
 oboe("resources/someJson.json")
@@ -445,10 +446,10 @@ oboe("resources/someJson.json")
 While allowing both styles creates an API which is larger than it needs
 to be, creating a library which is targeted at both the client and
 server side is a balance between a consistent call syntax spanning
-environments and consistency with the environment. I hope that the dual
+environments and consistency with the environment. Hopefully the dual
 interface will help adoption by either camp. The two styles are similar
 enough that a person familiar with one should be able to work with the
-other without difficulty. Implementating the duplicative parts of the
+other without difficulty. Implementing the duplicative parts of the
 API should require only a minimal degree of extra coding because they
 may be expressed in common using partial completion. Because `'!'` is
 the JSONPath for the root of the document, for some callback `c`,
@@ -504,8 +505,9 @@ Choice of streaming data transport
 
 As discussed in section \ref{browserstreamingframeworks}, current
 techniques to provide streaming over HTTP encourage a dichotomous split
-of traffic as either stream or download. I find that this split is not
-necessary and that streaming may be used as the most effective means of
+of traffic as either stream or download. This split is not
+a necessary consequence of the technologies used
+and streaming may instead be viewed as the most efficient means of
 downloading. Streaming services implemented using push pages or
 websockets are not REST. Under these frameworks a stream has a URL
 address but the data in the stream is not addressable. This is similar
@@ -514,13 +516,15 @@ HTTP URLs are viewed as locating endpoints for services rather than the
 actual resources. Being unaddressable, the data in the stream is also
 uncacheable: an event which is streamed live cannot later, when it is
 historic, be retrieved from a cache which was populated by the stream.
-These frameworks use HTTP as the underlying transport but I find they do
-not follow HTTP's principled design. Due to these concerns, in the
-browser I will only be supporting downloading using XHR.
+Like SOAP, these frameworks use HTTP as the underlying transport but do
+not follow HTTP's principled design. Although these techniques might otherwise be
+used where the browser's XHR makes streaming 
+impossible, because of these concerns Oboe in the browser will only support 
+resource transfer by XHRs.
 
-Although I am designing Oboe as a client for ordinary REST resources and
-not focusing on the library as a means to receive live events, it is
-interesting to speculate whether Oboe could be used as a REST-compatible
+Although Oboe is currently intended as a client for ordinary REST resources and
+not designed for receiving live events, it is
+interesting to speculate whether it could be used as a REST-compatible
 bridge to unify live and static data. Consider a REST service which
 gives results per-constituency for UK general elections. When
 requesting historic results the data is delivered in JSON format much as
@@ -562,8 +566,9 @@ task.
 Supporting only XHR as a transport unfortunately means that on older
 browsers which do not fire progress events (see section
 \ref{xhrsandstreaming}) a progressive conceptualisation of the data
-transfer is not possible. I will not be using streaming workarounds such
-as push tables because this would create a client which is unable to
+transfer is not possible. Streaming workarounds such
+as push tables will not be used because they would result in a client 
+which is unable to
 connect to the majority of REST services. Degrading gracefully, the best
 compatible behaviour is to wait until the document completes and then
 interpret the whole content as if it were streamed. Because nothing is

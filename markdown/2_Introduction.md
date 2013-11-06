@@ -2,7 +2,7 @@ Introduction
 ============
 
 REST [@rest] is the use of HTTP much as it was originally intended but
-with an extended scope to include the transfer of data resources as well
+with the scope extended to include the transfer of data resources as well
 as hypertext documents. Whereas the rival technology SOAP [@soap]
 largely disregards HTTP's principled design by adopting the protocol as
 a transport for bootstrapping its own semantics, REST adopts all of
@@ -94,7 +94,7 @@ which time they are issued in quick succession.
 ![**Revised aggregation sequence for a client capable of progressively
 interpreting the resources.** Because arrows in UML sequence diagrams
 draw returned values as a one-off happening rather than a continuous
-process, I have introduced a lighter arrow notation representing
+process, the lighter arrow notation is added to represent the
 fragments of an incremental response. Each request for an individual
 publication is made as soon as its URL can be extracted from the
 publications list and once all required data has been read from the
@@ -136,7 +136,7 @@ Stepping outside the big-small tradeoff
 ---------------------------------------
 
 Where a domain model is requestable via REST and contains data in a
-series with continuous ranges I have often noticed a tradeoff in client
+series with continuous ranges there is often a tradeoff in client
 design with regards to how much should be requested with each call.
 Because at any time it shows only a small window into a much larger
 model, the social networking site Twitter might be a good example. The
@@ -152,7 +152,7 @@ a tradeoff between sporadically requesting many tweets, yielding long,
 infrequent delays and frequently requesting a few, giving an interface
 which stutters momentarily but often.
 
-I propose that progressive loading could render this tradeoff
+Progressive loading could render this tradeoff
 unnecessary by simultaneously delivering the best of both strategies. In
 the Twitter example this could be achieved by making large requests but
 instead of deferring all rendering until the request completes, add the
@@ -166,8 +166,8 @@ Staying fast on a fallible network
 ----------------------------------
 
 REST operates over networks whose reliability varies widely. On
-unreliable networks connections are abruptly dropped and in my opinion
-existing HTTP clients handle unexpected terminations suboptimally.
+unreliable networks connections are abruptly dropped and
+existing HTTP clients handle unexpected terminations wastefully.
 Consider the everyday situation of a person using a smartphone browser
 to check their email. Mobile data coverage is often weak outside of
 major cities [@opensignal] so while travelling the signal will be lost
@@ -180,23 +180,25 @@ early disconnection there is no attempt to hand over the partial
 response. To the programmer who knows where to look the partial
 responses are extractable as raw text but handling them involves writing
 a special case and is difficult because standard parsers are not
-amenable to incomplete markup. Because of this difficulty I can only
-find examples of partial messages being dropped without inspection. For
+suited to interpreting incomplete markup. Because of this difficulty
+partial messages are dropped without inspection. For
 the user checking her email, even if 90% of her inbox had been retrieved
-before her phone signal was lost, the web application will behave as if
+before the signal was lost, the web application will behave as if
 it received none and show her nothing. Later, when the network is
-available again the inbox will be downloaded from scratch, including the
-90% which has already been successfully delivered. I see much potential
-for improvement here.
+available again the inbox will be downloaded from scratch including the
+90% which has already been successfully delivered. A more efficient system
+would allow the 90% from the aborted first request to be used straight away 
+and then later fetch only the lost 10%. 
 
-I propose moving away from this polarised view of
-successful/unsuccessful requests to one in which identifiable parts of a
-message are recognised as interesting in themselves, regardless of what
-follows, and these parts are handed back to the application as streaming
-occurs. This follows naturally from a conceptualisation of the HTTP
-response as a progressive stream of many small parts; as each part
-arrives it should be possible to use it without knowing if the next will
-be delivered successfully. Should an early disconnection occur, the
+The delivered part of a partially successful message may be used if we
+turn away from this polarised view of
+wholly successful/unsuccessful requests and conceptualise the message as
+having many parts which are useful in themselves, in which the successful 
+delivery of each part is handled independently without knowing if the next will
+part will also arrive. 
+These parts can be used earlier if they are made available to the application 
+when soon as they arrive, while the streaming is ongoing.
+Should an early disconnection occur, the
 content delivered up to that point will have already been handled so no
 special case is required to salvage it. In most cases the only recovery
 necessary will be to make a new request for just the part that was
@@ -235,25 +237,25 @@ coupled to the overall *shape* of the message.
 Deliverables
 ------------
 
-To avoid feature creep I am paring down the software deliverables to the
-smallest work which can be said to realise my thesis, the guiding
+To avoid feature creep the scope of the software deliverables is pared down to the
+smallest work which can be said to realise the goals of the project, the guiding
 principle being that it is preferable to produce a little well than more
 badly. Amongst commentators on start-up companies this is known as a
 *zoom-in pivot* [@lean p172] and the work it produces should be the
-*Minimum Viable Product* or MVP [@lean p106-110]. With a focus on
-quality I could not deliver a full stack so I am obliged to implement
-only solutions which interoperate with existing deployments. This is
-advantageous; to somebody looking to improve their system small
-enhancements are more inviting than wholesale change.
+*Minimum Viable Product* or MVP [@lean p106-110]. 
+It would not be feasible to deliver a full stack so we are obliged to 
+focus on solutions which interoperate with existing deployments. This is
+advantageous; to a third party adding small
+enhancements to an existing architecture is more inviting than wholesale change.
 
 To reify the vision above a streaming client is the MVP. Although an
 explicitly streaming server would improve the situation further, because
-all network transmissions may be viewed though a streaming lens it is
+all network data transfer may be thought of as a stream it is
 not required to start taking advantage of progressive REST. In the
 interest of creating something new, whilst HTTP servers capable of
 streaming are quite common even if they are not always programmed as
-such, I have been unable to find any example of a streaming-receptive
-REST client.
+such, there seems to be no published general-purpose, streaming-receptive
+REST client library.
 
 Criteria for success
 --------------------
@@ -266,11 +268,11 @@ representative task or in a user's perception of the application
 responsiveness while performing the task. Because applications in the
 target domain are much more I/O-bound than CPU-bound, optimisation in
 terms of the execution time of algorithms will be de-emphasised unless
-especially egregious. Additionally, I shall be considering how the
-semantics of a message are expanded as a system's design emerges and
-commenting on the value of loose coupling between data formats and the
-programs which act on them in avoiding disruption given unanticipated
-format changes.
+especially egregious. Additionally, there will be a consideration of how 
+message semantics are incrementally realised as part of an emergent design.
+This will include commentary on if disruption given unanticipated
+format changes may be avoided by libraries which encourage data consumers
+to be loosely coupled to the formats that they consume.
 
 [^1]: for quite an obviously visible example of progressive SVG loading,
     try loading this SVG using a recent version of Google Chrome:

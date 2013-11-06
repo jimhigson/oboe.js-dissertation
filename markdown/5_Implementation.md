@@ -508,6 +508,25 @@ more useful because stubbing out the tokeniser functions before testing
 the compiler would be a considerable effort and I do not believe it
 would improve the rigor of the JSONPath specification.
 
+One limitation of Oboe's JSONPath integration is that it can only 
+support selections which are decidable at the time when the candidate node is found.
+This forbids some seemingly simple selections such as *the last element of the array*
+because when an element is found, without looking ahead to possibly find
+an array closing it is not knowable if it is the last element. Removing this
+restriction would require a fairly substantial rewrite of the JSONPath engine. 
+One strategy would be
+to take an event-driven approach to the matching. At present matching is triggered
+by events but the tests themselves are expressed synchronously.
+Under an event-driven matching implementation, instead of
+returning a value each JSONPath term evaluator would be given a callback to 
+pass the result to. Under most circumstances it should be able to decide if 
+a match has taken place at
+the time that it is called, handing the result immediately to the callback. 
+However, for cases where more of the document
+must be revealed before a match can be decided the term evaluators would have
+the option of listening to the parse until further document nodes are 
+revealed, replying later when the required information is available.  
+
 Differences in the working of programs that can be easily written using Oboe.js
 -------------------------------------------------------------------------------
 

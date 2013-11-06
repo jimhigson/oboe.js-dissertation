@@ -323,8 +323,9 @@ seems to me as undesirable in relation to format structures as it would
 be anywhere else.
 
 In the *Red Queen's race* it took "all the running you can do, to keep
-in the same place". Ideally as a programmer I'd like to expend effort to
-make my code to do something new, or to perform better something that it
+in the same place". Ideally a programmer should only have to expend effort 
+so that their code 
+does something new, or performs better something that it
 already did, not to stay still. Following an object oriented
 encapsulation of data such that a caller does not have to concern itself
 with the data structures behind an interface, the internal
@@ -728,8 +729,8 @@ semantics require a lengthy expression and push onto the programmer the responsi
 managing state regarding the current position in the document and the
 nodes that have previously been seen. This
 maintenance of state tends to be programmed once per usage rather than
-assembled as the composition of reusable parts. I find the order of the
-code under SAX also quite unintuitive; event handlers cover multiple
+assembled as the composition of reusable parts. The ordering of the
+code under SAX is also quite unintuitive; event handlers cover multiple
 unrelated cases and each concern spans multiple handlers. This lends to
 a style of programming in which separate concerns do not find separate
 expression in the code. It is also notable that, unlike DOM, as the
@@ -738,9 +739,9 @@ programming required to interpret it also increases, mandating more
 state be stored and an increased number of cases be covered per event
 handler.
 
-While SAX addresses many of the problems raised in this dissertation, I
-find the unfriendly developer ergonomics pose too high a barrier to its
-adoption for all but fringe uses.
+While SAX addresses many of the problems raised in this dissertation, 
+its unfriendly developer ergonomics have presented too high a barrier for
+adoption in all but fringe uses.
 
 [^1]: See
     <http://jackson.codehaus.org/1.0.1/javadoc/org/codehaus/jackson/node/NullNode.html>

@@ -31,68 +31,64 @@ abstract: |
 Introduction
 ============
 
-REST [@rest] is the use of HTTP much as it was originally intended but 
-with an extended scope to include the transfer of
-data resources as well as hypertext documents. Whereas the rival
-technology SOAP [@soap] largely disregards HTTP's principled design by
-adopting the protocol as a transport for bootstrapping its own semantics,
-REST adopts all of HTTP's core phrasing.
-This includes the HTTP methods for fetching, creating
-and modifying resources: GET, POST, PUT, PATCH, DELETE, and the locating
-of resources using URLs. Under HTTP's original design hierarchical URLs
-are used to locate documents without reference to the services which
-produce them. REST
-advances this same naming strategy by likewise using URLs to locate data 
-resources, not services.
-As with HTTP, REST is stateless and therefore cacheable,
-allowing large-scale content distribution networks to be built. Because HTTP's
-inbuilt headers for content type, language negotiation, and resource
-expiry are used according to the originally intended
-meanings [@headers], existing HTTP
-intermediaries such as load balancing proxies, gateways, and caches need
-make no special accommodation for REST resources.
+REST [@rest] is the use of HTTP much as it was originally intended but
+with the scope extended to include the transfer of data resources as well
+as hypertext documents. Whereas the rival technology SOAP [@soap]
+largely disregards HTTP's principled design by adopting the protocol as
+a transport for bootstrapping its own semantics, REST adopts all of
+HTTP's core phrasing. This includes the HTTP methods for fetching,
+creating and modifying resources: GET, POST, PUT, PATCH, DELETE, and the
+locating of resources using URLs. Under HTTP's original design
+hierarchical URLs are used to locate documents without reference to the
+services which produce them. REST advances this same naming strategy by
+likewise using URLs to locate data resources, not services. As with
+HTTP, REST is stateless and therefore cacheable, allowing large-scale
+content distribution networks to be built. Because HTTP's inbuilt
+headers for content type, language negotiation, and resource expiry are
+used according to the originally intended meanings [@headers], existing
+HTTP intermediaries such as load balancing proxies, gateways, and caches
+need make no special accommodation for REST resources.
 
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
 documents are often interpreted in a streaming fashion, to date REST
-resources are not commonly examined in this way. For most practical cases
-where we wish to be increase the speed of a system there is no
-reasonable distinction between acting *earlier* and being *quicker*. 
-In the interest of creating efficient software we should prefer to use data at the first possible
-opportunity: examining content *while it streams* rather than holding it
-unexamined until it is wholly available. The purpose of this
-dissertation is to explore tangible benefits that may be realised by
-folding HTTP streaming into the REST paradigm.
+resources are not commonly examined in this way. For most practical
+cases where we wish to be increase the speed of a system there is no
+reasonable distinction between acting *earlier* and being *quicker*. In
+the interest of creating efficient software we should prefer to use data
+at the first possible opportunity: examining content *while it streams*
+rather than holding it unexamined until it is wholly available. The
+purpose of this dissertation is to explore tangible benefits that may be
+realised by folding HTTP streaming into the REST paradigm.
 
 Natural languages encourage our thinking to follow patterns that they
 easily support [@whorf56]. This idea has been applied to programming,
 for example Whorfianism was influential in the design of Ruby
-[@rubylang].
-It may be useful when looking for new techniques to question which
-established constructs are as they are because of languages which
-unintentionally suggest that formulation; it is perhaps significant that
-REST clients tend to style the calling of remote
-resources similarly to the call style of the host programming
-language. In practice one of two schemas are generally followed:
-a synchronous, blocking style in which an
-invocation halts execution for the duration of the request before
-evaluating to the fetched resource; or an asynchronous, non-blocking form in
-which some logic is specified to be applied to the response once it is
-available. Languages which promote concurrency though threading
-generally consider blocking in a single thread to be acceptable and will
-prefer the synchronous mode whereas languages with first class functions
-are naturally conversant in callbacks and will prefer asynchronous I/O.
-We should remember that in programming our languages limit the patterns
-that we readily see and that the schemes which map most easily onto our
-languages are not necessarily the best possible organisation. For any
-multi-packet message sent via a network some parts will arrive before
-others, at least approximately in-order but viewed from inside a
-language whose statements invariably yield single, discrete values it is
-comfortable to conceptualise the REST response as a discrete event. This
-tendency for a 'limiting comfort' extends to graphical notations such as
-UML whose constructs strongly reflect the programming languages of the
-day. UML sequence diagrams provide a syntax for instantaneously
-delivered return values, with no corresponding notation available for a
-resource whose data is progressively revealed.
+[@rubylang]. It may be useful when looking for new techniques to
+question which established constructs are as they are because of
+languages which unintentionally suggest that formulation; it is perhaps
+significant that REST clients tend to style the calling of remote
+resources similarly to the call style of the host programming language.
+In practice one of two schemas are generally followed: a synchronous,
+blocking style in which an invocation halts execution for the duration
+of the request before evaluating to the fetched resource; or an
+asynchronous, non-blocking form in which some logic is specified to be
+applied to the response once it is available. Languages which promote
+concurrency though threading generally consider blocking in a single
+thread to be acceptable and will prefer the synchronous mode whereas
+languages with first class functions are naturally conversant in
+callbacks and will prefer asynchronous I/O. We should remember that in
+programming our languages limit the patterns that we readily see and
+that the schemes which map most easily onto our languages are not
+necessarily the best possible organisation. For any multi-packet message
+sent via a network some parts will arrive before others, at least
+approximately in-order but viewed from inside a language whose
+statements invariably yield single, discrete values it is comfortable to
+conceptualise the REST response as a discrete event. This tendency for a
+'limiting comfort' extends to graphical notations such as UML whose
+constructs strongly reflect the programming languages of the day. UML
+sequence diagrams provide a syntax for instantaneously delivered return
+values, with no corresponding notation available for a resource whose
+data is progressively revealed.
 
 While the coining of the term REST represented a shift in how we think
 about HTTP, away from the transfer of hypertext documents to that of
@@ -128,7 +124,7 @@ which time they are issued in quick succession.
 ![**Revised aggregation sequence for a client capable of progressively
 interpreting the resources.** Because arrows in UML sequence diagrams
 draw returned values as a one-off happening rather than a continuous
-process, I have introduced a lighter arrow notation representing
+process, the lighter arrow notation is added to represent the
 fragments of an incremental response. Each request for an individual
 publication is made as soon as its URL can be extracted from the
 publications list and once all required data has been read from the
@@ -170,7 +166,7 @@ Stepping outside the big-small tradeoff
 ---------------------------------------
 
 Where a domain model is requestable via REST and contains data in a
-series with continuous ranges I have often noticed a tradeoff in client
+series with continuous ranges there is often a tradeoff in client
 design with regards to how much should be requested with each call.
 Because at any time it shows only a small window into a much larger
 model, the social networking site Twitter might be a good example. The
@@ -186,7 +182,7 @@ a tradeoff between sporadically requesting many tweets, yielding long,
 infrequent delays and frequently requesting a few, giving an interface
 which stutters momentarily but often.
 
-I propose that progressive loading could render this tradeoff
+Progressive loading could render this tradeoff
 unnecessary by simultaneously delivering the best of both strategies. In
 the Twitter example this could be achieved by making large requests but
 instead of deferring all rendering until the request completes, add the
@@ -200,8 +196,8 @@ Staying fast on a fallible network
 ----------------------------------
 
 REST operates over networks whose reliability varies widely. On
-unreliable networks connections are abruptly dropped and in my opinion
-existing HTTP clients handle unexpected terminations suboptimally.
+unreliable networks connections are abruptly dropped and
+existing HTTP clients handle unexpected terminations wastefully.
 Consider the everyday situation of a person using a smartphone browser
 to check their email. Mobile data coverage is often weak outside of
 major cities [@opensignal] so while travelling the signal will be lost
@@ -214,23 +210,25 @@ early disconnection there is no attempt to hand over the partial
 response. To the programmer who knows where to look the partial
 responses are extractable as raw text but handling them involves writing
 a special case and is difficult because standard parsers are not
-amenable to incomplete markup. Because of this difficulty I can only
-find examples of partial messages being dropped without inspection. For
+suited to interpreting incomplete markup. Because of this difficulty
+partial messages are dropped without inspection. For
 the user checking her email, even if 90% of her inbox had been retrieved
-before her phone signal was lost, the web application will behave as if
+before the signal was lost, the web application will behave as if
 it received none and show her nothing. Later, when the network is
-available again the inbox will be downloaded from scratch, including the
-90% which has already been successfully delivered. I see much potential
-for improvement here.
+available again the inbox will be downloaded from scratch including the
+90% which has already been successfully delivered. A more efficient system
+would allow the 90% from the aborted first request to be used straight away 
+and then later fetch only the lost 10%. 
 
-I propose moving away from this polarised view of
-successful/unsuccessful requests to one in which identifiable parts of a
-message are recognised as interesting in themselves, regardless of what
-follows, and these parts are handed back to the application as streaming
-occurs. This follows naturally from a conceptualisation of the HTTP
-response as a progressive stream of many small parts; as each part
-arrives it should be possible to use it without knowing if the next will
-be delivered successfully. Should an early disconnection occur, the
+The delivered part of a partially successful message may be used if we
+turn away from this polarised view of
+wholly successful/unsuccessful requests and conceptualise the message as
+having many parts which are useful in themselves, in which the successful 
+delivery of each part is handled independently without knowing if the next will
+part will also arrive. 
+These parts can be used earlier if they are made available to the application 
+when soon as they arrive, while the streaming is ongoing.
+Should an early disconnection occur, the
 content delivered up to that point will have already been handled so no
 special case is required to salvage it. In most cases the only recovery
 necessary will be to make a new request for just the part that was
@@ -269,25 +267,25 @@ coupled to the overall *shape* of the message.
 Deliverables
 ------------
 
-To avoid feature creep I am paring down the software deliverables to the
-smallest work which can be said to realise my thesis, the guiding
+To avoid feature creep the scope of the software deliverables is pared down to the
+smallest work which can be said to realise the goals of the project, the guiding
 principle being that it is preferable to produce a little well than more
 badly. Amongst commentators on start-up companies this is known as a
 *zoom-in pivot* [@lean p172] and the work it produces should be the
-*Minimum Viable Product* or MVP [@lean p106-110]. With a focus on
-quality I could not deliver a full stack so I am obliged to implement
-only solutions which interoperate with existing deployments. This is
-advantageous; to somebody looking to improve their system small
-enhancements are more inviting than wholesale change.
+*Minimum Viable Product* or MVP [@lean p106-110]. 
+It would not be feasible to deliver a full stack so we are obliged to 
+focus on solutions which interoperate with existing deployments. This is
+advantageous; to a third party adding small
+enhancements to an existing architecture is more inviting than wholesale change.
 
 To reify the vision above a streaming client is the MVP. Although an
 explicitly streaming server would improve the situation further, because
-all network transmissions may be viewed though a streaming lens it is
+all network data transfer may be thought of as a stream it is
 not required to start taking advantage of progressive REST. In the
 interest of creating something new, whilst HTTP servers capable of
 streaming are quite common even if they are not always programmed as
-such, I have been unable to find any example of a streaming-receptive
-REST client.
+such, there seems to be no published general-purpose, streaming-receptive
+REST client library.
 
 Criteria for success
 --------------------
@@ -300,11 +298,11 @@ representative task or in a user's perception of the application
 responsiveness while performing the task. Because applications in the
 target domain are much more I/O-bound than CPU-bound, optimisation in
 terms of the execution time of algorithms will be de-emphasised unless
-especially egregious. Additionally, I shall be considering how the
-semantics of a message are expanded as a system's design emerges and
-commenting on the value of loose coupling between data formats and the
-programs which act on them in avoiding disruption given unanticipated
-format changes.
+especially egregious. Additionally, there will be a consideration of how 
+message semantics are incrementally realised as part of an emergent design.
+This will include commentary on if disruption given unanticipated
+format changes may be avoided by libraries which encourage data consumers
+to be loosely coupled to the formats that they consume.
 
 [^2_Introduction1]: for quite an obviously visible example of progressive SVG loading,
     try loading this SVG using a recent version of Google Chrome:
@@ -640,8 +638,9 @@ seems to me as undesirable in relation to format structures as it would
 be anywhere else.
 
 In the *Red Queen's race* it took "all the running you can do, to keep
-in the same place". Ideally as a programmer I'd like to expend effort to
-make my code to do something new, or to perform better something that it
+in the same place". Ideally a programmer should only have to expend effort 
+so that their code 
+does something new, or performs better something that it
 already did, not to stay still. Following an object oriented
 encapsulation of data such that a caller does not have to concern itself
 with the data structures behind an interface, the internal
@@ -1045,8 +1044,8 @@ semantics require a lengthy expression and push onto the programmer the responsi
 managing state regarding the current position in the document and the
 nodes that have previously been seen. This
 maintenance of state tends to be programmed once per usage rather than
-assembled as the composition of reusable parts. I find the order of the
-code under SAX also quite unintuitive; event handlers cover multiple
+assembled as the composition of reusable parts. The ordering of the
+code under SAX is also quite unintuitive; event handlers cover multiple
 unrelated cases and each concern spans multiple handlers. This lends to
 a style of programming in which separate concerns do not find separate
 expression in the code. It is also notable that, unlike DOM, as the
@@ -1055,9 +1054,9 @@ programming required to interpret it also increases, mandating more
 state be stored and an increased number of cases be covered per event
 handler.
 
-While SAX addresses many of the problems raised in this dissertation, I
-find the unfriendly developer ergonomics pose too high a barrier to its
-adoption for all but fringe uses.
+While SAX addresses many of the problems raised in this dissertation, 
+its unfriendly developer ergonomics have presented too high a barrier for
+adoption in all but fringe uses.
 
 [^3_Background1]: See
     <http://jackson.codehaus.org/1.0.1/javadoc/org/codehaus/jackson/node/NullNode.html>
@@ -1076,41 +1075,41 @@ developer ergonomics because it is not usually convenient to think on
 the markup's level of abstraction. Using SAX, a programmer may only
 operate on a convenient abstraction after inferring it from a lengthy
 series of callbacks. In terms of ease of use, DOM is generally preferred
-because it provides the resource whole and in a convenient form. My
-design aims to duplicate this convenience and combine it with
+because it provides the resource whole and in a convenient form. 
+It is possible to duplicate this convenience and combine it with
 progressive interpretation by removing one restriction: that the node
 which is given is always the document root. From a hierarchical markup
 such as XML or JSON, when read in order, sub-trees are fully known
 before we fully know their parent tree. We may select pertinent parts of
 a document and deliver them as fully-formed entities as soon as they are
-known, without waiting for the remainder of the document to arrive. In
-this way I propose that it is possible to combine most of the desirable
-properties from SAX and DOM parsers into a new method.
+known, without waiting for the remainder of the document to arrive. 
+This approach combines most of the desirable
+properties from SAX and DOM parsers into a new, hybrid method.
 
-By my design, identifying the interesting parts of a document before it
+By this new design, identifying the interesting parts of a document before it
 is complete involves turning the established model for drilling-down
 inside-out. Under asynchronous I/O the programmer's callback
 traditionally receives the whole resource and then, inside the callback,
 locates the sub-parts that are required for a particular task. Inverting
-this process, I propose extracting the locating logic currently found
-inside the callback, expressing as a selector language, and using it to
+this process, the locating logic currently found
+inside the callback is extracted from it, expressed as a selector language, and used it to
 declare the cases in which the callback should be notified. The callback
 will receive complete fragments from the response once they have been
 selected according to this declaration.
 
-I will be implementing using the Javascript language because it has good
-support for non-blocking I/O and covers both contexts where this project
-will be most useful: in-browser programming and server programming.
-Focusing on the MVP, I will only be implementing the parsing of one
+Javascript was chosen for implementing the software deliverables because it has good
+support for non-blocking I/O and covers both environments where this project
+will be most useful: web browser and web server.
+Focusing on the MVP, parsing will only be implemented for one
 mark-up language. Although this technique could be applied to any
-text-based, tree-shaped markup, I find that JSON best meets my goals
+text-based, tree-shaped markup, JSON best meets the project goals
 because it is widely supported, easy to parse, and defines a single
 n-way tree, amenable to selectors which span multiple format versions.
 
 JSONPath is especially applicable to node selection as a document is
 read because it specifies only constraints on paths and 'contains'
 relationships. Because of the top-down serialisation order, on
-encountering any node in a serialised JSON stream, I will have already
+encountering any node in a serialised JSON stream we will have already
 seen enough of the prior document to know its full path. JSONPath would
 not be so amenable if it expressed sibling relationships because there
 is no similar guarantee of having seen other nodes on the same level
@@ -1128,18 +1127,19 @@ the content so search-style selections such as 'books costing less than
 X' are less useful than queries which identify nodes because of their
 type and position such as 'all books in the discount set', or, because
 we know we are examining `/books/discount`, simply 'all books'. In
-creating a new JSONPath implementation I have chosen to follow the
-existing language somewhat loosely, thereby specialising the matching
-and avoiding unnecessary code. It is difficult to anticipate what the
-real-world matching requirements will be but if I deliver now the 20% of
-possible features that I'm reasonably sure will be used for 80% of
-tasks, for the time being any functionality which is not covered may be
+creating a new JSONPath implementation the
+existing language is followed somewhat loosely, specialising the matching
+by adding features which are likely to be useful when detecting entities in REST resources
+while avoid writing unnecessary by dropping others. It is difficult to anticipate all
+real-world matching requirements but it is easier to find a core 20% of
+features that are likely to be useful in 80% of cases.
+For the time being any functionality which is not included may be
 implemented inside the callbacks themselves and later added to the
 selection language. For example, somebody wishing to filter on the price
-of books might use branching to further select inside their callback. I
-anticipate that the selections will frequently be on high-level types so
-it is useful to analyse the nature of type imposition with regards to
-JSON.
+of books might use branching to further select inside their callback.
+As seen in the 'all books' example above, identifying sub-trees according to 
+their categorisation as higher-level types is an intuitive
+abstraction to support.
 
 Detecting types in JSON
 -----------------------
@@ -1238,11 +1238,11 @@ keys are based on getters whose name typically reflects their
 cardinality; `public Address getAddress()` or
 `public List<Address> getAddresses()`. This may pose a problem in some
 cases and it would be interesting in future to investigate a system such
-as Ruby on Rails that natively understands English pluralisation. I
-considered introducing unions as an easy way to cover this situation,
-allowing expressions resembling `address|addresses.*` but decided that
-until I am sure of its usefulness it is simpler if this problem is
-solved outside of the JSONPath language by simply asking the programmer
+as Ruby on Rails that natively understands English pluralisation. Unions
+were also considered as a way to allow a pattern matching against singular or plural elements,
+resembling `address|addresses.*` but it was decided that
+until the usefulness is better demonstrated it is simpler to
+solve this problem outside of the JSONPath language by expecting the programmer
 to register two selection specifications against the same handler
 function.
 
@@ -1273,9 +1273,9 @@ Here, the keys which map onto addresses are named by the relationship
 between the parent and child nodes rather than by the type of the child.
 The type classification problem could be solved using an ontology with
 'address' subtypes 'residence', 'premises', and 'office' but this
-solution feels quite heavyweight for a simple selection language. I
-chose instead to import the idea of *duck typing* from Python
-programing, as named in a 2000 usenet discussion:
+solution feels quite heavyweight for a simple selection language. 
+Instead the idea of *duck typing* was imported from Python, as 
+named in a 2000 usenet discussion:
 
 > In other words, don't check whether it IS-a duck: check whether it
 > QUACKS-like-a duck, WALKS-like-a duck, etc, etc, depending on exactly
@@ -1285,18 +1285,17 @@ An address 'duck-definition' for the above JSON would say that any
 object which has number, street, and town properties is an address.
 Applied to JSON, duck typing takes an individualistic approach by
 deriving type from the node in itself rather than the situation in which
-it is found. Because I find this selection technique simple and powerful
-I decided to add it to my JSONPath variant. As discussed in section
+it is found. As discussed in section
 \ref{jsonpathxpath}, JSONPath's syntax is designed to resemble the
 equivalent Javascript accessors but Javascript has no syntax for a
-value-free list of object keys. The closest available notation is for
-object literals so I created a duck-type syntax derived from this by
+value-free list of object keys. The closest available Javascript notation is that for
+object literals so a duck-type syntax was derived from this by
 omitting the values, quotation marks, and commas. The address type
 described above would be written as `{number street town}`. Field order
 is insignificant so `{a b}` and `{b a}` are equivalent.
 
-It is difficult to generalise but when selecting items from a document I
-believe it will often be useful if nodes which are covariant with the
+It is difficult to generalise but when selecting items
+it is often useful if nodes which are covariant with the
 given type are also matched. We may consider that there is a root duck
 type `{}` which matches any node, that we create a sub-duck-type if we
 add to the list of required fields, and a super-duck-type if we remove
@@ -1328,8 +1327,8 @@ forms with mandatory fields.
 The new CSS4 capturing technique will be adapted for this project's JSONPath
 implementation. By
 duplicating a syntax which the majority of web developers should become
-familiar with over the next few years I hope that the learning curve
-can be made more gradual. Taking on this feature, the selector
+familiar with over the next few years the learning curve
+should appear more gradual. Taking on this feature, the selector
 `person.$address.town` would identify an address node with a town child,
 or `$people.{name, dob}` can be used to locate the same people array
 repeatedly whenever a new person is added to it. Javascript frameworks
@@ -1429,17 +1428,18 @@ oboe("resources/people.json")
       console.log("That is everyone!");
    })
    .fail( function() {
-      console.log("Actually, the download failed. Please forget ", 
-                  "the people I just told you about");
+      console.log("Actually, the download failed. There may be more ",
+                  "people but we don't know who they are yet.");
    });
 ~~~~
 
 In jQuery only one `done` handler is usually added to a request; the
 whole content is always given so there is only one thing to receive.
-Under Oboe there will usually be several separately selected areas of
-interest inside a JSON document so I anticipate that typically multiple
-node handlers will be added. Consequently, a shortcut style is provided
-for adding several selector-handler pairs at a time:
+Under Oboe each separately addressed area of
+interest inside the JSON resource requires its own handler so the design must
+accommodate adding multiple as the typical use case.
+A shortcut style is provided which allows several selector-handler pairs 
+to be added at a time:
 
 ~~~~ {.javascript}
 oboe("resources/people.json")
@@ -1499,8 +1499,8 @@ be given.
 
 Under Node.js the code style is more obviously event-based. Listeners
 are normally added using an `.on` method where the event name is a
-string given as the first argument. Adopting this style, my API design
-for oboe.js also allows events to be added as:
+string given as the first argument. Adopting this style, Oboe's API
+design also allows events to be added as:
 
 ~~~~ {.javascript}
 oboe("resources/someJson.json")
@@ -1513,10 +1513,10 @@ oboe("resources/someJson.json")
 While allowing both styles creates an API which is larger than it needs
 to be, creating a library which is targeted at both the client and
 server side is a balance between a consistent call syntax spanning
-environments and consistency with the environment. I hope that the dual
+environments and consistency with the environment. Hopefully the dual
 interface will help adoption by either camp. The two styles are similar
 enough that a person familiar with one should be able to work with the
-other without difficulty. Implementating the duplicative parts of the
+other without difficulty. Implementing the duplicative parts of the
 API should require only a minimal degree of extra coding because they
 may be expressed in common using partial completion. Because `'!'` is
 the JSONPath for the root of the document, for some callback `c`,
@@ -1572,8 +1572,9 @@ Choice of streaming data transport
 
 As discussed in section \ref{browserstreamingframeworks}, current
 techniques to provide streaming over HTTP encourage a dichotomous split
-of traffic as either stream or download. I find that this split is not
-necessary and that streaming may be used as the most effective means of
+of traffic as either stream or download. This split is not
+a necessary consequence of the technologies used
+and streaming may instead be viewed as the most efficient means of
 downloading. Streaming services implemented using push pages or
 websockets are not REST. Under these frameworks a stream has a URL
 address but the data in the stream is not addressable. This is similar
@@ -1582,13 +1583,15 @@ HTTP URLs are viewed as locating endpoints for services rather than the
 actual resources. Being unaddressable, the data in the stream is also
 uncacheable: an event which is streamed live cannot later, when it is
 historic, be retrieved from a cache which was populated by the stream.
-These frameworks use HTTP as the underlying transport but I find they do
-not follow HTTP's principled design. Due to these concerns, in the
-browser I will only be supporting downloading using XHR.
+Like SOAP, these frameworks use HTTP as the underlying transport but do
+not follow HTTP's principled design. Although these techniques might otherwise be
+used where the browser's XHR makes streaming 
+impossible, because of these concerns Oboe in the browser will only support 
+resource transfer by XHRs.
 
-Although I am designing Oboe as a client for ordinary REST resources and
-not focusing on the library as a means to receive live events, it is
-interesting to speculate whether Oboe could be used as a REST-compatible
+Although Oboe is currently intended as a client for ordinary REST resources and
+not designed for receiving live events, it is
+interesting to speculate whether it could be used as a REST-compatible
 bridge to unify live and static data. Consider a REST service which
 gives results per-constituency for UK general elections. When
 requesting historic results the data is delivered in JSON format much as
@@ -1630,8 +1633,9 @@ task.
 Supporting only XHR as a transport unfortunately means that on older
 browsers which do not fire progress events (see section
 \ref{xhrsandstreaming}) a progressive conceptualisation of the data
-transfer is not possible. I will not be using streaming workarounds such
-as push tables because this would create a client which is unable to
+transfer is not possible. Streaming workarounds such
+as push tables will not be used because they would result in a client 
+which is unable to
 connect to the majority of REST services. Degrading gracefully, the best
 compatible behaviour is to wait until the document completes and then
 interpret the whole content as if it were streamed. Because nothing is
@@ -2200,6 +2204,25 @@ and through a proxy. However, a more purist approach would not be any
 more useful because stubbing out the tokeniser functions before testing
 the compiler would be a considerable effort and I do not believe it
 would improve the rigor of the JSONPath specification.
+
+One limitation of Oboe's JSONPath integration is that it can only 
+support selections which are decidable at the time when the candidate node is found.
+This forbids some seemingly simple selections such as *the last element of the array*
+because when an element is found, without looking ahead to possibly find
+an array closing it is not knowable if it is the last element. Removing this
+restriction would require a fairly substantial rewrite of the JSONPath engine. 
+One strategy would be
+to take an event-driven approach to the matching. At present matching is triggered
+by events but the tests themselves are expressed synchronously.
+Under an event-driven matching implementation, instead of
+returning a value each JSONPath term evaluator would be given a callback to 
+pass the result to. Under most circumstances it should be able to decide if 
+a match has taken place at
+the time that it is called, handing the result immediately to the callback. 
+However, for cases where more of the document
+must be revealed before a match can be decided the term evaluators would have
+the option of listening to the parse until further document nodes are 
+revealed, replying later when the required information is available.  
 
 Differences in the working of programs that can be easily written using Oboe.js
 -------------------------------------------------------------------------------
@@ -4235,7 +4258,7 @@ function apiMethod(defaultHttpMethod, arg1, arg2) {
    if (arg1.url) {
 
       // method signature is:
-      //    oboe({method:m, url:u, body:b, complete:c, headers:{...}})
+      //    oboe({method:m, url:u, body:b, headers:{...}})
 
       return wire(
          (arg1.method || defaultHttpMethod),

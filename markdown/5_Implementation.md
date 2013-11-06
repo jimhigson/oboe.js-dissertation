@@ -264,15 +264,16 @@ methods. In this regard the high-level internal design of Oboe can be
 discussed using the terms from a more standard object oriented
 metamodel.
 
-Even where it creates a larger deliverable 
+Even where it creates a larger final deliverable, 
 short functions that can be combined to form longer
-ones have been generally preferred. Writing shorter functions reduces the size of the minimum testable
-unit which, because each test specifies a very small unit of
+ones have been generally preferred. Writing a program using short functions 
+reduces the size of the minimum testable
+unit and because each test specifies a very small unit of
 functionality, encourages the writing of very simple unit tests. Because
-the tests are simple there is less room for unanticipated cases to hide.
+the tests are simple is more difficult for unanticipated cases to hide.
 Due to pressures on code size a general purpose
 functional library was not chosen, one was created created with only the parts that are
-needed. See [functional.js](#header_functional) (Appendix
+necessary. See [functional.js](#header_functional) (Appendix
 p.\pageref{src_functional}). Functional programming in Javascript is
 known to be slower than other styles, particularly in Firefox which
 lacks optimisations such as Lambda Lifting [@functionalSpiderMonkey] but

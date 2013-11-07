@@ -655,7 +655,7 @@
    },
    
    {
-      "id":"",
+      "id":"adaptive",
       "title":"Adaptive Ob ject-Oriented Programming using Graph-Based Customization",
       "author":[         
          { "family": "Lieberherr", "given":"Karl J"},  
@@ -667,7 +667,17 @@
       "journal":{
          "name":"Communications of the ACM"
       }
-   }        
+   },
+   
+   {
+      "id":"unixbasics",
+      "title":"Basics of the Unix Philosophy",
+      "author":[               
+         { "family": "McIlroy", "given":"Doug"}
+      ],
+      "url":"http://www.faqs.org/docs/artu/ch01s06.html",
+      "issued": { "date-parts":[ [1978] ] }                  
+   }           
    
 ]
 

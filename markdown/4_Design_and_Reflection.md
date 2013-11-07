@@ -63,7 +63,11 @@ are examining `/books/discount`, simply 'all books'. In creating a new
 JSONPath implementation the existing language is followed somewhat
 loosely, specialising the matching by adding features which are likely
 to be useful when detecting entities in REST resources while avoid
-unnecessary code by dropping others. It is difficult to anticipate all
+unnecessary code by dropping others.
+Later adding new features to a language is easier than removing them 
+once a userbase has built up so where the utility isn't clear the 
+default position is to not include.
+It is difficult to anticipate all
 real-world matching requirements but it should be possible to identify a
 core 20% of features that are likely to be useful in 80% of cases. For
 the time being any functionality which is not included may be
@@ -167,15 +171,15 @@ which maps to the array.
 In the above markup, `addresses.*` would correctly identify three
 address nodes. The pluralisation of field names such as 'address'
 becoming 'addresses' is common when marshaling from OO languages because
-the JSON keys are based on getters whose name typically reflects their
+the JSON keys are extracted from getter names which reflect the method's
 cardinality: `public Address getAddress()` or
 `public List<Address> getAddresses()`. To identify members of a type
 held singularly or plurally it might help if a system that understands
-English pluralisation such as Ruby on Rails were investigated. Unions
+natural language pluralisation such as Ruby on Rails were investigated. Unions
 were also considered as a simpler solution, resembling
 `address|addresses.*`. It was decided that until the usefulness is
-better demonstrated, with no obvious best solution, it is simplest if
-plurals are handled outside of the JSONPath language by expecting the
+better demonstrated, with no obvious best solution, it is simplest to
+handle plurals outside of the JSONPath language by expecting the
 programmer to register two selection specifications against the same
 handler function.
 

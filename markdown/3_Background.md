@@ -339,12 +339,18 @@ later follow a narrative of updates to the logic expressed by the
 program. It is therefore harder to later understand the thinking behind
 a change or the reason for the change.
 
-Given model interrogation logic which is too tightly coupled to allow
-the model's inter-object structure to change, one approach to consider
-is Adaptive OOP [@adaptive] in which no detailed class structure is
-committed to when constructing the object oriented program. Once read,
-an external resource could be configured into an OO model according to a
-formal specification so that it may answer the desired requests. The
+In VirtualStudio, LINQ which is based on lambda-calculus and resembles
+SQL is used to drill-down into data structures and may also modify the
+data that is found. However this style of programming is significantly
+longer than the examples shown above so emulating it probably isn't
+suitable for this project.
+
+Given model interrogation logic which is tightly coupled so that the
+model's structure cannot change, one suggested approach is Adaptive OOP
+[@adaptive] in which no detailed class structure is committed to when
+constructing the object oriented program. Once read, the external
+resource could be dynamically configured into an OO model according to a
+formal specification so that it may answer the desired queries. The
 model that is constructed would be sufficient to answer the queries
 without the programmer having to suppose any rigid form.
 
@@ -590,8 +596,7 @@ greatest interest is the progress event:
 The historic lack of streaming for data fetched using XHR stands
 incongruously with the browser as a platform in which almost every other
 remote resource is interpreted progressively. Examples include
-progressive image formats, HTML, SVG, video, and Javascript itself
-(script interpretation starts before the script is fully loaded).
+progressive image formats, HTML, SVG, and video.
 
 The progress event is supported by the latest version of all major
 browsers. However, Internet Explorer only added support recently with

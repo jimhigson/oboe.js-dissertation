@@ -585,7 +585,29 @@
       "url":"http://www.ecma-international.org/publications/files/ECMA-ST-ARCH/ECMA-262,%203rd%20edition,%20December%201999.pdf",
       "issued": { "date-parts":[ [1999] ] },
       "type":"webpage"                  
-   }            
+   },            
+   
+   {
+      "id":"simpleschneier",
+      "title":"Crypto-Gram Newsletter",
+      "author":[         
+         { "family": "Schneier", "given":"Bruce"}
+      ],
+      "url":"https://www.schneier.com/crypto-gram-0003.html#8",
+      "issued": { "date-parts":[ [2000] ] },
+      "type":"webpage"                  
+   },
+   
+   {
+      "id":"schneierdoors",
+      "title":"To Profile or Not to Profile?",
+      "author":[         
+         { "family": "Schneier", "given":"Bruce"}
+      ],
+      "url":"http://www.samharris.org/blog/item/to-profile-or-not-to-profile",
+      "issued": { "date-parts":[ [2013] ] },
+      "type":"webpage"                  
+   }      
       
    
 ]

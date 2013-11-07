@@ -446,18 +446,18 @@ oboe("resources/someJson.json")
 ~~~~
 
 While allowing both styles creates an API which is larger than it needs
-to be, the dual interface is designed to encourage adoption one the
+to be, the dual interface is designed to encourage adoption on the
 client and server side. The two styles are similar enough that a person
 familiar with one should be able to work with the other without
 difficulty. Implementing the duplicative parts of the API should require
 only a minimal degree of extra coding because they may be expressed in
-common using partial completion. Because `'!'` is the JSONPath for the
+common and specialised using partial completion. Because `'!'` is the JSONPath for the
 root of the document, for some callback `c`, `.done(c)` is a equal to
 `.node('!', c)`. Likewise, `.node` is easily expressible as a partial
 completion of `.on` with `'node'`.
 
 When making PUT, POST or PATCH requests the API allows the body to be
-given as an object and serialises it as JSON because it is anticipated
+given as an object and serialises it as JSON because it is expected
 that REST services which emit JSON will also accept it.
 
 ~~~~ {.javascript}
@@ -473,7 +473,7 @@ Earlier callbacks when paths are found prior to nodes
 
 Following the project's aim of giving callbacks as early as possible,
 sometimes useful work can be done when a node is known to exist but
-before we have the contents of the node. A design follows in which each
+before we have the contents of the node. Under Oboe each
 node found in the JSON document can potentially trigger notifications at
 two stages: when it is first addressed and when it is complete. The API
 facilitates this by providing a `path` event following much the same

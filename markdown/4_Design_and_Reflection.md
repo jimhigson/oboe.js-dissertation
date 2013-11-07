@@ -410,7 +410,7 @@ location communicates information which is as important as their
 content. The `path` parameter provides the location as an array of
 strings plotting a descent from the JSON root to the found node. For
 example, Bolt has path `['medalWinners', 'gold']`. Similarly, the
-`ancestors` array is a list of the ancestors starting with the JSON root
+`ancestors` array lists the ancestors starting with the JSON root
 node and ending at the immediate parent of the found node. For all but
 the root node, which in any case has no ancestors, the nodes given by
 the ancestor list will have been only partially parsed.
@@ -424,13 +424,13 @@ oboe("resources/someJson.json")
    });
 ~~~~
 
-Being loosely typed, Javascript would not enforce that ternary callbacks
-are used as selection handlers. Given that before a callback is made the
-application programmers must have provided a JSONPath selector for the
-locations in the document they are interested in, for most JSON formats
-the content alone will be sufficient. The API design orders the callback
-parameters so that in most common cases a unary or binary function can
-be given.
+Being loosely typed, Javascript does not enforce that ternary callbacks
+are used as selection handlers. Before a callback is made the
+application programmers must have provided a JSONPath selector specifying the
+locations in the document that they are interested in. The programmer
+will already be aware enough of the node location so for most JSON formats
+the content alone will be sufficient, the API purposefully orders the callback
+parameters so that in most cases a unary function can be given.
 
 Under Node.js the code style is more obviously event-based. Listeners
 are normally added using an `.on` method where the event name is a

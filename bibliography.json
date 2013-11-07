@@ -643,17 +643,31 @@
       "type":"webpage"                  
    },
    
-{
-   "id":"getjson",
-   "title":"Get JSON",
-   "author":[         
-      { "family": "NPM"}
-   ],
-   "url":"https://npmjs.org/package/get-json",
-   "issued": { "date-parts":[ [2013] ] },
-   "type":"webpage"                  
-}         
-      
+   {
+      "id":"getjson",
+      "title":"Get JSON",
+      "author":[         
+         { "family": "NPM"}
+      ],
+      "url":"https://npmjs.org/package/get-json",
+      "issued": { "date-parts":[ [2013] ] },
+      "type":"webpage"                  
+   },
+   
+   {
+      "id":"",
+      "title":"Adaptive Ob ject-Oriented Programming using Graph-Based Customization",
+      "author":[         
+         { "family": "Lieberherr", "given":"Karl J"},  
+         { "family": "Silva-Lepe", "given":"Ignacio"},
+         { "family": "Cun", "given":"Xiao"}
+      ],
+      "url":"http://www.csg.ci.i.u-tokyo.ac.jp/old-pages/muga/paper/others/gpce_gcse/ap_graf.pdf",
+      "issued": { "date-parts":[ [1994] ] },
+      "journal":{
+         "name":"Communications of the ACM"
+      }
+   }        
    
 ]
 

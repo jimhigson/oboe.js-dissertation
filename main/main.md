@@ -734,7 +734,7 @@ distinct lists of child nodes, attribute children and node list
 children. From one perspective attributes are child nodes of their
 parent element but they can alternatively be considered as data stored
 in the element. Because of this classification ambiguity an XML document
-can't be said to form a single correct n-way tree. XML attributes may only
+can't be said to form a single n-way tree. XML attributes may only
 contain strings and have a lesser expressivity than child nodes which
 allow recursive structure; it is a common refactor to change from
 attributes to elements when a scalar value is upgraded to a compound.
@@ -1732,14 +1732,13 @@ automated testing can provide a high degree of confidence regarding the
 correct working of the library. A local event bus facilitates
 communication inside an Oboe instance and most components interact
 solely by using this bus: receiving events, processing them, and
-publishing further events in response. The use of an event bus
-removes the need for each unit
-to locate other units before it may listen to their output,
-giving a highly decoupled shape to the library in which each part knows
-the events it requires but not who publishes them. Once everything is
-wired into the bus no central control is required and the larger
-behaviours emerge as a consequence of the interactions between finer
-ones.
+publishing further events in response. The use of an event bus removes
+the need for each unit to locate other units before it may listen to
+their output, giving a highly decoupled shape to the library in which
+each part knows the events it requires but not who publishes them. Once
+everything is wired into the bus no central control is required and the
+larger behaviours emerge as a consequence of the interactions between
+finer ones.
 
 Design for automated testing
 ----------------------------
@@ -1756,10 +1755,10 @@ that when it receives certain input events the expected output events
 are consequently published.
 
 The *Component tests* step back from examining individual components to
-a position where their behaviour in composition may be examined.
-Because the compositions are quite simple there are fewer component
-tests than unit tests. The component tests do not take account of how
-the composition is drawn and predominantly examine the behaviour of the
+a position where their behaviour in composition may be examined. Because
+the compositions are quite simple there are fewer component tests than
+unit tests. The component tests do not take account of how the
+composition is drawn and predominantly examine the behaviour of the
 library through its public API. One exception is that the streamingXHR
 component is switched for a stub so that HTTP traffic can be simulated.
 
@@ -1768,9 +1767,8 @@ tests*. These verify Oboe as a black box without any knowledge of, or
 access to, the internals, using the same API as is exposed to
 application programmers. These tests are the most expensive to write but
 a small number are necessary in order to verify that Oboe works
-correctly end-to-end. HTTP traffic
-cannot be faked without access to the internals
-so before these tests are performed a corresponding REST
+correctly end-to-end. HTTP traffic cannot be faked without access to the
+internals so before these tests are performed a corresponding REST
 service is started. This test service is written using Node and returns
 known content progressively according to predefined timings, somewhat
 emulating a slow internet connection. The integration tests particularly
@@ -1785,23 +1783,21 @@ downloaded.
 
 Confidently black-box testing a stateful unit is difficult. Because of
 side-effects and hidden state we can only rely on inductive reasoning to
-say that similar future calls won't later result in different behaviours.
-Building up the parse result
-from SAX events is a fairly complex process which cannot be implemented
-efficiently using wholly side-effect free Javascript. To promote
-testability the state is delegated to a simple state-storing unit. The
-intricate logic may then be expressed as a separately tested set of
-side-effect free functions which transition between one state and the
-next. For whichever results
+say that similar future calls won't later result in different
+behaviours. Building up the parse result from SAX events is a fairly
+complex process which cannot be implemented efficiently using wholly
+side-effect free Javascript. To promote testability the state is
+delegated to a simple state-storing unit. The intricate logic may then
+be expressed as a separately tested set of side-effect free functions
+which transition between one state and the next. For whichever results
 the functions give while under test, uninfluenced by state one may be
-confident that they will later yield the same result if 
-given the same input.
-The separate unit to maintain the state has exactly one
+confident that they will later yield the same result if given the same
+input. The separate unit to maintain the state has exactly one
 responsibility, to hold the incremental parse output between function
 calls, and is trivial to test. This approach slightly breaks with the
 object oriented principle of encapsulation by hiding state behind the
-logic which acts on it but the departure will be justified if a
-more testable codebase promotes greater reliability.
+logic which acts on it but the departure will be justified if a more
+testable codebase promotes greater reliability.
 
 To enhance testability Oboe has also embraced dependency injection.
 Components do not instantiate their dependencies but rather rely on them
@@ -1810,18 +1806,17 @@ phase. For example, the network component which hides browser
 differences does not know how to create the underlying XHR that it
 adapts. Undoubtedly, by not instantiating its own transport this
 component presents a less friendly interface: its data source is no
-longer a hidden implementation detail but exposed as a part of its
-API as the responsibility of the caller. This disadvantage is
-mitigated by the interface being purely internal. Dependency injection
-allows the tests to be written more simply because it is
-easy to substitute the real XHR for a stub. Unit tests should test
-exactly one unit; were the streaming HTTP object to create its own
-transport, the XHR would also be under test, plus whichever external
-service it connects to. Because Javascript allows redefinition of built
-in types the stubbing could have also been done by
-overwriting the XHR constructor to return a mock. However this is to be
-avoided as it opens up the possibility of changes to the environment
-leaking between test cases.
+longer a hidden implementation detail but exposed as a part of its API
+as the responsibility of the caller. This disadvantage is mitigated by
+the interface being purely internal. Dependency injection allows the
+tests to be written more simply because it is easy to substitute the
+real XHR for a stub. Unit tests should test exactly one unit; were the
+streaming HTTP object to create its own transport, the XHR would also be
+under test, plus whichever external service it connects to. Because
+Javascript allows redefinition of built in types the stubbing could have
+also been done by overwriting the XHR constructor to return a mock.
+However this is to be avoided as it opens up the possibility of changes
+to the environment leaking between test cases.
 
 Running the tests
 -----------------
@@ -1834,25 +1829,25 @@ required not to surpass a certain size so this also checked on every
 save. Because Oboe is a small, tightly focused project the majority of
 the programming time is spent refactoring already working code. Running
 tests on save provides quick feedback so that mistakes are found before
-the programmer is thinking about the next context. Agile practitioners emphasise
-the importance of tests that execute quickly [@cleancode p.314:T9] --
-Oboe's 220 unit and component tests run in less than a second so
-discovering programming mistakes is nearly instant. If the "content of
-any medium is always another medium” [@media p.8], we might say that the
-content of programming is the process that is realised by its execution.
-A person working in a physical medium sees the thing they are making but
-the programmer does usually not see their program's execution
-simultaneously as they create. Conway notes that an artisan works by
-transform-in-place "start with the working material in place and you
-step by step transform it into its final form," but software is created
-through proxies. He attempts to close this gap by merging
-programming with the results of programming [@humanize pp.8-9]. 
-If we bring together the medium and the message by viewing the
-result of code while we write it, we can build in a series of small,
-iterative, correct steps and programming can be more explorative and
-expressive. Running the tests subtly, automatically hundreds of times
-per day isn't merely convenient, this build process noticeably improved
-the quality of the project's programming.
+the programmer is thinking about the next context. Agile practitioners
+emphasise the importance of tests that execute quickly [@cleancode
+p.314:T9] -- Oboe's 220 unit and component tests run in less than a
+second so discovering programming mistakes is nearly instant. If the
+"content of any medium is always another medium” [@media p.8], we might
+say that the content of programming is the process that is realised by
+its execution. A person working in a physical medium sees the thing they
+are making but the programmer does usually not see their program's
+execution simultaneously as they create. Conway notes that an artisan
+works by transform-in-place "start with the working material in place
+and you step by step transform it into its final form," but software is
+created through proxies. He attempts to close this gap by merging
+programming with the results of programming [@humanize pp.8-9]. If we
+bring together the medium and the message by viewing the result of code
+while we write it, we can build in a series of small, iterative, correct
+steps and programming can be more explorative and expressive. Running
+the tests subtly, automatically hundreds of times per day isn't merely
+convenient, this build process noticeably improved the quality of the
+project's programming.
 
 Integration tests are not run on save. They intentionally simulate a
 slow network so by the time they complete a programmer will have already
@@ -1870,11 +1865,11 @@ convenient while programming but unless a project is written as a single
 file in practice some build phase is required to create an easily
 distributable form. Dependency managers have not yet become standard for
 client-side web development so dependant libraries are usually manually
-downloaded. For a developer wishing to include Oboe in their own
-project a single file is much more convenient than the multi-file raw
-source. If they are not using a similar build process on their site, a
-single file is also faster to transfer to their users, mostly because
-the HTTP overhead is of constant size per request.
+downloaded. For a developer wishing to include Oboe in their own project
+a single file is much more convenient than the multi-file raw source. If
+they are not using a similar build process on their site, a single file
+is also faster to transfer to their users, mostly because the HTTP
+overhead is of constant size per request.
 
 Javascript files are interpreted in series by the browser so load-time
 dependencies must precede dependants. If several valid Javascript files
@@ -1885,18 +1880,17 @@ files but distributed as one. Several tools exist to automate this stage
 of the build process that topologically sort the dependency graph before
 concatenation in order to find a suitable script order.
 
-Early in the project Require.js [@requirejs] was chosen for this task. Javascript 
-doesn't have a built in import statement; Require adds
-one from inside the language as an asynchronous `require` function.
-Calls to `require` AJAX in
-and execute the imported source, passing any exported items to the given
-callback. For non-trivial applications loading each dependency
-individually over AJAX is intended only for debugging because making so
-many requests is slow. For efficient delivery Require provides the
-`optimise` command which concatenates an application into a single file
-by using static analysis to deduce a workable source order. Because the
-`require` function may be called from anywhere, this is undecidable in
-the general case so when a safe concatenation order cannot be found
+Early in the project Require.js [@requirejs] was chosen for this task.
+Javascript doesn't have a built in import statement; Require adds one
+from inside the language as an asynchronous `require` function. Calls to
+`require` AJAX in and execute the imported source, passing any exported
+items to the given callback. For non-trivial applications loading each
+dependency individually over AJAX is intended only for debugging because
+making so many requests is slow. For efficient delivery Require provides
+the `optimise` command which concatenates an application into a single
+file by using static analysis to deduce a workable source order. Because
+the `require` function may be called from anywhere, this is undecidable
+in the general case so when a safe concatenation order cannot be found
 Require falls back to lazy loading. In practice this isn't a problem
 because imports are generally not subject to branching. For larger
 webapps lazy loading is actually a feature because it speeds up the
@@ -1917,43 +1911,41 @@ implement one. Unfortunately this was not feasible. Even after
 optimisation, Require's design necessitates that calls to the `require`
 function are left in the code and that the Require run-time component is
 available to handle them. At more than 5k gzipped this would have more
-than doubled Oboe's download footprint.
-With about 15 source files and a fairly sparse
-dependency graph, finding a working order on paper proved a simpler task than
-integrating with tools offering to automate the process.
-After finding a Grunt plugin analogous to the unix `cat`
+than doubled Oboe's download footprint. With about 15 source files and a
+fairly sparse dependency graph, finding a working order on paper proved
+a simpler task than integrating with tools offering to automate the
+process. After finding a Grunt plugin analogous to the unix `cat`
 command it was trivial to create a build process which produces a
-distributable library while requiring no dependency management code
-to be loaded at run-time.
+distributable library while requiring no dependency management code to
+be loaded at run-time.
 
-For future consideration there is Browserify [@browserify]. This library reverses the
-'browser first' Javascript mindset by viewing Node as the primary target
-for Javascript development and adapting the browser environment to
-match. Browserify converts applications written for Node into a single
-file packaged for delivery to a web browser. Significantly, other than
-adaptors wrapping browser APIs in the call style of their Node
-equivalents, Browserify leaves no trace of itself in the final
-Javascript. When run on browsers supporting progress events Browserify's 
-HTTP adaptor[^5_Implementation1] presents XHRs using Node's streaming interface
-so it should be capable of adapting the Node version of Oboe to run under
-modern browsers.
+For future consideration there is Browserify [@browserify]. This library
+reverses the 'browser first' Javascript mindset by viewing Node as the
+primary target for Javascript development and adapting the browser
+environment to match. Browserify converts applications written for Node
+into a single file packaged for delivery to a web browser.
+Significantly, other than adaptors wrapping browser APIs in the call
+style of their Node equivalents, Browserify leaves no trace of itself in
+the final Javascript. When run on browsers supporting progress events
+Browserify's HTTP adaptor[^5_Implementation1] presents XHRs using Node's streaming
+interface so it should be capable of adapting the Node version of Oboe
+to run under modern browsers.
 
 Javascript source can be made significantly smaller by *minification*
 techniques such as reducing scoped symbols to a single character or
-deleting the comments. For Oboe the popular minifier library Uglify [@uglify]
-was chosen. Uglify performs only surface optimisations, concentrating
-mostly on producing compact syntax by manipulating the code's abstract
-syntax tree. Google Closure 
-Compiler [@closure],
-a more sophisticated optimiser which leverages a deeper understanding
-of the program, would be an alternative option.
-Unfortunately, proving equivalence in highly
-dynamic languages is often impossible and Closure Compiler is only safe
-given a well-advised subset of Javascript. It delivers no reasonable
-guarantee of equivalence if code is not written as the Closure team
-expected. Integration tests would catch any such failures but for the
-time being it was decided that even constrained by micro-library size limits, a
-slightly larger file is a worthwhile tradeoff for a safer build process.
+deleting the comments. For Oboe the popular minifier library Uglify
+[@uglify] was chosen. Uglify performs only surface optimisations,
+concentrating mostly on producing compact syntax by manipulating the
+code's abstract syntax tree. Google Closure Compiler [@closure], a more
+sophisticated optimiser which leverages a deeper understanding of the
+program, would be an alternative option. Unfortunately, proving
+equivalence in highly dynamic languages is often impossible and Closure
+Compiler is only safe given a well-advised subset of Javascript. It
+delivers no reasonable guarantee of equivalence if code is not written
+as the Closure team expected. Integration tests would catch any such
+failures but for the time being it was decided that even constrained by
+micro-library size limits, a slightly larger file is a worthwhile
+tradeoff for a safer build process.
 
 Styles of programming
 ---------------------
@@ -1965,57 +1957,54 @@ public API. Although Javascript supports them, classes and constructors
 are not used, nor is there any inheritance or notable polymorphism.
 Closures form the primary means of data storage and hiding. Most
 entities do not give a Javascript object on instantiation, they are
-constructed as a set of event handlers attached to the central bus which,
-as inner-functions inside the same outer function,
-share access to values caught in a common closure. From
-outside the closure the values are not only private as
-would be seen in a Java-style OO model, they are inherently unaddressable.
+constructed as a set of event handlers attached to the central bus
+which, as inner-functions inside the same outer function, share access
+to values caught in a common closure. From outside the closure the
+values are not only private as would be seen in a Java-style OO model,
+they are inherently unaddressable.
 
 Although not following an established object-oriented metamodel, the
-high-level componentisation hasn't departed very far from how the project
-might be divided following that style and OO design patterns have influenced
-the layout considerably. If we wished to think in terms of the OO
-paradigm we might say that values trapped inside closures are private
-attributes and that the handlers registered on the event bus are public
-methods. In this regard the high-level internal design of Oboe can be
-discussed using the terms from a more standard object oriented
+high-level componentisation hasn't departed very far from how the
+project might be divided following that style and OO design patterns
+have influenced the layout considerably. If we wished to think in terms
+of the OO paradigm we might say that values trapped inside closures are
+private attributes and that the handlers registered on the event bus are
+public methods. In this regard the high-level internal design of Oboe
+can be discussed using the terms from a more standard object oriented
 metamodel.
 
-Even where it creates a larger final deliverable, 
-short functions that can be combined to form longer
-ones have been generally preferred. Writing a program using short functions 
-reduces the size of the minimum testable
-unit and because each test specifies a very small unit of
+Even where it creates a larger final deliverable, short functions that
+can be combined to form longer ones have been generally preferred.
+Writing a program using short functions reduces the size of the minimum
+testable unit and because each test specifies a very small unit of
 functionality, encourages the writing of very simple unit tests. When
 the tests are simple there is less room for unanticipated cases to hide.
-Due to pressures on code size a general purpose
-functional library was not chosen, one was created containing only the 
-necessary functions
-([functional.js](#header_functional), Appendix p.\pageref{src_functional}).
-Functional programming in Javascript is
+Due to pressures on code size a general purpose functional library was
+not chosen, one was created containing only the necessary functions
+([functional.js](#header_functional), Appendix
+p.\pageref{src_functional}). Functional programming in Javascript is
 known to be slower than other styles, particularly in Firefox which
 lacks optimisations such as Lambda Lifting [@functionalSpiderMonkey] but
-the effect should be insignificant, particularly when considered alongside 
-the performance advantages that streaming I/O offers.
-Because of its
-single-threaded execution model, in the browser any Javascript is run
-during script execution frames, interlaced with frames for other
+the effect should be insignificant, particularly when considered
+alongside the performance advantages that streaming I/O offers. Because
+of its single-threaded execution model, in the browser any Javascript is
+run during script execution frames, interlaced with frames for other
 concurrent concerns. To minimise the impact on other concerns such as
 rendering it is important that no task occupies the CPU for very long.
 Since most monitors refresh at 60Hz, about 16ms is a fair target for the
 maximum duration of a browser script frame. In Node no limit can be
 implied from a display but any CPU-hogging task degrades the
-responsiveness of concurrent work. Switching tasks is cheap so effectively
-sharing the CPU prefers many small execution frames over
-a few larger ones. Whether running in a browser or server, the
-bottleneck is more often I/O than processing speed; providing no task
-contiguously holds the CPU for an unusually long time an application can
-usually be considered fast enough. Oboe's progressive model favours
-sharing because it naturally splits the work over many execution frames
-which by a non-progressive mode would be performed during a single
-frame. Although the overall CPU time will be higher, Oboe should share
-the processor more cooperatively and because of better I/O management
-the overall system responsiveness should be improved.
+responsiveness of concurrent work. Switching tasks is cheap so
+effectively sharing the CPU prefers many small execution frames over a
+few larger ones. Whether running in a browser or server, the bottleneck
+is more often I/O than processing speed; providing no task contiguously
+holds the CPU for an unusually long time an application can usually be
+considered fast enough. Oboe's progressive model favours sharing because
+it naturally splits the work over many execution frames which by a
+non-progressive mode would be performed during a single frame. Although
+the overall CPU time will be higher, Oboe should share the processor
+more cooperatively and because of better I/O management the overall
+system responsiveness should be improved.
 
 Incrementally building the parsed content
 -----------------------------------------
@@ -2025,18 +2014,18 @@ there is an *incremental content builder* and *ascent tracer* which
 handle SAX events from the Clarinet JSON parser. By presenting to the
 controller a simpler interface than is provided by Clarinet, taken
 together these might be considered as an Adaptor pattern, albeit
-modified to be event-driven rather than call-driven: we receive six event
-types and in response emit from a vocabulary of two, `NODE_FOUND` and
-`PATH_FOUND`. The events received from Clarinet are low level, reporting
-the sequence of tokens in the markup; those emitted are at a much higher
-level of abstraction, reporting the JSON nodes and paths as they are
-discovered. Testing a JSONPath expression for a match against any
-particular node requires the node itself, the path to the node, and the
-ancestor nodes. For each newly found item in the JSON this information
-is delivered as the payload of the two event types emitted by the
-content builder. When the callback adaptors receive these events they
-have the information required to test registered patterns for matches
-and notify application callbacks if required.
+modified to be event-driven rather than call-driven: we receive six
+event types and in response emit from a vocabulary of two, `NODE_FOUND`
+and `PATH_FOUND`. The events received from Clarinet are low level,
+reporting the sequence of tokens in the markup; those emitted are at a
+much higher level of abstraction, reporting the JSON nodes and paths as
+they are discovered. Testing a JSONPath expression for a match against
+any particular node requires the node itself, the path to the node, and
+the ancestor nodes. For each newly found item in the JSON this
+information is delivered as the payload of the two event types emitted
+by the content builder. When the callback adaptors receive these events
+they have the information required to test registered patterns for
+matches and notify application callbacks if required.
 
 ![**List representation of an ascent rising from leaf to root through a
 JSON tree.** Note the special ROOT value which represents the location
@@ -2065,18 +2054,17 @@ manipulated to visit every node, allowing each to be tested against the
 registered JSONPath expressions. Internally, the builder's handlers for
 SAX events are declared as the combination of a smaller number of basic
 reusable parts. Several of Clarinet's event types differ only by the
-type of the node that they announce but Oboe is largely
-unconcerned regarding a JSON node's type. On picking up `openobject` and
-`openarray` events, both pass through to the same `nodeFound` function,
-differing only in the type of the node which is first created.
-Similarly, Clarinet emits a `value` event when a string or number is
-found in the markup. Because primitive nodes are always leaves the
-builder treats them as a node which instantaneously starts and ends,
-handled programmatically as the composition of the `nodeFound` and
-`nodeFinished` functions.
+type of the node that they announce but Oboe is largely unconcerned
+regarding a JSON node's type. On picking up `openobject` and `openarray`
+events, both pass through to the same `nodeFound` function, differing
+only in the type of the node which is first created. Similarly, Clarinet
+emits a `value` event when a string or number is found in the markup.
+Because primitive nodes are always leaves the builder treats them as a
+node which instantaneously starts and ends, handled programmatically as
+the composition of the `nodeFound` and `nodeFinished` functions.
 
-Although the builder functions are stateless and side-effect free, between
-SAX events the current ascent needs to be stored. This is
+Although the builder functions are stateless and side-effect free,
+between SAX events the current ascent needs to be stored. This is
 handled by the ascent tracker which serves as a holder for this data.
 Starting with the ascent initialised as the empty list, on receiving a
 SAX event it passes the ascent to the handler and stores the result so
@@ -2085,37 +2073,38 @@ to the next handler.
 
 Linked lists were chosen for the ascents in preference to the more
 conventional approach of using native Javascript arrays for several
-reasons. A program is easier to test and debug given
-immutable data but employing the native Arrays without mutating
-would be very expensive because on each new path the whole array would
-have to be copied. During debugging, unpicking a stack trace holding immutable 
-data requires less mental stress because every value revealed is the value that has always
-occupied that space and the programmer does not have to project along the time axis by
-imagining which values were in the same space earlier or might be there
-later. The lack of side effects means that new
-commands may be tried during a pause in execution without worrying about breaking the
-working of the program. In terms of speed, array-type structures are
-poorly suited to frequent growing and shrinking so for
-tracking ascents whose length changes with every event received, arrays 
-are relatively unperformant. Taking into account the receiver of the ascent data,
-lists are also a convenient format for the JSONPath engine to match against as will
-be discussed in the next section. The Javascript file
-[lists.js](#header_lists) (Appendix p.\pageref{src_lists}) implements
-various list functions: `cons`, `head`, `tail`, `map`, `foldR`, `all`,
-`without` as well as providing conversions to and from arrays.
+reasons. A program is easier to test and debug given immutable data but
+employing the native Arrays without mutating would be very expensive
+because on each new path the whole array would have to be copied. During
+debugging, unpicking a stack trace holding immutable data requires less
+mental stress because every value revealed is the value that has always
+occupied that space and the programmer does not have to project along
+the time axis by imagining which values were in the same space earlier
+or might be there later. The lack of side effects means that new
+commands may be tried during a pause in execution without worrying about
+breaking the working of the program. In terms of speed, array-type
+structures are poorly suited to frequent growing and shrinking so for
+tracking ascents whose length changes with every event received, arrays
+are relatively unperformant. Taking into account the receiver of the
+ascent data, lists are also a convenient format for the JSONPath engine
+to match against as will be discussed in the next section. The
+Javascript file [lists.js](#header_lists) (Appendix
+p.\pageref{src_lists}) implements various list functions: `cons`,
+`head`, `tail`, `map`, `foldR`, `all`, `without` as well as providing
+conversions to and from arrays.
 
 Oboe JSONPath implementation
 ----------------------------
 
 With the initial commit the JSONPath implementation was little more than
 a series of regular expressions[^5_Implementation3] but has slowly evolved into a
-featureful and efficient implementation. A total rewriting was
-possible because the correct behaviour is well defined by test
+featureful and efficient implementation. A total rewriting was possible
+because the correct behaviour is well defined by test
 specifications[^5_Implementation4]. The JSONPath compiler exposes a single higher-order
 function. This function takes the JSONPath as a string and, proving it
 is a valid expression, returns a function which tests for matches to the
-pattern. The type is difficult to express in Javascript but expressed
-as Haskell would be:
+pattern. The type is difficult to express in Javascript but expressed as
+Haskell would be:
 
 ~~~~ {.haskell}
 String -> Ascent -> JsonPathMatchResult
@@ -2141,9 +2130,9 @@ for matching to execute quickly. The extra time needed to compile a
 pattern when new application callbacks are registered is relatively
 insignificant because it is performed much less often.
 
-The compilation is performed by recursively examining the left-most
-side of the string for a JSONPath clause. For each clause type there is
-a function which tests ascents for that clause, for example by checking
+The compilation is performed by recursively examining the left-most side
+of the string for a JSONPath clause. For each clause type there is a
+function which tests ascents for that clause, for example by checking
 the field name; by partial completion the field name function would be
 specialised to match against one particular name. Having generated a
 function to match against the left-most clause, compilation continues
@@ -2189,32 +2178,32 @@ statementExpr(             // outermost wrapper, added when JSONPath
 )      
 ~~~~
 
-Because the matching is implemented using a side-effect free subset of Javascript
-it would be safe to use a functional cache. As well as saving
+Because the matching is implemented using a side-effect free subset of
+Javascript it would be safe to use a functional cache. As well as saving
 time by avoiding repeated execution this could potentially also save
 memory because where two JSONPath strings contain a common left side
 they could share the inner part of their functional expression. Given
 the patterns `!.animals.mammals.human` and `!.animals.mammals.cats`, the
 JSONPath engine will currently create two identical evaluators for
-`!.animals.mammals`. Likewise, while evaluating several sibling
-elements against a pattern that requires
-matches at multiple depths in the JSON hierarchy, the same JSONPath term evaluator  
-will be tested many times against the
-parent element, always with the same result. Although
-Javascript doesn't come with functional caching, it can be added using
-the language itself, probably the best known example being `memoize`
-from Underscore.js [@underscore_memo]. It is likely however that hashing the function
-parameters would be slower than performing the matching. Although the
-parameters are all immutable and could in theory be hashed by object
-identity, in practice there is no way to access an object ID from inside
-the language so any hash function for a node parsed out of JSON would
-have to walk the entire subtree rooted from that node, requiring time proportional
-to the size of the tree. Current
-Javascript implementations also make it difficult to manage caches in
-general from inside the language because there is no way to occupy only
-spare memory. Weak references are proposed in the ECMAScript 6th edition draft [@ecma6] but currently
-only experimentally supported[^5_Implementation5]. If the hashing problem were solved
-the WeakHashMap would be ideal for adding functional caching in future.
+`!.animals.mammals`. Likewise, while evaluating several sibling elements
+against a pattern that requires matches at multiple depths in the JSON
+hierarchy, the same JSONPath term evaluator\
+will be tested many times against the parent element, always with the
+same result. Although Javascript doesn't come with functional caching,
+it can be added using the language itself, probably the best known
+example being `memoize` from Underscore.js [@underscore_memo]. It is
+likely however that hashing the function parameters would be slower than
+performing the matching. Although the parameters are all immutable and
+could in theory be hashed by object identity, in practice there is no
+way to access an object ID from inside the language so any hash function
+for a node parsed out of JSON would have to walk the entire subtree
+rooted from that node, requiring time proportional to the size of the
+tree. Current Javascript implementations also make it difficult to
+manage caches in general from inside the language because there is no
+way to occupy only spare memory. Weak references are proposed in the
+ECMAScript 6th edition draft [@ecma6] but currently only experimentally
+supported[^5_Implementation5]. If the hashing problem were solved the WeakHashMap would
+be ideal for adding functional caching in future.
 
 Functions describing the tokenisation of the JSONPath language are given
 their own source file and tested independently of the compilation.
@@ -2231,38 +2220,35 @@ p.\pageref{testpyramid}) to be split into two further sub-layers.
 Arguably, the upper of these sub-layers is not a unit test because it is
 verifying more than one unit, the tokeniser and the compiler, and there
 is some redundancy since the tokenisation is tested both independently
-and through a proxy. A more purist approach would 
-stub out the tokeniser functions before testing
-the compiled JSONPath expressions.
-This would certainly be a desirable if a general
-purpose compiler generator were being implemented but since the aim of the code
-is to work with only one language, removing the
-peculiarities of the language from the test would only decrease their effectiveness
-as an indicator of correct interpretation.
+and through a proxy. A more purist approach would stub out the tokeniser
+functions before testing the compiled JSONPath expressions. This would
+certainly be a desirable if a general purpose compiler generator were
+being implemented but since the aim of the code is to work with only one
+language, removing the peculiarities of the language from the test would
+only decrease their effectiveness as an indicator of correct
+interpretation.
 
-One limitation is that Oboe currently only supports
-selections which are decidable at the time that the candidate node is 
-discovered.
-This forbids some seemingly simple selections such as *the last element of the array*
-because when an element is found, without looking ahead and possibly finding
-an array closing token we cannot know if our node is the last element.
-Removing this
-restriction would require a fairly substantial rewrite of the JSONPath engine. 
-One strategy would be
-to take an event-driven approach to the matching. At present matching is triggered
-by events but the tests themselves are expressed synchronously.
-Under an event-driven matching implementation, instead of
-returning a value, each JSONPath term evaluator would be given a callback to 
-pass the result to. Under most circumstances it should be able to decide if 
-a match has taken place at
-the time that it is called, handing the result immediately to the callback. 
-However, for cases where more of the document
-must be revealed before a match can be decided the term evaluators would have
-the option of listening to the parse until further document nodes are 
-revealed, replying later when the necessary information is available.
-Luckily, a language with just the selectors that we able to evaluate when nodes are found
-is powerful enough to handle most cases so until a strong need is demonstrated 
-the selector language will be kept in its curernt, relatively simple form.
+One limitation is that Oboe currently only supports selections which are
+decidable at the time that the candidate node is discovered. This
+forbids some seemingly simple selections such as *the last element of
+the array* because when an element is found, without looking ahead and
+possibly finding an array closing token we cannot know if our node is
+the last element. Removing this restriction would require a fairly
+substantial rewrite of the JSONPath engine. One strategy would be to
+take an event-driven approach to the matching. At present matching is
+triggered by events but the tests themselves are expressed
+synchronously. Under an event-driven matching implementation, instead of
+returning a value, each JSONPath term evaluator would be given a
+callback to pass the result to. Under most circumstances it should be
+able to decide if a match has taken place at the time that it is called,
+handing the result immediately to the callback. However, for cases where
+more of the document must be revealed before a match can be decided the
+term evaluators would have the option of listening to the parse until
+further document nodes are revealed, replying later when the necessary
+information is available. Luckily, a language with just the selectors
+that we able to evaluate when nodes are found is powerful enough to
+handle most cases so until a strong need is demonstrated the selector
+language will be kept in its curernt, relatively simple form.
 
 Differences in the working of programs that can be easily written using Oboe.js
 -------------------------------------------------------------------------------
@@ -2311,19 +2297,18 @@ fs.readFile("/home/me/secretPlans.json", function( err, plansJson ){
 ~~~~
 
 While the behaviours intended by the programmer are similar, some
-accidental side-behaviours differ between the two. It is likely that most programmers
-would not think of these differences as they write so it is important
-that they are not destructive. In the first
-example the order of the output for schemes and plans will match their
-order in the JSON, whereas for the second scheming is always done before
-plotting. The error behaviours are also different -- the first prints
-until it has an error, the second prints if there are no errors. In the
-second example it is *almost mandatory* to check for errors before
-starting the output whereas in the first it feels most natural to
-register the error listener at the end of the chained calls. 
-It is unusual in describing a system's desirable behaviour to state the
-reaction to abnormal cases first so I find that the Oboe example follows 
-the more natural ordering.
+accidental side-behaviours differ between the two. It is likely that
+most programmers would not think of these differences as they write so
+it is important that they are not destructive. In the first example the
+order of the output for schemes and plans will match their order in the
+JSON, whereas for the second scheming is always done before plotting.
+The error behaviours are also different -- the first prints until it has
+an error, the second prints if there are no errors. In the second
+example it is *almost mandatory* to check for errors before starting the
+output whereas in the first it feels most natural to register the error
+listener at the end of the chained calls. It is unusual in describing a
+system's desirable behaviour to state the reaction to abnormal cases
+first so I find that the Oboe example follows the more natural ordering.
 
 Considering the code style that is encouraged, the first example takes a
 more declarative form by specifying the items of interest using patterns
@@ -2373,22 +2358,19 @@ Benchmarking vs non-progressive REST
 
 I feel it is important to experimentally answer the question, *is this
 way actually any faster?* To measure performance the Oboe repository
-contains a small
-benchmarking suite that runs under Node.js. One of the advantages
-of incremental parsing suggested in the introduction was a perceptual 
-improvement in speed.
-The experiments do not directly gauge user perception because it
-would require subjective judgement and human
-participants, an undertaking large enough to be a project in itself. 
-In lieu of perceptual experiments the benchmarks measure the time taken to provide the first
-output. This correlates with how quickly the first interface elements may be drawn
-and should be a good proxy indicator of perceptual speed. Node is used
-to host the tests because it is a minimalist platform and should give
-repeatable results whereas browsers may be 
-running any number of simultaneous background tasks and are less predictable.
-Node also has the advantage
-that small changes in memory use are not overwhelmed by a memory hungry
-environment.
+contains a small benchmarking suite that runs under Node.js. One of the
+advantages of incremental parsing suggested in the introduction was a
+perceptual improvement in speed. The experiments do not directly gauge
+user perception because it would require subjective judgement and human
+participants, an undertaking large enough to be a project in itself. In
+lieu of perceptual experiments the benchmarks measure the time taken to
+provide the first output. This correlates with how quickly the first
+interface elements may be drawn and should be a good proxy indicator of
+perceptual speed. Node is used to host the tests because it is a
+minimalist platform and should give repeatable results whereas browsers
+may be running any number of simultaneous background tasks and are less
+predictable. Node also has the advantage that small changes in memory
+use are not overwhelmed by a memory hungry environment.
 
 The benchmark involves two node processes, one acting as a REST client
 and the other as a REST server, mimicking a service backed by a
@@ -2421,40 +2403,40 @@ In comparison with JSON.parse, Oboe shows a dramatic improvement of
 about 96% regarding the time taken for the first output to be produced
 and a smaller but significant improvement of about 40% in the total time
 required to create the aggregation. Oboe's aggregation on a good network
-is about 15% slower than Clarinet; since Oboe depends on Clarinet for parsing it 
-could not be faster but I had hoped for the gap to be smaller.
+is about 15% slower than Clarinet; since Oboe depends on Clarinet for
+parsing it could not be faster but I had hoped for the gap to be
+smaller.
 
 Clarinet is known to be slower than JSON.parse for input which is
 already held in memory [@clarinetspeed] but when reading from a stream
-this is more than offset by the ability to parse progressively. Compared to
-JSON.parse, the extra computation time needed by Oboe and Clarinet is
+this is more than offset by the ability to parse progressively. Compared
+to JSON.parse, the extra computation time needed by Oboe and Clarinet is
 shown to be relatively insignificant in comparison to the advantage of
 better I/O management. Reacting earlier using slower handlers is shown
-to be faster overall than reacting later with quicker ones. I feel
-that this vindicates a project focus on efficient management of I/O
-over faster algorithms. 
+to be faster overall than reacting later with quicker ones. I feel that
+this vindicates a project focus on efficient management of I/O over
+faster algorithms.
 
 Oboe shows an unexpected improvement in terms of memory usage compared
 to JSON.parse. It is not clear why this would be but it may be
-attributable to the large dependency tree brought in by the get-json [@getjson]
-library used in the JSON.parse client version. As expected, Clarinet has
-the smallest memory usage because it never stores a complete version of
-the parsed JSON.
-Clarinet's memory usage remains roughly constant 
-as the parsed resource increases in size while the other two will
-rise linearly. Node is popular on RaspberryPi type devices with
-constrained RAM and Clarinet might be preferable to Oboe where code clarity
-is less important than a small memory footprint.
+attributable to the large dependency tree brought in by the get-json
+[@getjson] library used in the JSON.parse client version. As expected,
+Clarinet has the smallest memory usage because it never stores a
+complete version of the parsed JSON. Clarinet's memory usage remains
+roughly constant as the parsed resource increases in size while the
+other two will rise linearly. Node is popular on RaspberryPi type
+devices with constrained RAM and Clarinet might be preferable to Oboe
+where code clarity is less important than a small memory footprint.
 
 Comparative developer ergonomics
 --------------------------------
 
 Writing less code is not in itself a guarantee of a better developer
 ergonomics but it is a good indicator so long as the program isn't
-forced to be overly terse. The table below reports the quantity of
-code required to implement the benchmark REST client under each
-strategy. Each version is written in the most natural expression for the
-library used.
+forced to be overly terse. The table below reports the quantity of code
+required to implement the benchmark REST client under each strategy.
+Each version is written in the most natural expression for the library
+used.
 
   Strategy       Code Required (lines)   Code required (chars)
   ------------ ----------------------- -----------------------
@@ -2474,8 +2456,8 @@ oboe(DB_URL).node('{id url}.url', function(url){
 
 Non-progressive parsing with JSON.parse was slightly longer, requiring a
 loop and an if statement, both necessary to drill down into the results.
-The code below is shortened by using get-json package which
-combines parsing implicitly with the download:
+The code below is shortened by using get-json package which combines
+parsing implicitly with the download:
 
 ~~~~ {.javascript}
 getJson(DB_URL, function(err, records) {
@@ -2503,20 +2485,21 @@ would be useful when programming against evolving services.
 The Clarinet version of the code is too long to include here but may be
 seen [in the appendix](#header_benchmarkClient), on page
 \pageref{src_benchmarkClient}. By using SAX directly the code is more
-verbose and its purpose is obfuscated. A person looking at
-this source would find it difficult to deduce what is being done without 
-considering it for some time. The functions receiving SAX events must handle several
+verbose and its purpose is obfuscated. A person looking at this source
+would find it difficult to deduce what is being done without considering
+it for some time. The functions receiving SAX events must handle several
 different cases and so tend to have generic parameter names such as
 'key' or 'value' which represent the token type. By contrast, Oboe and
 JSON.parse both allow names such as 'record' or 'url' which are chosen
-according to the semantics of the value. This naming aids understandability
-because it allows the programmer to think in terms of the domain model
-rather than working on the level of serialisation artifacts.
+according to the semantics of the value. This naming aids
+understandability because it allows the programmer to think in terms of
+the domain model rather than working on the level of serialisation
+artifacts.
 
 Performance under various Javascript engines
 --------------------------------------------
 
-The file `oboe.performance.spec.js`[^6_Conclusion2] contains a benchmark which
+The file `oboe.performance.spec.js`[^6_Conclusion1] contains a benchmark which
 concentrates on measuring the performance of Oboe's pattern matching.
 This test registers a complex pattern which intentionally uses all
 features from the JSONPath language and then fetches a JSON file
@@ -2562,16 +2545,15 @@ Of these results I find only the performance under old versions of
 Internet Explorer poor enough to be concerning. Since this platform
 forbids progressively interpreting the XHR response an improvement over
 the traditional model was known not to be possible but I did not expect
-the performance to degrade by so much.
-Adding three seconds to a REST call will
-unacceptably impair the user experience of a webapp so it might be reasonable
-to conclude that for complex use cases Oboe is currently unsuited to
-legacy platforms. If we desired to improve performance on older
-platforms one solution might be to create a simpler, non-progressive
-implementation of the Oboe API for selective delivery to older browsers.
-However, I would argue that the time spent writing a basic legacy
-version would be better employed waiting for these moribund platforms to
-die.
+the performance to degrade by so much. Adding three seconds to a REST
+call will unacceptably impair the user experience of a webapp so it
+might be reasonable to conclude that for complex use cases Oboe is
+currently unsuited to legacy platforms. If we desired to improve
+performance on older platforms one solution might be to create a
+simpler, non-progressive implementation of the Oboe API for selective
+delivery to older browsers. However, I would argue that the time spent
+writing a basic legacy version would be better employed waiting for
+these moribund platforms to die.
 
 For an imperative language coded in a functional style the compiler may
 not optimise as effectively as if a functional language were used. This
@@ -2582,12 +2564,12 @@ parameters to application callbacks even when the parameters are of
 secondary importance, such as the path and ancestor arrays that are
 created for every matching node, and will be predominantly ignored.
 Under a functional language these could be lazily evaluated without
-requiring any special effort by the application programmer. The choice of
-Javascript gives a very large number of
-client- and server-side applications that may potentially adopt the
-library. However, server-side Oboe would be very amicable to
-implementation using a purer functional language and it would be
-interesting to see how much faster it could be.
+requiring any special effort by the application programmer. The choice
+of Javascript gives a very large number of client- and server-side
+applications that may potentially adopt the library. However,
+server-side Oboe would be very amicable to implementation using a purer
+functional language and it would be interesting to see how much faster
+it could be.
 
 Status as a micro-library
 -------------------------
@@ -2595,9 +2577,9 @@ Status as a micro-library
 The file `oboe-browser.min.js` is the minified, built version of Oboe
 ready to be sent to web browsers and can be found in the project's
 `dist` directory. The size fluctuates as commits are made but after gzip
-it comes to about 4800 bytes; close to but comfortably under the 5120 byte
-limit. At roughly the size of a small image the download footprint of
-Oboe should not discourage adoption.
+it comes to about 4800 bytes; close to but comfortably under the 5120
+byte limit. At roughly the size of a small image the download footprint
+of Oboe should not discourage adoption.
 
 Potential future work
 ---------------------
@@ -2607,8 +2589,8 @@ future expansion would be to create a matching server-side component
 that provides an intuitive interface for writing JSON streams. So far,
 sending streaming JSON has required that the resource be written out
 using programmer-assembled strings but this approach is error prone and
-would scale badly as messages become more complex. A
-server-side library for stream writing would allow Oboe to be used as a REST-compatible
+would scale badly as messages become more complex. A server-side library
+for stream writing would allow Oboe to be used as a REST-compatible
 streaming solution for situations which currently employ push tables or
 Websockets. This would provide a form of REST streaming that operates
 according to the principled design of HTTP rather than by sidestepping
@@ -2622,41 +2604,41 @@ which would allow programmers to create a progressive interpretation of
 any resource type. As a minimum, a plug-in would require a SAX-like
 parser and a DSL for node selection.
 
-Oboe stores all parsed nodes for the duration of its
-lifetime so despite being similar to a SAX parser in terms of being
-progressive, it consumes as much memory as a DOM parser. The nodes
-remain held so that all possible JSONPath expressions may later be
-tested. However, in most cases memory could be freed if the parsed
-content were stored only so far as is required to test against the
-patterns which have actually been registered. For selectors which match
-near the root this would allow large subtrees to be pruned, particularly after
-the patterns have matched and the nodes have already been handed back to
-the application. Likewise, the current implementation takes a
-rather brute force approach when examining nodes for pattern matches by
-checking every registered JSONPath expression against every node parsed
-from the JSON. For many expressions we should be able to say that there
-will be no matches inside a particular JSON subtree, either because we
-have already matched or because the the subtree's ancestors invariably
-imply failure. A more sophisticated implementation might subdue provably
-unsatisfiable handlers until the SAX parser leaves an unmatchable
-subtree.
+Oboe stores all parsed nodes for the duration of its lifetime so despite
+being similar to a SAX parser in terms of being progressive, it consumes
+as much memory as a DOM parser. The nodes remain held so that all
+possible JSONPath expressions may later be tested. However, in most
+cases memory could be freed if the parsed content were stored only so
+far as is required to test against the patterns which have actually been
+registered. For selectors which match near the root this would allow
+large subtrees to be pruned, particularly after the patterns have
+matched and the nodes have already been handed back to the application.
+Likewise, the current implementation takes a rather brute force approach
+when examining nodes for pattern matches by checking every registered
+JSONPath expression against every node parsed from the JSON. For many
+expressions we should be able to say that there will be no matches
+inside a particular JSON subtree, either because we have already matched
+or because the the subtree's ancestors invariably imply failure. A more
+sophisticated implementation might subdue provably unsatisfiable
+handlers until the SAX parser leaves an unmatchable subtree.
 
 Summing up
 ----------
 
 The community reaction to Oboe has been overwhelmingly positive with
 several projects already adopting it and reporting performance gains
-which are large enough to be obvious. While some attention
-may be required for optimisation under Firefox, this project meets all of
-its intended aims, presenting a REST client library which in the best
-case allows the network to be used much more efficiently and in the
-worse case is very close to the previous best solution, at least when used with
-capable platforms. At the same time
-the produced solution requires less code, is less tightly coupled to JSON format
-specifics, and because of the declarative style I believe is easier to use 
-than the previous simplest solution.
+which are large enough to be obvious. While some attention may be
+required for optimisation under Firefox, this project meets all of its
+intended aims, presenting a REST client library which in the best case
+allows the network to be used much more efficiently and in the worse
+case is very close to the previous best solution, at least when used
+with capable platforms. At the same time the produced solution requires
+less code, is less tightly coupled to JSON format specifics, and because
+of the declarative style I believe is easier to use than the previous
+simplest solution.
 
-[^6_Conclusion2]: In git repository, [test/specs/oboe.performance.spec.js](https://github.com/jimhigson/oboe.js/blob/master/test/specs/oboe.performance.spec.js)
+[^6_Conclusion1]: In git repository,
+    [test/specs/oboe.performance.spec.js](https://github.com/jimhigson/oboe.js/blob/master/test/specs/oboe.performance.spec.js)
 
 
 Appendix i: Limits to number of simultaneous connections under various HTTP clients {#appendix_http_limits}

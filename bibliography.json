@@ -678,7 +678,18 @@
       ],
       "url":"http://www.faqs.org/docs/artu/ch01s06.html",
       "issued": { "date-parts":[ [1978] ] }                  
-   }           
+   }, 
+   
+   {
+      "id":"linq",
+      "title":"LINQ (Language-Integrated Query)",
+      "author":[         
+         { "family": "Microsoft"}
+      ],
+      "url":"http://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx",
+      "issued": { "date-parts":[ [2013] ] },
+      "type":"webpage"                  
+   }          
    
 ]
 

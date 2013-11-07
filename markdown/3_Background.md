@@ -339,18 +339,18 @@ later follow a narrative of updates to the logic expressed by the
 program. It is therefore harder to later understand the thinking behind
 a change or the reason for the change.
 
-In VirtualStudio, LINQ which is based on lambda-calculus and resembles
-SQL is used to drill-down into data structures and may also modify the
-data that is found. However this style of programming is significantly
-longer than the examples shown above so emulating it probably isn't
-suitable for this project.
+In VirtualStudio, LINQ [@linq], which is based on lambda-calculus and
+resembles SQL is used to drill-down into data structures and may also
+modify the data that is found. However this style of programming requires the
+application developer to write significantly more code than in the simple 
+programmatic access above so it does not meet the aims of this project.
 
 Given model interrogation logic which is tightly coupled so that the
 model's structure cannot change, one suggested approach is Adaptive OOP
 [@adaptive] in which no detailed class structure is committed to when
-constructing the object oriented program. Once read, the external
+constructing the object oriented program. A REST
 resource could be dynamically configured into an OO model according to a
-formal specification so that it may answer the desired queries. The
+formal specification in a specialisation that is capable of answering the desired queries. The
 model that is constructed would be sufficient to answer the queries
 without the programmer having to suppose any rigid form.
 

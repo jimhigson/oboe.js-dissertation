@@ -585,7 +585,18 @@
       "url":"http://www.ecma-international.org/publications/files/ECMA-ST-ARCH/ECMA-262,%203rd%20edition,%20December%201999.pdf",
       "issued": { "date-parts":[ [1999] ] },
       "type":"webpage"                  
-   },            
+   },
+   
+   {
+      "id":"ecma6",
+      "title":"Draft Specification for ES.next (Ecma-262 Edition 6)",
+      "author":[         
+         { "family": "Harmony"}
+      ],
+      "url":"http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts",
+      "issued": { "date-parts":[ [2013] ] },
+      "type":"webpage"                  
+   },               
    
    {
       "id":"simpleschneier",
@@ -600,14 +611,48 @@
    
    {
       "id":"schneierdoors",
-      "title":"To Profile or Not to Profile?",
+      "title":
+         "To Profile or Not to Profile? - a debate between Sam Harris and Bruce Schneier",
       "author":[         
          { "family": "Schneier", "given":"Bruce"}
       ],
       "url":"http://www.samharris.org/blog/item/to-profile-or-not-to-profile",
       "issued": { "date-parts":[ [2013] ] },
       "type":"webpage"                  
-   }      
+   },      
+   
+   {
+      "id":"requirejs",
+      "title":"Require.js",
+      "author":[         
+         { "family": "Burke", "given":"James"}
+      ],
+      "url":"http://requirejs.org/",
+      "issued": { "date-parts":[ [2011] ] },
+      "type":"webpage"                  
+   },
+   
+   {
+      "id":"uglify",
+      "title":"UglifyJs",
+      "author":[         
+         { "family": "Bazon", "given":"Mihai"}
+      ],
+      "url":"https://github.com/mishoo/UglifyJS",
+      "issued": { "date-parts":[ [2010] ] },
+      "type":"webpage"                  
+   },
+   
+{
+   "id":"getjson",
+   "title":"Get JSON",
+   "author":[         
+      { "family": "NPM"}
+   ],
+   "url":"https://npmjs.org/package/get-json",
+   "issued": { "date-parts":[ [2013] ] },
+   "type":"webpage"                  
+}         
       
    
 ]

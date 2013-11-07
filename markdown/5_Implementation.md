@@ -17,10 +17,10 @@ callbacks. The internal componentisation is designed primarily so that
 automated testing can provide a high degree of confidence regarding the
 correct working of the library. A local event bus facilitates
 communication inside an Oboe instance and most components interact
-solely by using this bus; receiving events, processing them, and
-publishing further events in response. The use of an event bus is a
-variation on the Observer pattern which removes the need for each unit
-to locate specific other units before it may listen to their output,
+solely by using this bus: receiving events, processing them, and
+publishing further events in response. The use of an event bus
+removes the need for each unit
+to locate other units before it may listen to their output,
 giving a highly decoupled shape to the library in which each part knows
 the events it requires but not who publishes them. Once everything is
 wired into the bus no central control is required and the larger
@@ -42,7 +42,7 @@ that when it receives certain input events the expected output events
 are consequently published.
 
 The *Component tests* step back from examining individual components to
-a position where their behaviour as a composition may be examined.
+a position where their behaviour in composition may be examined.
 Because the compositions are quite simple there are fewer component
 tests than unit tests. The component tests do not take account of how
 the composition is drawn and predominantly examine the behaviour of the
@@ -54,14 +54,15 @@ tests*. These verify Oboe as a black box without any knowledge of, or
 access to, the internals, using the same API as is exposed to
 application programmers. These tests are the most expensive to write but
 a small number are necessary in order to verify that Oboe works
-correctly end-to-end. Without access to the internals HTTP traffic
-cannot be faked so before these tests are performed a corresponding REST
+correctly end-to-end. HTTP traffic
+cannot be faked without access to the internals
+so before these tests are performed a corresponding REST
 service is started. This test service is written using Node and returns
 known content progressively according to predefined timings, somewhat
 emulating a slow internet connection. The integration tests particularly
 verify behaviours where platform differences could cause
 inconsistencies. For example, the test URL `/tenSlowNumbers` writes out
-the first ten natural numbers as a JSON array at a rate of two per
+the first ten natural numbers as a JSON array at a rate of four per
 second. The test registers a JSONPath selector that matches the numbers
 against a callback that aborts the HTTP request on seeing the fifth. The
 correct behaviour is to get no sixth callback, even when running on a
@@ -73,7 +74,7 @@ side-effects and hidden state we can only rely on inductive reasoning to
 say that similar future calls won't later result in different behaviours.
 Building up the parse result
 from SAX events is a fairly complex process which cannot be implemented
-efficiently as wholly side-effect free Javascript. To promote
+efficiently using wholly side-effect free Javascript. To promote
 testability the state is delegated to a simple state-storing unit. The
 intricate logic may then be expressed as a separately tested set of
 side-effect free functions which transition between one state and the
@@ -85,7 +86,7 @@ The separate unit to maintain the state has exactly one
 responsibility, to hold the incremental parse output between function
 calls, and is trivial to test. This approach slightly breaks with the
 object oriented principle of encapsulation by hiding state behind the
-logic which acts on it but the departure will be justified if the
+logic which acts on it but the departure will be justified if a
 more testable codebase promotes greater reliability.
 
 To enhance testability Oboe has also embraced dependency injection.
@@ -98,12 +99,12 @@ component presents a less friendly interface: its data source is no
 longer a hidden implementation detail but exposed as a part of its
 API as the responsibility of the caller. This disadvantage is
 mitigated by the interface being purely internal. Dependency injection
-in this case allows the tests to be written more simply because it is
+allows the tests to be written more simply because it is
 easy to substitute the real XHR for a stub. Unit tests should test
 exactly one unit; were the streaming HTTP object to create its own
 transport, the XHR would also be under test, plus whichever external
 service it connects to. Because Javascript allows redefinition of built
-in types the stubbing could have potentially also been done by
+in types the stubbing could have also been done by
 overwriting the XHR constructor to return a mock. However this is to be
 avoided as it opens up the possibility of changes to the environment
 leaking between test cases.
@@ -122,7 +123,7 @@ tests on save provides quick feedback so that mistakes are found before
 the programmer is thinking about the next context. Agile practitioners emphasise
 the importance of tests that execute quickly [@cleancode p.314:T9] --
 Oboe's 220 unit and component tests run in less than a second so
-discovering programming mistakes is almost instant. If the "content of
+discovering programming mistakes is nearly instant. If the "content of
 any medium is always another medium” [@media p.8], we might say that the
 content of programming is the process that is realised by its execution.
 A person working in a physical medium sees the thing they are making but
@@ -130,19 +131,19 @@ the programmer does usually not see their program's execution
 simultaneously as they create. Conway notes that an artisan works by
 transform-in-place "start with the working material in place and you
 step by step transform it into its final form," but software is created
-through intermediate proxies. He attempts to close this gap by merging
+through proxies. He attempts to close this gap by merging
 programming with the results of programming [@humanize pp.8-9]. 
 If we bring together the medium and the message by viewing the
 result of code while we write it, we can build in a series of small,
 iterative, correct steps and programming can be more explorative and
 expressive. Running the tests subtly, automatically hundreds of times
-per day isn't merely convenient, this build noticeably improved
+per day isn't merely convenient, this build process noticeably improved
 the quality of the project's programming.
 
 Integration tests are not run on save. They intentionally simulate a
-slow network so they take some time to run and I'd already have started
-the next micro-task by the time they complete. Oboe is version
-controlled using git and hosted on github. The integration tests are
+slow network so by the time they complete a programmer will have already
+context-switched to the next micro-task. Oboe's source is version
+controlled using git and hosted on Github. The integration tests are
 used as the final check before a branch in git is merged into the
 master.
 
@@ -159,20 +160,20 @@ downloaded. For a developer wishing to include Oboe in their own
 project a single file is much more convenient than the multi-file raw
 source. If they are not using a similar build process on their site, a
 single file is also faster to transfer to their users, mostly because
-the HTTP overhead is of constant size per resource.
+the HTTP overhead is of constant size per request.
 
 Javascript files are interpreted in series by the browser so load-time
 dependencies must precede dependants. If several valid Javascript files
-are concatenated in the same order as delivered to the browser, the
+are concatenated in the same order as delivered to the browser the
 joined version is functionally equivalent to the individual files. This
 is a common technique so that code can be written and debugged as many
 files but distributed as one. Several tools exist to automate this stage
 of the build process that topologically sort the dependency graph before
 concatenation in order to find a suitable script order.
 
-Early in the project *Require.js* was chosen for this task. Javascript as a
-language doesn't have an import statement so Require adds
-one from inside the language itself as the asynchronous `require` function.
+Early in the project Require.js [@requirejs] was chosen for this task. Javascript 
+doesn't have a built in import statement; Require adds
+one from inside the language as an asynchronous `require` function.
 Calls to `require` AJAX in
 and execute the imported source, passing any exported items to the given
 callback. For non-trivial applications loading each dependency
@@ -194,21 +195,21 @@ visits to online banking will not need to create standing orders so it
 is better if this part is loaded on-demand rather than increase the
 initial page load time.
 
-Require's `optimise` was originally intended to automate the creation of a
+Require's `optimise` was originally chosen to automate the creation of a
 combined Javascript file for Oboe. Oboe would not benefit from AMD
-because everybody who uses it will use all of the library but using
-Require to find a working source order would save having to manually
+because everybody who uses it will need all of the library but using
+Require to find a working source order would avoid having to manually
 implement one. Unfortunately this was not feasible. Even after
 optimisation, Require's design necessitates that calls to the `require`
 function are left in the code and that the Require run-time component is
 available to handle them. At more than 5k gzipped this would have more
 than doubled Oboe's download footprint.
 With about 15 source files and a fairly sparse
-dependency graph, finding a working order on paper proved simpler than
+dependency graph, finding a working order on paper proved a simpler task than
 integrating with tools offering to automate the process.
 After finding a Grunt plugin analogous to the unix `cat`
 command it was trivial to create a build process which produces a
-distributable library requiring no dependency management code
+distributable library while requiring no dependency management code
 to be loaded at run-time.
 
 For future consideration there is Browserify [@browserify]. This library reverses the
@@ -216,14 +217,16 @@ For future consideration there is Browserify [@browserify]. This library reverse
 for Javascript development and adapting the browser environment to
 match. Browserify converts applications written for Node into a single
 file packaged for delivery to a web browser. Significantly, other than
-adaptors wrapping browser APIs in the call style of the Node
+adaptors wrapping browser APIs in the call style of their Node
 equivalents, Browserify leaves no trace of itself in the final
-Javascript. Additionally, the HTTP adaptor[^1] is capable of using XHRs
-as a streaming source when run on supporting browsers.
+Javascript. When run on browsers supporting progress events Browserify's 
+HTTP adaptor[^1] presents XHRs using Node's streaming interface
+so it should be capable of adapting the Node version of Oboe to run under
+modern browsers.
 
 Javascript source can be made significantly smaller by *minification*
 techniques such as reducing scoped symbols to a single character or
-deleting the comments. For Oboe the popular minifier library *Uglify*
+deleting the comments. For Oboe the popular minifier library Uglify [@uglify]
 was chosen. Uglify performs only surface optimisations, concentrating
 mostly on producing compact syntax by manipulating the code's abstract
 syntax tree. Google Closure 
@@ -235,7 +238,7 @@ dynamic languages is often impossible and Closure Compiler is only safe
 given a well-advised subset of Javascript. It delivers no reasonable
 guarantee of equivalence if code is not written as the Closure team
 expected. Integration tests would catch any such failures but for the
-time being it was decided that even working to the micro-library limits, a
+time being it was decided that even constrained by micro-library size limits, a
 slightly larger file is a worthwhile tradeoff for a safer build process.
 
 Styles of programming
@@ -248,11 +251,11 @@ public API. Although Javascript supports them, classes and constructors
 are not used, nor is there any inheritance or notable polymorphism.
 Closures form the primary means of data storage and hiding. Most
 entities do not give a Javascript object on instantiation, they are
-constructed as a set of event handlers with access to shared values from
-a common closure. As inner-functions of the same containing function,
-the handlers share access to variables from the containing scope. From
-outside the closure the values are not only protected as private as
-would be seen in an OO model, they are inherently unaddressable.
+constructed as a set of event handlers attached to the central bus which,
+as inner-functions inside the same outer function,
+share access to values caught in a common closure. From
+outside the closure the values are not only private as
+would be seen in a Java-style OO model, they are inherently unaddressable.
 
 Although not following an established object-oriented metamodel, the
 high-level componentisation hasn't departed very far from how the project
@@ -269,13 +272,13 @@ short functions that can be combined to form longer
 ones have been generally preferred. Writing a program using short functions 
 reduces the size of the minimum testable
 unit and because each test specifies a very small unit of
-functionality, encourages the writing of very simple unit tests. Because
-the tests are simple is more difficult for unanticipated cases to hide.
+functionality, encourages the writing of very simple unit tests. When
+the tests are simple there is less room for unanticipated cases to hide.
 Due to pressures on code size a general purpose
-functional library was not chosen, one was created created containing only the 
-necessary functions.
-See [functional.js](#header_functional) (Appendix
-p.\pageref{src_functional}). Functional programming in Javascript is
+functional library was not chosen, one was created containing only the 
+necessary functions
+([functional.js](#header_functional), Appendix p.\pageref{src_functional}).
+Functional programming in Javascript is
 known to be slower than other styles, particularly in Firefox which
 lacks optimisations such as Lambda Lifting [@functionalSpiderMonkey] but
 the effect should be insignificant, particularly when considered alongside 
@@ -288,8 +291,8 @@ rendering it is important that no task occupies the CPU for very long.
 Since most monitors refresh at 60Hz, about 16ms is a fair target for the
 maximum duration of a browser script frame. In Node no limit can be
 implied from a display but any CPU-hogging task degrades the
-responsiveness of any concurrent work. Switching tasks is cheap so
-sharing the CPU well generally prefers many small execution frames over
+responsiveness of concurrent work. Switching tasks is cheap so effectively
+sharing the CPU prefers many small execution frames over
 a few larger ones. Whether running in a browser or server, the
 bottleneck is more often I/O than processing speed; providing no task
 contiguously holds the CPU for an unusually long time an application can
@@ -348,7 +351,7 @@ manipulated to visit every node, allowing each to be tested against the
 registered JSONPath expressions. Internally, the builder's handlers for
 SAX events are declared as the combination of a smaller number of basic
 reusable parts. Several of Clarinet's event types differ only by the
-type of the node that they announce but the builder is largely
+type of the node that they announce but Oboe is largely
 unconcerned regarding a JSON node's type. On picking up `openobject` and
 `openarray` events, both pass through to the same `nodeFound` function,
 differing only in the type of the node which is first created.
@@ -358,8 +361,8 @@ builder treats them as a node which instantaneously starts and ends,
 handled programmatically as the composition of the `nodeFound` and
 `nodeFinished` functions.
 
-Although the builder functions are stateless and side-effect free, while
-visiting each JSON node the current ascent needs to be stored. This is
+Although the builder functions are stateless and side-effect free, between
+SAX events the current ascent needs to be stored. This is
 handled by the ascent tracker which serves as a holder for this data.
 Starting with the ascent initialised as the empty list, on receiving a
 SAX event it passes the ascent to the handler and stores the result so
@@ -392,7 +395,7 @@ Oboe JSONPath implementation
 
 With the initial commit the JSONPath implementation was little more than
 a series of regular expressions[^3] but has slowly evolved into a
-featureful and efficient implementation. The extent of the rewriting was
+featureful and efficient implementation. A total rewriting was
 possible because the correct behaviour is well defined by test
 specifications[^4]. The JSONPath compiler exposes a single higher-order
 function. This function takes the JSONPath as a string and, proving it
@@ -479,10 +482,11 @@ memory because where two JSONPath strings contain a common left side
 they could share the inner part of their functional expression. Given
 the patterns `!.animals.mammals.human` and `!.animals.mammals.cats`, the
 JSONPath engine will currently create two identical evaluators for
-`!.animals.mammals`. Likewise, while evaluating a pattern that requires
-matches at multiple depths in the JSON hierarchy against several sibling
-elements, the same JSONPath evaluator term could be tested against the
-parent element many times, always with the same result. Although
+`!.animals.mammals`. Likewise, while evaluating several sibling
+elements against a pattern that requires
+matches at multiple depths in the JSON hierarchy, the same JSONPath term evaluator  
+will be tested many times against the
+parent element, always with the same result. Although
 Javascript doesn't come with functional caching, it can be added using
 the language itself, probably the best known example being `memoize`
 from Underscore.js [@underscore_memo]. It is likely however that hashing the function
@@ -494,7 +498,7 @@ have to walk the entire subtree rooted from that node, requiring time proportion
 to the size of the tree. Current
 Javascript implementations also make it difficult to manage caches in
 general from inside the language because there is no way to occupy only
-spare memory. Weak references are proposed in ECMAScript 6 but currently
+spare memory. Weak references are proposed in the ECMAScript 6th edition draft [@ecma6] but currently
 only experimentally supported[^5]. If the hashing problem were solved
 the WeakHashMap would be ideal for adding functional caching in future.
 
@@ -508,7 +512,7 @@ support[^6]. By verifying the tokenisation functions through their own
 tests it is simpler to create thorough specification because the tests
 may focus on the tokenisation more clearly without having to observe its
 results though another layer. For JSONPath matching we might consider
-the unit test layer of the test pyramid (figure \ref{testpyramid}
+the unit test layer of the test pyramid (figure \ref{testpyramid},
 p.\pageref{testpyramid}) to be split into two further sub-layers.
 Arguably, the upper of these sub-layers is not a unit test because it is
 verifying more than one unit, the tokeniser and the compiler, and there
@@ -534,14 +538,17 @@ One strategy would be
 to take an event-driven approach to the matching. At present matching is triggered
 by events but the tests themselves are expressed synchronously.
 Under an event-driven matching implementation, instead of
-returning a value each JSONPath term evaluator would be given a callback to 
+returning a value, each JSONPath term evaluator would be given a callback to 
 pass the result to. Under most circumstances it should be able to decide if 
 a match has taken place at
 the time that it is called, handing the result immediately to the callback. 
 However, for cases where more of the document
 must be revealed before a match can be decided the term evaluators would have
 the option of listening to the parse until further document nodes are 
-revealed, replying when the required information is later available.  
+revealed, replying later when the necessary information is available.
+Luckily, a language with just the selectors that we able to evaluate when nodes are found
+is powerful enough to handle most cases so until a strong need is demonstrated 
+the selector language will be kept in its curernt, relatively simple form.
 
 Differences in the working of programs that can be easily written using Oboe.js
 -------------------------------------------------------------------------------
@@ -556,10 +563,10 @@ is used to read a local JSON file and write to the console.
 oboe( fs.createReadStream( "/home/me/secretPlans.json" ) )
    .on("node", {
       "schemes.*": function(scheme){
-         console.log("Aha! " + scheme);
+         console.log("Aha!", scheme);
       },
       "plottings.*": function(deviousPlot){
-         console.log("Hmmm! " + deviousPlot);
+         console.log("Hmmm!," deviousPlot);
       }   
    })
    .on("done", function(){
@@ -570,9 +577,29 @@ oboe( fs.createReadStream( "/home/me/secretPlans.json" ) )
    });
 ~~~~
 
+~~~~ {.javascript}
+fs.readFile("/home/me/secretPlans.json", function( err, plansJson ){     
+   if( err ) {
+      console.log("Drat! Foiled again!");
+      return;
+   }
+   var plans = JSON.parse(err, plansJson);
+   
+   plans.schemes.forEach(function( scheme ){
+      console.log("Aha!", scheme);   
+   });   
+   plans.plottings.forEach(function(deviousPlot){
+      console.log("Hmmm!", deviousPlot);
+   });
+      
+   console.log("*twiddles mustache*");   
+});
+~~~~
+
 While the behaviours intended by the programmer are similar, some
 accidental side-behaviours differ between the two. It is likely that most programmers
-would not think of these differences as they write. In the first
+would not think of these differences as they write so it is important
+that they are not destructive. In the first
 example the order of the output for schemes and plans will match their
 order in the JSON, whereas for the second scheming is always done before
 plotting. The error behaviours are also different -- the first prints

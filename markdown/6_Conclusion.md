@@ -10,21 +10,21 @@ contains a small
 benchmarking suite that runs under Node.js. One of the advantages
 of incremental parsing suggested in the introduction was a perceptual 
 improvement in speed.
-The experiments do not direct measure user perception because it
+The experiments do not directly gauge user perception because it
 would require subjective judgement and human
 participants, an undertaking large enough to be a project in itself. 
 In lieu of perceptual experiments the benchmarks measure the time taken to provide the first
-output which correlates with how quickly the first interface elements may be drawn
+output. This correlates with how quickly the first interface elements may be drawn
 and should be a good proxy indicator of perceptual speed. Node is used
 to host the tests because it is a minimalist platform and should give
-repeatable results, whereas browsers are less predictable and may be 
-running any number of simultaneous background tasks.
+repeatable results whereas browsers may be 
+running any number of simultaneous background tasks and are less predictable.
 Node also has the advantage
 that small changes in memory use are not overwhelmed by a memory hungry
 environment.
 
 The benchmark involves two node processes, one acting as a REST client
-and the other as a REST server and mimics a REST service backed by a
+and the other as a REST server, mimicking a service backed by a
 relational database. Relational database client libraries pass data from
 a result cursor one tuple at a time to be used by the application, the
 service simulates this by writing out forty tuples as JSON objects, one
@@ -33,13 +33,13 @@ resource which will also be fetched so that an aggregation can be
 created. To simulate real network conditions, Apple's *Network Line
 Conditioner* was used with the presets *3G, Average Case* and *Cable
 modem* to represent poor and good internet connections respectively.
-Three client version were implemented using JSON.parse DOM-style
+Three client versions were implemented using JSON.parse DOM-style
 parsing, Clarinet SAX-style parsing and Oboe. Memory was measured on the
 client using Node's built in memory reporting tool,
 `process.memoryusage()` and the largest figure reported during each run
 is taken. The test server and client can be found in the project's
 `benchmark` directory, or in the appendix on pages
-\ref{src_benchmarkServer} and \ref{src_benchmarkClient}.
+\ref{src_benchmarkClient} and \ref{src_benchmarkServer}.
 
   Client Strategy   Network     First output   Total time   Max. Memory
   ----------------- --------- -------------- ------------ -------------
@@ -54,26 +54,22 @@ In comparison with JSON.parse, Oboe shows a dramatic improvement of
 about 96% regarding the time taken for the first output to be produced
 and a smaller but significant improvement of about 40% in the total time
 required to create the aggregation. Oboe's aggregation on a good network
-is about 15% slower than Clarinet; since Oboe is built on Clarinet it 
+is about 15% slower than Clarinet; since Oboe depends on Clarinet for parsing it 
 could not be faster but I had hoped for the gap to be smaller.
-This is probably because Oboe encodes a more involved workflow than a
-raw SAX parser.
 
 Clarinet is known to be slower than JSON.parse for input which is
-already held in memory[@clarinetspeed] but when reading from a network
-this offset by the ability to parse progressively. Compared to
+already held in memory [@clarinetspeed] but when reading from a stream
+this is more than offset by the ability to parse progressively. Compared to
 JSON.parse, the extra computation time needed by Oboe and Clarinet is
 shown to be relatively insignificant in comparison to the advantage of
 better I/O management. Reacting earlier using slower handlers is shown
 to be faster overall than reacting later with quicker ones. I feel
 that this vindicates a project focus on efficient management of I/O
-over faster algorithms; much current programming takes a *hurry up and
-wait* approach by concentrating on algorithm micro-optimisation over
-performing tasks at the earliest possible time.
+over faster algorithms. 
 
 Oboe shows an unexpected improvement in terms of memory usage compared
 to JSON.parse. It is not clear why this would be but it may be
-attributable to the large dependency tree brought in by the get-json
+attributable to the large dependency tree brought in by the get-json [@getjson]
 library used in the JSON.parse client version. As expected, Clarinet has
 the smallest memory usage because it never stores a complete version of
 the parsed JSON.
@@ -88,9 +84,9 @@ Comparative developer ergonomics
 
 Writing less code is not in itself a guarantee of a better developer
 ergonomics but it is a good indicator so long as the program isn't
-forced to be overly terse. The table below report the quantity of
+forced to be overly terse. The table below reports the quantity of
 code required to implement the benchmark REST client under each
-strategy. Each version is written as the most natural expression for the
+strategy. Each version is written in the most natural expression for the
 library used.
 
   Strategy       Code Required (lines)   Code required (chars)
@@ -111,8 +107,8 @@ oboe(DB_URL).node('{id url}.url', function(url){
 
 Non-progressive parsing with JSON.parse was slightly longer, requiring a
 loop and an if statement, both necessary to drill down into the results.
-The code below is shortened by using the get-json[^1] package which
-combines parsing implicitly into the download:
+The code below is shortened by using get-json package which
+combines parsing implicitly with the download:
 
 ~~~~ {.javascript}
 getJson(DB_URL, function(err, records) {
@@ -232,7 +228,7 @@ Status as a micro-library
 The file `oboe-browser.min.js` is the minified, built version of Oboe
 ready to be sent to web browsers and can be found in the project's
 `dist` directory. The size fluctuates as commits are made but after gzip
-it comes to about 4800 bytes; close to but comfortably under the 5120
+it comes to about 4800 bytes; close to but comfortably under the 5120 byte
 limit. At roughly the size of a small image the download footprint of
 Oboe should not discourage adoption.
 
@@ -244,8 +240,8 @@ future expansion would be to create a matching server-side component
 that provides an intuitive interface for writing JSON streams. So far,
 sending streaming JSON has required that the resource be written out
 using programmer-assembled strings but this approach is error prone and
-would scale badly as messages become more complex. A stream-writer
-server side library would allow Oboe to be used as a REST-compatible
+would scale badly as messages become more complex. A
+server-side library for stream writing would allow Oboe to be used as a REST-compatible
 streaming solution for situations which currently employ push tables or
 Websockets. This would provide a form of REST streaming that operates
 according to the principled design of HTTP rather than by sidestepping
@@ -257,9 +253,9 @@ demand, an XML/XPATH version seems like an obvious expansion. This could
 be implemented by allowing resource formats to be added using plugins
 which would allow programmers to create a progressive interpretation of
 any resource type. As a minimum, a plug-in would require a SAX-like
-parser and a compiler for some kind of node selection language.
+parser and a DSL for node selection.
 
-Oboe stores all JSON nodes that are parsed for the duration of its
+Oboe stores all parsed nodes for the duration of its
 lifetime so despite being similar to a SAX parser in terms of being
 progressive, it consumes as much memory as a DOM parser. The nodes
 remain held so that all possible JSONPath expressions may later be
@@ -287,10 +283,10 @@ which are large enough to be obvious. While some attention
 may be required for optimisation under Firefox, this project meets all of
 its intended aims, presenting a REST client library which in the best
 case allows the network to be used much more efficiently and in the
-worse case is as good as the previous best solution. At the same time
-the produced library is in many cases easier to use than the previous
-simplest solution.
-
-[^1]: https://npmjs.org/package/get-json
+worse case is very close to the previous best solution, at least when used with
+capable platforms. At the same time
+the produced solution requires less code, is less tightly coupled to JSON format
+specifics, and because of the declarative style I believe is easier to use 
+than the previous simplest solution.
 
 [^2]: In git repository, [test/specs/oboe.performance.spec.js](https://github.com/jimhigson/oboe.js/blob/master/test/specs/oboe.performance.spec.js)

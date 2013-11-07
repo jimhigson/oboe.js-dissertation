@@ -509,9 +509,9 @@ of traffic as either stream or download. This split is not a necessary
 consequence of the technologies used and streaming may instead be viewed
 as the most efficient means of downloading. Streaming services
 implemented using push pages or websockets are not REST. Under these
-frameworks a stream has a URL address but the data in the stream is not
+frameworks a stream has a URL but the data in the stream is not
 addressable. This is similar to STREST, the *Service Trampled REST*
-anti-pattern [@strest], in which HTTP URLs are viewed as locating
+anti-pattern [@strest] in which HTTP URLs are viewed as locating
 endpoints for services rather than the actual resources. Being
 unaddressable, the data in the stream is also uncacheable: an event
 which is streamed live cannot later, when it is historic, be retrieved
@@ -522,8 +522,8 @@ principled design.
 Although Oboe is not designed for live events, it is interesting to
 speculate whether it could be used as a REST-compatible bridge to unify
 live-ongoing feeds with ordinary REST resources. Consider a REST service
-which gives per-constituency results for UK general elections. When
-requesting historic results the data is delivered in JSON format much as
+which gives per-constituency results for UK general elections. If
+historic results are requested the data is delivered in JSON format much as
 usual. Requesting the results for the current year on the night of the
 election, an incomplete JSON with the constituencies known so far would
 be immediately sent, followed by the remainder dispatched individually
@@ -532,11 +532,11 @@ finally close leaving a complete resource. A few days later, somebody
 wishing to fetch the results would use the *same URL for the historic
 data as was used on the night for the live data*. This is possible
 because the URL refers only to the data that is required, not to whether
-it is current or historic. Because it eventually formed a complete HTTP
+it is current or historic. Because it eventually forms a complete HTTP
 response, the data that was streamed is not incompatible with HTTP
-caching and a cache which saw the data when it was live could store it
-as usual and later serve it as historic. More sophisticated intermediate
-caches sitting on the network between client and service would recognise
+caching and a cache which saw the data while it was live could later 
+serve it from cache as historic. More sophisticated
+caches located between client and service would recognise
 when a new request has the same URL as an already ongoing request, serve
 the response received so far, and then continue by giving both inbound
 requests the content as it arrives from the already established outbound
@@ -553,14 +553,14 @@ Taking this idea one step further, Oboe might be used for infinite data
 which intentionally never completes. In principle this is not
 incompatible with HTTP caching although more research would have to be
 done into how well current caches handle requests which do not finish. A
-REST service which provides infinite resources would have to confirm
+REST service which provides infinite length resources would have to confirm
 that it is delivering to a streaming client, perhaps with a request
 header. Otherwise, if a non-streaming REST client were to use the
 service it would try to get 'all' of the data and never complete its
 task.
 
 Supporting only XHR as a transport unfortunately means that on older
-browsers which do not fire progress events (see section
+browsers which do not fire progress events (section
 \ref{xhrsandstreaming}) a progressive conceptualisation of the data
 transfer is not possible. Streaming workarounds such as push tables will
 not be used because they would result in a client which is unable to
@@ -574,18 +574,19 @@ platforms, an application author will not have to write special cases
 and the performance should be no worse than with traditional AJAX
 libraries such as jQuery. On legacy browsers Oboe could not be used to
 receive live data -- in the election night example no constituencies
-could be shown until they had all been called.
+would be shown until they had all been called.
+
+
 
 Node's standard HTTP library provides a view of the response as a
 standard ReadableStream so there will be no problems programming to a
-progressive interpretation of HTTP. In Node all streams provide a common
-API regardless of their origin so there is no reason not to allow
-arbitrary streams to be read. Although Oboe is intended primarily as a
+streaming interpretation of HTTP. In Node because all streams provide a common
+API regardless of their origin allowing
+arbitrary sources to be read is no extra work. Although Oboe is intended primarily as a
 REST client, under Node it will be capable of reading data from any
 source. Oboe might be used to read from a local file, an ftp server, a
 cryptography source, or the process's standard input.
 
-*one security model, not two*
 
 Handling transport failures
 ---------------------------
@@ -614,7 +615,7 @@ library qualifies as being *micro* if it is delivered in 5kb or less,
 better for an application developer to gather together several tiny
 libraries than find one with a one-size-fits-all approach, perhaps
 echoing the unix command line tradition for small programs which each do
-exactly one thing. As well as being a small library, in the spirit of a
+exactly one thing. As well as being small, in the spirit of a
 micro-library a project should impose as few restrictions as possible on
 its use and be agnostic as to which other libraries or programming
 styles it will be combined with. Oboe feels on the edge of what is

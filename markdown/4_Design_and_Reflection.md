@@ -284,7 +284,7 @@ higher-level libraries they work very well -- most XML DOM parsers are
 built in this way. The pre-existing Clarinet project [@clarinet] is well
 tested, liberally licenced, and compact, meeting our needs perfectly.
 The name of this project, Oboe.js, was chosen in tribute to the value
-delivered by Clarinet, itself named after the **Sax**ophone.
+delivered by Clarinet, itself named after the **SAX**ophone.
 
 API design
 ----------

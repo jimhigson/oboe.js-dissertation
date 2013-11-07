@@ -132,6 +132,11 @@ $endfor$
 \date{$date$}
 
 \begin{document}
+
+\raggedbottom
+\widowpenalties 1 10000
+\addtolength{\topskip}{0pt plus 10pt}
+
 $if(title)$
 \maketitle
 $endif$

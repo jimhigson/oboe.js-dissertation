@@ -291,11 +291,11 @@ API design
 
 Everything that Oboe is designed to do can already be achieved by
 combining a SAX parser with imperatively coded node selection. This has
-not been adopted widely because it requires verbose, difficult
+not been widely adopted because it requires verbose, difficult
 programming in a style which is unfamiliar to most programmers. With
 this in mind it is a high priority to design a public API for Oboe which
 is concise, simple, and resembles other commonly used tools. If Oboe's
-API is made similar to common tools, a lesser modification should be
+API is made similar to common tools a lesser modification should be
 required to switch existing projects to streaming HTTP.
 
 For some common use cases it should be possible to create an API which
@@ -307,10 +307,11 @@ is often to create a new expression of the same logic [@cleancode p.
 is open for apps to incrementally refactor towards a progressive
 expression. Allowing adoption as a series of small, easily manageable
 steps rather than a single leap is especially helpful for teams working
-under Scrum because all work must fit within a fairly short timeframe.
+under Scrum because all work must be self-contained and fit within a 
+fairly short timeframe.
 
 jQuery is by far the most popular library for AJAX today. The basic call
-style for making an AJAX GET request is as follows:
+style for making a GET request is as follows:
 
 ~~~~ {.javascript}
 jQuery.ajax("resources/shortMessage.txt")
@@ -322,9 +323,9 @@ jQuery.ajax("resources/shortMessage.txt")
    });
 ~~~~
 
-While jQuery is callback-based and internally event driven, the public
-API it exposes does not wrap asynchronously retrieved content in event
-objects and event types are expressed by the name of the method used to
+The jQuery API is callback-based, it does not wrap asynchronously 
+retrieved content in event
+objects, and event types are expressed by the name of the method used to
 add the listener. These names, `done` and `fail`, follow generic
 phrasing and are common to all asynchronous functionality that jQuery
 provides. Promoting brevity, the methods are chainable so that several
@@ -332,7 +333,7 @@ listeners may be added from one statement. Although Javascript supports
 exception throwing, for asynchronous failures a fail event is used
 instead. Exceptions are not applicable to non-blocking I/O because at
 the time of the failure the call which provoked the exception will
-already have been popped from the call stack.
+already have been popped from the stack.
 
 `jQuery.ajax` is overloaded so that the parameter may be an object,
 allowing more detailed information to be given:
@@ -340,32 +341,32 @@ allowing more detailed information to be given:
 ~~~~ {.javascript}
 jQuery.ajax({ "url":"resources/shortMessage.txt",
               "accepts": "text/plain",
-              "headers": { "X-MY-COOKIE": "123ABC" }
+              "headers": { "X-USER-ID": "123ABC" }
            });
 ~~~~
 
 This pattern of passing arguments as object literals is common in
-Javascript for functions which take a large number of arguments,
+Javascript for functions which take a large number of parameters,
 particularly if some are optional. This avoids having to pad unprovided
 optional arguments in the middle of the list with null values and,
-because the use of the values is named from the callee, also avoids an
-anti-pattern where a callsite can only be understood after counting the
+because the purpose of the values is given at the call site, avoids an
+anti-pattern where a call may only be understood after counting the
 position of the arguments.
 
-Taking on this style while extending it to cover events for progressive
-parsing, we arrive at the following Oboe public API:
+Taking on this style while extending it to incorporate progressive
+parsing, we arrive at the following API:
 
 ~~~~ {.javascript}
 oboe("resources/people.json")
-   .node( "person.name", function(name, path, ancestors) {
+   .node( "person.name", function(name) {
       console.log("There is somebody called", name);   
    })
    .done( function( wholeJson ) {
       console.log("That is everyone!");
    })
    .fail( function() {
-      console.log("Actually, the download failed. There may be more",
-                  "people but we don't know who they are yet.");
+      console.log("There might may be more people but",
+                  "we don't know who they are yet.");
    });
 ~~~~
 

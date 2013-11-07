@@ -339,6 +339,15 @@ later follow a narrative of updates to the logic expressed by the
 program. It is therefore harder to later understand the thinking behind
 a change or the reason for the change.
 
+Given model interrogation logic which is too tightly coupled to allow
+the model's inter-object structure to change, one approach to consider
+is Adaptive OOP [@adaptive] in which no detailed class structure is
+committed to when constructing the object oriented program. Once read,
+an external resource could be configured into an OO model according to a
+formal specification so that it may answer the desired requests. The
+model that is constructed would be sufficient to answer the queries
+without the programmer having to suppose any rigid form.
+
 JSONPath and XPath selector languages
 -------------------------------------
 

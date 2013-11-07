@@ -339,23 +339,8 @@ later follow a narrative of updates to the logic expressed by the
 program. It is therefore harder to later understand the thinking behind
 a change or the reason for the change.
 
-In VirtualStudio, LINQ [@linq], which is based on lambda-calculus and
-resembles SQL is used to drill-down into data structures and may also
-modify the data that is found. However this style of programming requires the
-application developer to write significantly more code than in the simple 
-programmatic access above so it does not meet the aims of this project.
-
-Given model interrogation logic which is tightly coupled so that the
-model's structure cannot change, one suggested approach is Adaptive OOP
-[@adaptive] in which no detailed class structure is committed to when
-constructing the object oriented program. A REST
-resource could be dynamically configured into an OO model according to a
-formal specification in a specialisation that is capable of answering the desired queries. The
-model that is constructed would be sufficient to answer the queries
-without the programmer having to suppose any rigid form.
-
-JSONPath and XPath selector languages
--------------------------------------
+Little languages for descending into fetched data
+-------------------------------------------------
 
 \label{jsonpathxpath}
 
@@ -363,13 +348,28 @@ To address the problem of drilling down to pertinent fragments of a
 message without tightly coupling to the format, consider if instead of
 programmatically descending step-by-step, a language were used which
 allows the right amount of specificity to be given regarding which parts
-to select. Certain markup languages come with associated query languages
-whose coupling is loose enough that not every node that is descended
-through must be specified. The best known is XPATH but there is also
-JSONPath, a JSON equivalent [@jsonpath].
+to select. In VirtualStudio LINQ [@linq], which is based on
+lambda-calculus and resembles SQL is used to drill-down into data
+structures and may also modify the data that is found. However this
+style of programming requires the application developer to write
+significantly more code than in the simple programmatic access above so
+it does not meet the aims of this project.
 
-As far as possible, JSONPath's syntax resembles the equivalent
-Javascript:
+Given model interrogation logic which is tightly coupled so that the
+model's structure cannot change, one suggested approach is Adaptive OOP
+[@adaptive] in which no detailed class structure is committed to when
+constructing the object oriented program. A REST resource could be
+dynamically configured into an OO model according to a formal
+specification in a specialisation that is capable of answering the
+desired queries. The model that is constructed would be sufficient to
+answer the queries without the programmer having to suppose any rigid
+form.
+
+Certain markup languages come with associated query languages whose
+coupling is loose enough that not every node that is descended through
+must be specified. The best known is XPATH but there is also JSONPath, a
+JSON equivalent [@jsonpath]. As far as possible, JSONPath's syntax 
+resembles the equivalent Javascript:
 
 ~~~~ {.javascript}
 // in Javascript we can get the town of the second person as:

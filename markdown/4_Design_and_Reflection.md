@@ -371,10 +371,10 @@ oboe("resources/people.json")
 ~~~~
 
 In jQuery the whole content is given back at once so usually only one
-`done` handler is usually added to a request. Under Oboe each separately
+`done` handler is added to a request. Under Oboe each separately
 addressed area of interest inside the JSON resource requires its own
-handler so it is helpful to provide streamlined support for adding
-several selector-handler pairs at a time. A shortcut style is provided:
+handler so it is helpful to provide a shortcut style for adding
+several selector-handler pairs at a time.
 
 ~~~~ {.javascript}
 oboe("resources/people.json")
@@ -388,7 +388,7 @@ oboe("resources/people.json")
    });
 ~~~~
 
-Note the `path` and `ancestors` parameters in the examples above. These
+Note the `path` and `ancestors` parameters in the example above. These
 provide additional information regarding the context in which the
 identified node was found. Consider the following JSON:
 

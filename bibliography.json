@@ -614,7 +614,8 @@
       "title":
          "To Profile or Not to Profile? - a debate between Sam Harris and Bruce Schneier",
       "author":[         
-         { "family": "Schneier", "given":"Bruce"}
+         { "family": "Schneier", "given":"Bruce"},
+         { "family": "Harris", "given":"Sam"}
       ],
       "url":"http://www.samharris.org/blog/item/to-profile-or-not-to-profile",
       "issued": { "date-parts":[ [2013] ] },

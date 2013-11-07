@@ -635,7 +635,7 @@ problems. As well as being small, a micro-library
 should impose as few restrictions as possible on its use and be agnostic
 as to which other libraries or programming styles it will be combined
 with, echoing the UNIX philosophy for small, easily combined 
-programs [@unixbasics]
+programs [@unixbasics].
 
 > This is the Unix philosophy:\
 > Do one thing and do it well.\

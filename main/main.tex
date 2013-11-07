@@ -776,6 +776,16 @@ later follow a narrative of updates to the logic expressed by the
 program. It is therefore harder to later understand the thinking behind
 a change or the reason for the change.
 
+Given model interrogation logic which is too tightly coupled to allow
+the model's inter-object structure to change, one approach to consider
+is Adaptive OOP (Lieberherr, Silva-Lepe, and Cun 1994) in which no
+detailed class structure is committed to when constructing the object
+oriented program. Once read, an external resource could be configured
+into an OO model according to a formal specification so that it may
+answer the desired requests. The model that is constructed would be
+sufficient to answer the queries without the programmer having to
+suppose any rigid form.
+
 \subsection{JSONPath and XPath selector
 languages}\label{jsonpath-and-xpath-selector-languages}
 
@@ -1806,13 +1816,13 @@ libraries such as jQuery. On legacy browsers Oboe could not be used to
 receive live data -- in the election night example no constituencies
 would be shown until they had all been called.
 
-One benefit of a unified model for streamed and short-lived content is
+One benefit of a unified model for streamed and finite-size content is
 that it allows a simpler security model. Because the demands of the
 transport are different, streaming security is usually implemented
-separately from other HTTP requests. Schneier argues that ``complexity
-is the worst enemy of security'' (Schneier 2000 Software Complexity and
-Security) and in one online debate paints a buildings analogy (Schneier
-2013):
+separately from other HTTP requests. Schneier often argues that
+``complexity is the worst enemy of security'' (Schneier 2000 Software
+Complexity and Security) and in one online debate paints a buildings
+analogy (Schneier and Harris 2013):
 
 \begin{quote}
 More specifically, simplicity tends to completely remove potential
@@ -1828,7 +1838,7 @@ takes more work to secure a building with ten doors than with one door.
 
 Unifying two means of data transfer into a single model is analogous to
 a building having only one entrance. A better level of security should
-be possible given the same resources.
+be possible given the same effort taken to secure it.
 
 Node's standard HTTP library provides a view of the response as a
 standard ReadableStream so there will be no problems programming to a
@@ -1862,17 +1872,19 @@ smaller is better because site creators are sensitive to the download
 size of their sites. Javascript micro-libraries are listed at
 \href{http://microjs.com}{microjs.com}, which includes this project. A
 library qualifies as being \emph{micro} if it is delivered in 5kb or
-less, 5120 bytes but micro-libraries also tend to follow the ethos that
+less, 5120 bytes, but micro-libraries also tend to follow the ethos that
 it is better for an application developer to gather together several
-tiny libraries than find one with a one-size-fits-all approach, perhaps
-echoing the unix command line tradition for small programs which each do
-exactly one thing. As well as being small, in the spirit of a
-micro-library a project should impose as few restrictions as possible on
-its use and be agnostic as to which other libraries or programming
-styles it will be combined with. Oboe feels on the edge of what is
-possible to elegantly do as a micro-library so while the limit is
-somewhat arbitrary, keeping below this limit whilst writing readable
-code should provide an interesting extra challenge.
+tiny, simple libraries than find a complex one which aims to solve many
+problems. As well as being small, a micro-library should impose as few
+restrictions as possible on its use and be agnostic as to which other
+libraries or programming styles it will be combined with, echoing the
+UNIX philosophy for small, easily combined programs (McIlroy 1978).
+
+\begin{quote}
+This is the Unix philosophy:\\Do one thing and do it well.\\Write
+programs to work together.\\Write programs to handle text streams,
+because that is a universal interface.
+\end{quote}
 
 \section{Implementation}\label{implementation}
 
@@ -5215,11 +5227,18 @@ JavaScript for the Browser and Nodejs.''
 Lea, Tom. 2012. ``Improving Performance on Twitter.com.''
 \url{{[}https://blog.twitter.com/2012/improving-performance-twittercom{]}}.
 
+Lieberherr, Karl J, Ignacio Silva-Lepe, and Xiao Cun. 1994. ``Adaptive
+Ob Ject-Oriented Programming Using Graph-Based Customization.''
+\url{http://www.csg.ci.i.u-tokyo.ac.jp/old-pages/muga/paper/others/gpce_gcse/ap_graf.pdf}.
+
 Martelli, Alex. 2000. ``Discussion of Typing in Python Language, 2000.''
 \url{https://groups.google.com/forum/?hl=en/\#!msg/comp.lang.python/CCs2oJdyuzc/NYjla5HKMOIJ}.
 
 Martin, Robert ``Uncle Bob''. 2008. \emph{Clean Code: A Handbook of
 Agile Software Craftsmanship}.
+
+McIlroy, Doug. 1978. ``Basics of the Unix Philosophy.''
+\url{http://www.faqs.org/docs/artu/ch01s06.html}.
 
 McLuhan, Marshall. 1964. \emph{Understanding Media: The Extensions of
 Man}.
@@ -5240,8 +5259,8 @@ Ryan, Dahl. 2009. ``Node.js.'' \url{http://nodejs.org/}.
 Schneier, Bruce. 2000. ``Crypto-Gram Newsletter.''
 \url{https://www.schneier.com/crypto-gram-0003.html\#8}.
 
----------. 2013. ``To Profile or Not to Profile? - a Debate Between Sam
-Harris and Bruce Schneier.''
+Schneier, Bruce, and Sam Harris. 2013. ``To Profile or Not to Profile? -
+a Debate Between Sam Harris and Bruce Schneier.''
 \url{http://www.samharris.org/blog/item/to-profile-or-not-to-profile}.
 
 Stefanov, Stoyan. 2009. ``Progressive Rendering via Multiple Flushes.''

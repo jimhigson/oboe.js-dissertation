@@ -126,7 +126,7 @@ node.
 
 ~~~~ {.javascript}
 {
-   "name": ""
+   "name": "..."
 ,  "residence": {
       "address": [
          "47", "Cloud street", "Dreamytown"
@@ -165,18 +165,20 @@ which maps to the array.
 }
 ~~~~
 
-In the above JSON, `addresses.*` would correctly identify three address
+In the above markup, `addresses.*` would correctly identify three address
 nodes. The pluralisation of field names such as 'address' becoming
 'addresses' is common when marshaling from OO languages because the JSON
 keys are based on getters whose name typically reflects their
-cardinality; `public Address getAddress()` or
-`public List<Address> getAddresses()`. This may pose a problem in some
-cases and it would be interesting in future to investigate a system such
-as Ruby on Rails that natively understands English pluralisation. Unions
-were also considered as a way to allow pattern matching against singular or plural elements,
-resembling `address|addresses.*` but it was decided that
-until the usefulness is better demonstrated it is simpler to
-solve this problem outside of the JSONPath language by expecting the programmer
+cardinality: `public Address getAddress()` or
+`public List<Address> getAddresses()`. To identify members of a type
+held singularly or plurally it might help if
+a system that understands English 
+pluralisation such as Ruby on Rails were investigated. Unions
+were also considered as a simpler solution, resembling `address|addresses.*`. 
+It was decided that
+until the usefulness is better demonstrated, with no obvious best solution,
+it is simplest if plurals are handled
+outside of the JSONPath language by expecting the programmer
 to register two selection specifications against the same handler
 function.
 

@@ -573,12 +573,13 @@ libraries such as jQuery. On legacy browsers Oboe could not be used to
 receive live data -- in the election night example no constituencies
 would be shown until they had all been called.
 
-One benefit of a unified model for streamed and short-lived content is that
-it allows a simpler security model. Because the demands of the transport are
-different, streaming security is usually implemented separately from
-other HTTP requests. Schneier argues that "complexity is the worst enemy
-of security" [@simpleschneier Software Complexity and Security] and in
-one online debate paints a buildings analogy [@schneierdoors]:
+One benefit of a unified model for streamed and finite-size content is
+that it allows a simpler security model. Because the demands of the
+transport are different, streaming security is usually implemented
+separately from other HTTP requests. Schneier often argues that "complexity is
+the worst enemy of security" [@simpleschneier Software Complexity and
+Security] and in one online debate paints a buildings analogy
+[@schneierdoors]:
 
 > More specifically, simplicity tends to completely remove potential
 > avenues of attack. An easy example might be to think of a building.
@@ -593,7 +594,7 @@ one online debate paints a buildings analogy [@schneierdoors]:
 
 Unifying two means of data transfer into a single model is analogous to
 a building having only one entrance. A better level of security should
-be possible given the same resources.
+be possible given the same effort taken to secure it.
 
 Node's standard HTTP library provides a view of the response as a
 standard ReadableStream so there will be no problems programming to a
@@ -627,14 +628,16 @@ smaller is better because site creators are sensitive to the download
 size of their sites. Javascript micro-libraries are listed at
 [microjs.com](http://microjs.com), which includes this project. A
 library qualifies as being *micro* if it is delivered in 5kb or less,
-5120 bytes but micro-libraries also tend to follow the ethos that it is
-better for an application developer to gather together several tiny
-libraries than find one with a one-size-fits-all approach, perhaps
-echoing the unix command line tradition for small programs which each do
-exactly one thing. As well as being small, in the spirit of a
-micro-library a project should impose as few restrictions as possible on
-its use and be agnostic as to which other libraries or programming
-styles it will be combined with. Oboe feels on the edge of what is
-possible to elegantly do as a micro-library so while the limit is
-somewhat arbitrary, keeping below this limit whilst writing readable
-code should provide an interesting extra challenge.
+5120 bytes, but micro-libraries also tend to follow the ethos that it is
+better for an application developer to gather together several tiny,
+simple libraries than find a complex one which aims to solve many
+problems. As well as being small, a micro-library
+should impose as few restrictions as possible on its use and be agnostic
+as to which other libraries or programming styles it will be combined
+with, echoing the UNIX philosophy for small, easily combined 
+programs [@unixbasics]
+
+> This is the Unix philosophy:\
+> Do one thing and do it well.\
+> Write programs to work together.\
+> Write programs to handle text streams, because that is a universal interface.

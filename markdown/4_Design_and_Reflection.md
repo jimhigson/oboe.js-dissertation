@@ -221,7 +221,7 @@ a 2000 usenet discussion:
 An address 'duck-definition' for the above JSON would say that any
 object which has number, street, and town properties is an address.
 Applied to JSON, duck typing takes an individualistic approach by
-deriving type from the node in itself rather than the situation in which
+deriving type from the node itself rather than the situation in which
 it is found. As discussed in section \ref{jsonpathxpath}, JSONPath's
 syntax is designed to resemble the equivalent Javascript accessors but
 Javascript has no syntax for a value-free list of object keys. The
@@ -237,8 +237,8 @@ also matched. We may consider that there is a root duck type `{}` which
 matches any node, that we create a sub-duck-type if we add to the list
 of required fields, and a super-duck-type if we remove from it. Because
 in OOP extended classes may add new fields, this idea of the attribute
-list expanding for a sub-type applies neatly to JSON REST resources
-marshaled from an OO representation. In implementation, to conform to a
+list expanding for a sub-type applies neatly to resources
+marshaled from an OO representation. To conform to a
 duck-type a node must have all of the required fields but could also
 have any others.
 
@@ -271,9 +271,9 @@ people array repeatedly whenever a new person is added to it. Javascript
 frameworks such as d3.js and Angular are designed to work with whole
 models as they change. Consequently, the interface they present
 converses more fluently with collections than individual entities. If we
-are downloading data to use with these libraries it is more convenient
-if we use explicit capturing so that we are notified whenever the
-collection is expanded and can pass it on.
+are downloading data to use with these libraries the integration 
+is more convenient with explicit capturing because we can hand over 
+the collection as it expands.
 
 Parsing the JSON response
 -------------------------

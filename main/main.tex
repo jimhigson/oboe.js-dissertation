@@ -216,7 +216,7 @@ or SVG\footnote{for quite an obviously visible example of progressive
   considered but also the XML source order, for example in this case it
   would be helpful if the outline of the UK appeared first and the
   exploded sections last.} the images themselves will also be presented
-incrementally. This incremental display is the product of specialised
+incrementally. The incremental display is achieved through specialised
 programming which applies only to displaying web pages. The contribution
 of this dissertation is to provide a generic analogue, applicable to any
 problem domain.
@@ -277,7 +277,9 @@ same perceptual speed improvements apply because of HTTP chunked
 encoding (Stefanov 2009). If this layer were a remote aggregation
 service, starting to write out the aggregated response early provides
 much the same benefits to the client able to interpret it progressively
-and, even if it is not, the overall delivery remains faster.
+and, even if it is not, the overall delivery remains faster. Whilst HTTP
+servers capable of streaming are quite common, there seems to be no
+published general-purpose, streaming-receptive REST client library.
 
 \subsection{Stepping outside the big-small
 tradeoff}\label{stepping-outside-the-big-small-tradeoff}
@@ -296,8 +298,9 @@ Applied repeatedly the illusion of an infinitely long page is
 maintained, albeit punctuated with pauses whenever new content is
 loaded. There is a tradeoff in the presentation layer between
 sporadically requesting many items and frequently requesting a few. At
-one extreme the interface\\suffers long but occasional pauses, whereas
-at the other it regularly falters momentarily.
+one extreme the interface would occasionally falter for a longer time,
+whereas at the other it would pause momentarily but with greater
+regularity.
 
 Progressive loading could render this tradeoff unnecessary by
 simultaneously delivering the best of both strategies. In the Twitter
@@ -397,10 +400,8 @@ than to action a shift which requires wholesale change.
 Although an explicitly streaming server would improve the situation
 further, because all network data transfer may be thought of as a
 stream, it is not required to start taking advantage of progressive
-REST. Whilst HTTP servers capable of streaming are quite common, there
-seems to be no published general-purpose, streaming-receptive REST
-client library. A streaming client is the MVP and is the programming
-deliverable for this project.
+REST. A streaming client is the MVP and is the programming deliverable
+for this project.
 
 \subsection{Criteria for success}\label{criteria-for-success}
 
@@ -412,9 +413,9 @@ representative task or in a user's perception of application
 responsiveness. Because applications in the target domain are much more
 I/O-bound than CPU-bound, optimisation in terms of the execution time of
 algorithms will be de-emphasised unless especially egregious. The
-delivered library should allow looser coupling to consumed
-resources\\than is possible with the current best tools so that the
-service provider can be upgraded without disruption.
+delivered library should allow looser coupling to the format of consumed
+resources\\than is possible with the current best tools so that it is
+less disruptive when services are upgraded.
 
 \section{Background}\label{background}
 
@@ -1862,10 +1863,10 @@ cryptography source, or the process's standard input.
 failures}\label{handling-transport-failures}
 
 Oboe cannot know the correct behaviour when a connection is lost so this
-decision is left to the containing application. On request failure one
-of two behaviours is expected: if the actions performed in response to
-data so far remain valid in the absence of a full transmission their
-effects will be kept and a new request made for just the missed part;
+decision is left to the containing application. On failure one of two
+behaviours is expected: if the actions performed in response to data so
+far remain valid in the absence of a full transmission their effects
+will be kept and a new request made for just the missed part;
 alternatively, if all the data is required for the actions to be valid,
 the application should take an optimistic locking approach and perform
 rollback.
@@ -2036,7 +2037,7 @@ close this gap by merging programming with the results of programming
 viewing the result of code while we write it, we can build in a series
 of small, iterative, correct steps and programming can be more
 explorative and expressive. Running the tests subtly, automatically,
-hundreds of times per day was not just convenient, this build process
+hundreds of times per day is not merely time-saving, this build process
 noticeably improved the quality of the project's programming.
 
 Integration tests are not run on save. They intentionally simulate a
@@ -2148,7 +2149,8 @@ expression. Consider the code below:
 \end{Highlighting}
 \end{Shaded}
 
-Uglify compresses this example by about 50\%:
+Uglify compresses this example into a single statement, reducing the
+size by about 55\%.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2157,15 +2159,16 @@ Uglify compresses this example by about 50\%:
 \end{Highlighting}
 \end{Shaded}
 
-An alternative option would be Google Closure Compiler (Google 2009), a
-more sophisticated optimiser which leverages a deeper understanding of
-the program. Unfortunately, proving equivalence in highly dynamic
-languages is often impossible and Closure Compiler is only safe given a
-well-advised subset of Javascript. It delivers no reasonable guarantee
-of equivalence if code is not written as the Closure team expected.
-Integration tests would catch any such failures but for the time being
-it was decided that even constrained by micro-library size limits, a
-slightly larger file is a worthwhile tradeoff for a safer build process.
+An alternative minifier would be Google Closure Compiler (Google 2009),
+a more sophisticated project which leverages a deeper understanding of
+the programming it reduces. Unfortunately, proving equivalence in highly
+dynamic languages is often impossible and Closure Compiler is only safe
+given a well-advised subset of Javascript. It delivers no reasonable
+guarantee of equivalence if code is not written as the Closure team
+expected. Integration tests would catch any such failures but for the
+time being it was decided that even constrained by micro-library size
+limits, a slightly larger file is a worthwhile tradeoff for a safer
+build process.
 
 \subsection{Styles of programming}\label{styles-of-programming}
 
@@ -2452,7 +2455,7 @@ also make it difficult to manage caches in general from inside the
 language because there is no way to occupy only spare memory. Weak
 references are proposed in the ECMAScript 6th edition draft (Harmony
 2013) but currently only experimentally supported\footnote{At time of
-  writing Mozilla Firefox is the only browser supporting WeakHashMap by
+  writing, Mozilla Firefox is the only browser supporting WeakHashMap by
   default. In Google Chrome it is implemented but not available to
   Javascript unless explicitly enabled by a browser flag.
   \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global/_Objects/WeakMap}
@@ -2479,8 +2482,9 @@ and through a proxy. A more purist approach would stub out the tokeniser
 functions before testing the compiled JSONPath expressions. This would
 be desirable if a general purpose compiler generator were being
 implemented but since the aim of the code is to work with only one
-language, removing the peculiarities of the language from the tests
-would only decrease their ability to demonstrate correct interpretation.
+language, removing the peculiarities of the tokenisation from the tests
+would only decrease their ability to demonstrate the correct
+interpretation of the JSONPath language as a whole.
 
 One limitation is that Oboe currently only supports selections which are
 decidable at the time that the candidate node is discovered. This
@@ -2499,13 +2503,13 @@ handing the result immediately to the callback. However, for cases where
 more of the document must be revealed before a match can be decided the
 term evaluators would have the option of listening to the parse until
 further document nodes are revealed, replying later when the necessary
-information is available. While a wider selection vocabulary would be
-available, such an expansion would make it difficult to guarantee
-callback order which may cause confusion for application developers.
-Luckily, a language containing only selectors which may be evaluated
-against nodes as they are detected is powerful enough to handle most
-cases. Until a strong need is demonstrated the selector language will be
-kept in its current form.
+information is available. While a wider selection vocabulary might be
+useful, such an expansion would make it difficult to offer a predictable
+callback order and could cause confusion for application developers. A
+language containing only selectors which may be evaluated against nodes
+as they are detected is powerful enough to handle most cases. Until a
+strong need is demonstrated the selector language will be kept in its
+current form.
 
 \subsection{Differences in the working of programs that can be easily
 written using

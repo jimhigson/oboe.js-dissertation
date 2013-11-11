@@ -105,7 +105,7 @@ hypertext and other resources -- and the HTML will be parsed and
 displayed incrementally while it is downloading, with resources such as
 images requested in parallel as soon as they are referenced. In the case
 of progressive JPEG or SVG[^2_Introduction1] the images themselves will also be
-presented incrementally. This incremental display is the product of
+presented incrementally. The incremental display is achieved through
 specialised programming which applies only to displaying web pages.
 The contribution of this dissertation is to provide a generic
 analogue, applicable to any problem domain.
@@ -159,7 +159,9 @@ encoding [@perceptionHttpChunkedSpeed]. If this layer were a remote
 aggregation service, starting to write out the aggregated response early
 provides much the same benefits to the client able to interpret it
 progressively and, even if it is not, the overall delivery remains
-faster.
+faster. Whilst HTTP servers capable of
+streaming are quite common, there seems to be no published general-purpose,
+streaming-receptive REST client library.
 
 Stepping outside the big-small tradeoff
 ---------------------------------------
@@ -177,12 +179,12 @@ the end of the list the next batch is automatically requested. When
 loaded, this new batch is converted to HTML and added to the bottom of
 the page. Applied repeatedly the illusion of an infinitely long page is
 maintained, albeit punctuated with pauses whenever new content is
-loaded. 
+loaded.
 There is
 a tradeoff in the presentation layer between sporadically requesting many items
-and frequently requesting a few. At one extreme the interface  
-suffers long but occasional pauses, whereas at the other it regularly 
-falters momentarily.
+and frequently requesting a few. At one extreme the interface would
+occasionally falter for a longer time, whereas at the other it would
+pause momentarily but with greater regularity.
 
 Progressive loading could render this tradeoff
 unnecessary by simultaneously delivering the best of both strategies. In
@@ -286,9 +288,6 @@ Although an
 explicitly streaming server would improve the situation further, because
 all network data transfer may be thought of as a stream, it is
 not required to start taking advantage of progressive REST.
-Whilst HTTP servers capable of
-streaming are quite common, there seems to be no published general-purpose, streaming-receptive
-REST client library.
 A streaming client is the MVP and is the programming deliverable for this project.
 
 Criteria for success
@@ -303,9 +302,9 @@ responsiveness. Because applications in the
 target domain are much more I/O-bound than CPU-bound, optimisation in
 terms of the execution time of algorithms will be de-emphasised unless
 especially egregious. The delivered library should allow looser coupling
-to consumed resources  
-than is possible with the current best tools so that the service provider 
-can be upgraded without disruption. 
+to the format of consumed resources  
+than is possible with the current best tools so that it is less disruptive 
+when services are upgraded.
 
 [^2_Introduction1]: for quite an obviously visible example of progressive SVG loading,
     try loading this SVG using a recent version of Google Chrome:
@@ -1692,7 +1691,7 @@ Handling transport failures
 ---------------------------
 
 Oboe cannot know the correct behaviour when a connection is lost so this
-decision is left to the containing application. On request
+decision is left to the containing application. On
 failure one of two behaviours is expected: if the actions performed in
 response to data so far remain valid in the absence of a full
 transmission their effects will be kept and a new request made for just
@@ -1859,8 +1858,8 @@ programming with the results of programming [@humanize pp.8-9]. If we
 bring together the medium and the message by viewing the result of code
 while we write it, we can build in a series of small, iterative, correct
 steps and programming can be more explorative and expressive. Running
-the tests subtly, automatically, hundreds of times per day was not just
-convenient, this build process noticeably improved the quality of the
+the tests subtly, automatically, hundreds of times per day is not merely
+time-saving, this build process noticeably improved the quality of the
 project's programming.
 
 Integration tests are not run on save. They intentionally simulate a
@@ -1970,17 +1969,18 @@ if( cached === false ) {
 return baseUrl;
 ```      
 
-Uglify compresses this example by about 50%:
+Uglify compresses this example into a single statement, reducing the size 
+by about 55%.
 
 ``` {.javascript}
 return b === !1 && (a += -1 == a.indexOf("?") ? 
 "?" : "&", a += "_=" + (new Date).getTime()), a
 ```      
 
-An alternative option would be
+An alternative minifier would be
 Google Closure Compiler [@closure], a more
-sophisticated optimiser which leverages a deeper understanding of the
-program. Unfortunately, proving
+sophisticated project which leverages a deeper understanding of the
+programming it reduces. Unfortunately, proving
 equivalence in highly dynamic languages is often impossible and Closure
 Compiler is only safe given a well-advised subset of Javascript. It
 delivers no reasonable guarantee of equivalence if code is not written
@@ -1988,7 +1988,6 @@ as the Closure team expected. Integration tests would catch any such
 failures but for the time being it was decided that even constrained by
 micro-library size limits, a slightly larger file is a worthwhile
 tradeoff for a safer build process.
-
 
 Styles of programming
 ---------------------
@@ -2267,9 +2266,9 @@ and through a proxy. A more purist approach would stub out the tokeniser
 functions before testing the compiled JSONPath expressions. This would
 be desirable if a general purpose compiler generator were
 being implemented but since the aim of the code is to work with only one
-language, removing the peculiarities of the language from the tests would
-only decrease their ability to demonstrate correct
-interpretation.
+language, removing the peculiarities of the tokenisation from the tests would
+only decrease their ability to demonstrate the correct interpretation of the
+JSONPath language as a whole.
 
 One limitation is that Oboe currently only supports selections which are
 decidable at the time that the candidate node is discovered. This
@@ -2288,10 +2287,10 @@ handing the result immediately to the callback. However, for cases where
 more of the document must be revealed before a match can be decided the
 term evaluators would have the option of listening to the parse until
 further document nodes are revealed, replying later when the necessary
-information is available. While a wider selection vocabulary would be
-available, such an expansion would make it difficult to guarantee
-callback order which may cause confusion for application developers. 
-Luckily, a language containing only selectors
+information is available. While a wider selection vocabulary might be
+useful, such an expansion would make it difficult to offer a predictable
+callback order and could cause confusion for application developers. 
+A language containing only selectors
 which may be evaluated against nodes as they are detected is powerful enough to
 handle most cases. Until a strong need is demonstrated the selector
 language will be kept in its current form.
@@ -2387,7 +2386,7 @@ linearly with the number of levels that must be traversed.
     and
     https://github.com/jimhigson/oboe.js/blob/master/test/specs/jsonPathTokens.unit.spec.js
 
-[^5_Implementation5]: At time of writing Mozilla Firefox is the only browser supporting
+[^5_Implementation5]: At time of writing, Mozilla Firefox is the only browser supporting
     WeakHashMap by default. In Google Chrome it is implemented but not available
     to Javascript unless explicitly enabled by a browser flag.
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/WeakMap

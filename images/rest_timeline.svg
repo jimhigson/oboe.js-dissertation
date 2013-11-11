@@ -223,9 +223,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="1041.1375"
-     inkscape:cy="798.00007"
+     inkscape:zoom="0.7"
+     inkscape:cx="1035.6253"
+     inkscape:cy="716.47496"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -234,7 +234,7 @@
      inkscape:window-height="1152"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid2985"
@@ -421,7 +421,7 @@
            sodipodi:role="line"
            id="tspan3143"
            x="316"
-           y="338.36218">GET /pulibcations/article/1</tspan></text>
+           y="338.36218">GET /publications/article/{id1}</tspan></text>
       <text
          inkscape:export-ydpi="599.89062"
          inkscape:export-xdpi="599.89062"
@@ -435,7 +435,7 @@
            y="344.36218"
            x="331"
            id="tspan3147"
-           sodipodi:role="line">GET /pulibcations/article/2</tspan></text>
+           sodipodi:role="line">GET /publications/article/{id2}</tspan></text>
       <text
          inkscape:export-ydpi="599.89062"
          inkscape:export-xdpi="599.89062"
@@ -449,7 +449,7 @@
            sodipodi:role="line"
            id="tspan3151"
            x="346"
-           y="351.36218">GET /pulibcations/article/3</tspan></text>
+           y="351.36218">GET /publications/article/{id3}</tspan></text>
       <rect
          inkscape:export-ydpi="599.89062"
          inkscape:export-xdpi="599.89062"
@@ -524,7 +524,7 @@
            sodipodi:role="line"
            id="tspan9151"
            x="596"
-           y="200.36218">GET /pulibcations/author/timbl</tspan></text>
+           y="200.36218">GET /publications/authors/{authorId}</tspan></text>
       <path
          inkscape:export-ydpi="599.89062"
          inkscape:export-xdpi="599.89062"
@@ -594,7 +594,7 @@
            y="215.36218"
            x="745"
            id="tspan9181"
-           sodipodi:role="line">GET /pulibcations/article/1</tspan></text>
+           sodipodi:role="line">GET /publications/article/{id1}</tspan></text>
       <text
          inkscape:export-ydpi="599.89062"
          inkscape:export-xdpi="599.89062"
@@ -608,7 +608,7 @@
            sodipodi:role="line"
            id="tspan9185"
            x="760"
-           y="245.36218">GET /pulibcations/article/2</tspan></text>
+           y="245.36218">GET /publications/article/{id2}</tspan></text>
       <text
          inkscape:export-ydpi="599.89062"
          inkscape:export-xdpi="599.89062"
@@ -622,7 +622,7 @@
            y="270.36218"
            x="775"
            id="tspan9189"
-           sodipodi:role="line">GET /pulibcations/article/3</tspan></text>
+           sodipodi:role="line">GET /publications/article/{id3}</tspan></text>
       <rect
          inkscape:export-ydpi="599.89062"
          inkscape:export-xdpi="599.89062"
@@ -1176,12 +1176,12 @@
            y="200.27885"
            x="173.75"
            id="tspan3284"
-           sodipodi:role="line">GET /pulibcations/author/timbl</tspan></text>
+           sodipodi:role="line">GET /publications/authors/{authorId}</tspan></text>
     </g>
     <rect
-       style="opacity:0;color:#000000;fill:#000000;fill-opacity:0.20894027000000001;fill-rule:nonzero;stroke:#000000;stroke-width:0.99999994000000003;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.99999994000000003, 0.99999994000000003;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="opacity:0;color:#000000;fill:#000000;fill-opacity:0.20894027;fill-rule:nonzero;stroke:#000000;stroke-width:0.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.99999993, 0.99999993;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3422"
-       width="920"
+       width="940"
        height="680"
        x="0"
        y="132.36218"
@@ -1190,11 +1190,11 @@
        inkscape:export-ydpi="600" />
     <rect
        y="132.36218"
-       x="1020"
+       x="1020.0001"
        height="680"
-       width="920"
+       width="960.00006"
        id="rect3424"
-       style="opacity:0;color:#000000;fill:#000000;fill-opacity:0.20894027000000001;fill-rule:nonzero;stroke:#000000;stroke-width:0.99999994000000003;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.99999994000000003, 0.99999994000000003;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="opacity:0;color:#000000;fill:#000000;fill-opacity:0.20894027;fill-rule:nonzero;stroke:#000000;stroke-width:0.99999994;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.99999996, 0.99999996;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        inkscape:export-filename="/Users/jimhigson/Sites/oboe.js-dissertation/images/rest_timeline_2.png"
        inkscape:export-xdpi="600"
        inkscape:export-ydpi="600" />

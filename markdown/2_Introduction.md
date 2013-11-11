@@ -75,8 +75,8 @@ hypertext and other resources -- and the HTML will be parsed and
 displayed incrementally while it is downloading, with resources such as
 images requested in parallel as soon as they are referenced. In the case
 of progressive JPEG or SVG[^1] the images themselves will also be
-presented incrementally. This incremental display is achieved through
-software created for a single purpose, to display web pages.
+presented incrementally. The incremental display is achieved through
+specialised programming which applies only to displaying web pages.
 The contribution of this dissertation is to provide a generic
 analogue, applicable to any problem domain.
 
@@ -86,12 +86,12 @@ REST aggregation could be faster
 ![**Sequence diagram showing the aggregation of low-level REST resources
 by an intermediary.** A client fetches an author's publication list and
 then their first three articles. This sequence represents the most
-commonly used technique in which the client does not react util the
+commonly used technique in which the client does not react until the
 response is complete.
 \label{rest_timeline_1}](images/rest_timeline_1.png)
 
 ![**Revised aggregation sequence showing a client which progressively
-interprets the resources.** Because the arrows in a UML sequence diagrams
+interprets the resources.** Because UML sequence diagrams
 draw returned values as a one-off happening rather than a continuous
 process, the lighter arrow notation is added to represent
 fragments of an incremental response. Each request for an individual
@@ -129,7 +129,9 @@ encoding [@perceptionHttpChunkedSpeed]. If this layer were a remote
 aggregation service, starting to write out the aggregated response early
 provides much the same benefits to the client able to interpret it
 progressively and, even if it is not, the overall delivery remains
-faster.
+faster. Whilst HTTP servers capable of
+streaming are quite common, there seems to be no published general-purpose,
+streaming-receptive REST client library.
 
 Stepping outside the big-small tradeoff
 ---------------------------------------
@@ -147,10 +149,12 @@ the end of the list the next batch is automatically requested. When
 loaded, this new batch is converted to HTML and added to the bottom of
 the page. Applied repeatedly the illusion of an infinitely long page is
 maintained, albeit punctuated with pauses whenever new content is
-loaded. For the programmers working on this presentation layer there is
-a tradeoff between sporadically requesting many tweets, yielding long,
-infrequent delays and frequently requesting a few, giving an interface
-which stutters momentarily but often.
+loaded.
+There is
+a tradeoff in the presentation layer between sporadically requesting many items
+and frequently requesting a few. At one extreme the interface would
+occasionally falter for a longer time, whereas at the other it would
+pause momentarily but with greater regularity.
 
 Progressive loading could render this tradeoff
 unnecessary by simultaneously delivering the best of both strategies. In
@@ -192,9 +196,9 @@ and when the signal later returns fetch only the lost 10%.
 
 The delivered part of a partially successful message may be used if we
 turn away from this polarised view of
-wholly successful/unsuccessful requests and conceptualise the message as
+wholly successful and unsuccessful requests. A message may be conceptualised as
 having many parts which are useful in themselves, in which the successful 
-delivery of each part is handled independently without knowing if the next will
+delivery of each part is handled independently before knowing if the next
 part will also arrive. 
 As well as allowing partially successful messages to be used,
 seeing the resource as a stream of small parts allows those parts
@@ -217,7 +221,7 @@ In most respects a SOA architecture fits well with the fast release
 cycle encouraged by Agile methodologies. Because in SOA we may consider
 that all data is local and that the components are
 loosely coupled and autonomous, frequent releases of any particular
-sub-system shouldn't pose a problem to the correct operation of the
+sub-system should pose no problem to the correct operation of the
 whole. In allowing a design to emerge organically it should be possible
 for the structure of resource formats to be realised slowly and
 iteratively while a greater understanding of the problem is gained.
@@ -254,12 +258,7 @@ Although an
 explicitly streaming server would improve the situation further, because
 all network data transfer may be thought of as a stream, it is
 not required to start taking advantage of progressive REST.
-In the
-interest of creating something new, whilst HTTP servers capable of
-streaming are quite common even if they are not always programmed as
-such, there seems to be no published general-purpose, streaming-receptive
-REST client library.
-A streaming client is the MVP and is the code deliverable of this project.
+A streaming client is the MVP and is the programming deliverable for this project.
 
 Criteria for success
 --------------------
@@ -272,11 +271,10 @@ representative task or in a user's perception of application
 responsiveness. Because applications in the
 target domain are much more I/O-bound than CPU-bound, optimisation in
 terms of the execution time of algorithms will be de-emphasised unless
-especially egregious. Additionally, there will be a consideration of how 
-message semantics are incrementally realised as part of an emergent design.
-This will include commentary on if disruption given unanticipated
-format changes may be avoided by libraries which encourage data consumers
-to be loosely coupled to the formats that they consume.
+especially egregious. The delivered library should allow looser coupling
+to the format of consumed resources  
+than is possible with the current best tools so that it is less disruptive 
+when services are upgraded.
 
 [^1]: for quite an obviously visible example of progressive SVG loading,
     try loading this SVG using a recent version of Google Chrome:

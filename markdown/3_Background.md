@@ -1,7 +1,7 @@
 Background
 ==========
 
-![**Labelling nodes in an n-tier architecture**. By Although network
+![**Labelling nodes in an n-tier architecture**. Although network
 topology is often split about client and server side, for our purposes
 categorisation as data, middle, and presentation tier is the more
 meaningful distinction. According to this split the client- and
@@ -203,9 +203,9 @@ Javascript's syntax for literal values into a stand-alone serialisation
 language. For the graduate tackling JSON parsing the task is simpler
 still, being expressible as fifteen context free grammars.
 
-Whereas XML's markup can be traced to document formats, JSON's lineage
+Whereas XML markup can be traced to document formats, JSON's lineage
 is in a programming language. From these roots it isn't surprising that
-JSON maps more directly to the metamodel that most programmers think in.
+JSON maps more directly to the metamodels that most programmers think in.
 XML parsers produce Elements, Text, Attributes, ProcessingInstruction
 which require extra translation before they are convenient to use inside
 a programming language. Because JSON already closely resembles how a
@@ -235,8 +235,8 @@ the JSON object's likeness to Javascript objects whose iteration order
 is indeterminate [@ecma3 4.3.3]. In the example above the people objects
 would probably have been written based on either a class with two public
 properties or a hash map. On receiving this data the text would be
-demarshalled into similar orderless structures and that the data found
-an ordered expression during transport would be quickly forgotten. When
+demarshalled into similar orderless structures and it would be quickly forgotten
+that the data found an ordered expression during transport. When
 viewing a document as a stream and interpreting while still incomplete
 it is easier to mistakenly react differently according to field order.
 If nodes from the example above were used when only the first field has
@@ -323,10 +323,10 @@ client because only the translation from DTO to domain object must be
 updated but do not avoid change altogether if a service format is
 refactored. In the *Red Queen's race* it took "all the running you can
 do, to keep in the same place". Ideally a programmer should only have to
-expend effort so that their code does something new, or performs better
+expend effort so that their code does something new, or perform better
 something that it already did, not to stay still. Following an object
 oriented encapsulation of data such that a caller does not have to
-concern itself with the data structures behind an interface the internal
+concern itself with the data structures behind an interface, the internal
 implementation may be changed without disruptions to the rest of the
 code base. However, when the structure of the inter-object composition
 is revised, isolation from the changes is less often recognised as a
@@ -349,7 +349,7 @@ message without tightly coupling to the format, consider if instead of
 programmatically descending step-by-step, a language were used which
 allows the right amount of specificity to be given regarding which parts
 to select. In VirtualStudio LINQ [@linq], which is based on
-lambda-calculus and resembles SQL is used to drill-down into data
+lambda-calculus and resembles SQL, is used to drill-down into data
 structures and may also modify the data that is found. However this
 style of programming requires the application developer to write
 significantly more code than in the simple programmatic access above so
@@ -419,10 +419,12 @@ version below:
 }
 ~~~~
 
+formats tend to grow, not shrink
+
 Maintaining compatibility with unanticipated format revisions through
 selector languages is easier with JSON than XML. The XML metamodel
 contains overlapping representations of equivalent entities which a
-format being refactored is liable to switch between. Each XML element
+format is liable to switch between when being refactored. Each XML element
 has two distinct lists of child nodes, attribute children and node list
 children. From one perspective attributes are child nodes of their
 parent element but they can alternatively be considered as data stored
@@ -440,8 +442,8 @@ change.
 </people>
 ~~~~
 
-The XPath `//person@town` matches against the XML above but because of
-the switch from attribute to child element fails to match towns in the
+The XPath `//person@town` identifies the town in the XML above but because of
+the switch from attribute to sub-element fails in the
 revised version below.
 
 ~~~~ {.xml}
@@ -525,7 +527,7 @@ adding non-standard features; Internet Explorer made AJAX possible in
 2000 by exposing Microsoft's Active X *Xml Http Request* (XHR) class to
 the Javascript sandbox. This was widely copied and near equivalents were
 added to all major browsers. In 2006 the interface was eventually
-formalised by the W3C [@xhrWorkingDraft]. XHR's slow progresss to
+formalised by the W3C [@xhrWorkingDraft]. XHR's slow progress to
 standardisation reflected a period of general stagnation for web
 standards. HTML4 reached Recommendation status in 2001 but having
 subsequently found several evolutionary dead ends such as XHTML, there
@@ -664,8 +666,8 @@ abstraction the markup syntax is a distant concern whereas for SAX each
 element's opening and closing must be noted so the developer may not put
 the data's serialisation aside. SAX comes with the advantages that it
 may read a document progressively and has lower memory requirements
-because it does not store the parsed tree. Correspondingly, it it
-popular for embedded systems running on constrained hardware and may be
+because it does not store the parsed tree. It is a
+popular choice for embedded systems running on constrained hardware and may be
 used to handle documents larger than the available RAM.
 
 Suppose we have some JSON representing people and want to extract the

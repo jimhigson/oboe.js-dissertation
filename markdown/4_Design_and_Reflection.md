@@ -24,8 +24,8 @@ complete if we turn the established model for drilling-down inside-out.
 Under asynchronous I/O the programmer's callback traditionally receives
 the whole resource and then, inside the callback, locates the sub-parts
 that are required for a particular task. Inverting this process, the
-locating logic currently found inside the callback can be extracted from
-it, expressed as a selector language, and used it to declare the cases
+locating logic currently found inside the callback can be extracted,
+expressed as a selector language, and used to declare the cases
 in which the callback should be notified. The callback will receive
 complete fragments from the response once they have been selected
 according to this declaration.
@@ -65,14 +65,15 @@ loosely, specialising the matching by adding features which are likely
 to be useful when detecting entities in REST resources while avoid
 unnecessary code by dropping others. Later adding new features to a
 language is easier than removing them once a userbase has built up so
-where the utility isn't clear the default position is to not include. It
-is difficult to anticipate all real-world matching requirements but it
+where the utility of a feature is not clear the default position should 
+be to not include it.
+It is difficult to anticipate all real-world matching requirements but it
 should be possible to identify a core 20% of features that are likely to
-be useful in 80% of cases. For the time being any functionality which is
+be useful in 80% of cases. For the timebeing any functionality which is
 not included may be implemented by registering a more permissive
 selection and then further filtering programmatically from inside the
 callback. Patterns of programmatic filtering which arise from use in the
-wild can later mined and added to the selection language.
+wild can later be mined and added to the selection language.
 
 Detecting types in JSON
 -----------------------
@@ -100,7 +101,7 @@ programmers in creating their own.
 ~~~~ {.xml}
 <!--  
   XML leaves no doubt as to the labels we give to an Element's type 
-  type. Although we might further interpret, this is a 'person'
+  type. Although we might further interpret, this is a 'person'.
 -->
 <person  name='...' gender="male"
          age="45" height="175cm" profession="architect">
@@ -362,7 +363,7 @@ oboe("resources/people.json")
    })
    .fail( function() {
       console.log("There might may be more people but",
-                  "we don't know who they are yet.");
+                  "we do not know who they are yet.");
    });
 ~~~~
 
@@ -479,8 +480,8 @@ this by providing a `path` event following much the same style as
 ~~~~ {.javascript}
 oboe("events.json")
    .path( "medalWinners", function() {
-      // We don"t know the winners yet but we know we have some 
-      // so let's start drawing the table:    
+      // We do not know the winners yet but we know we have some 
+      // so we can start drawing the table:    
       gui.showMedalTable();
    })
    .node( "medalWinners.*", function(person, path) {    
@@ -488,7 +489,7 @@ oboe("events.json")
       gui.addPersonToMedalTable(person, metal);
    })
    .fail( function(){
-      // That didn"t work. Revert!
+      // Revert!
       gui.hideMedalTable();
    });
 ~~~~
@@ -564,7 +565,7 @@ not be used because they would result in a client which is unable to
 connect to the majority of REST services. Degrading gracefully, the best
 compatible behaviour is to wait until the document completes and then
 interpret the whole content as if it were streamed. Because nothing is
-done until the request is complete the callbacks will be fired later
+done until the request is complete, the callbacks will be fired later
 than on a more capable platform but will have the same content and be in
 the same order. By reverting to non-progressive AJAX on legacy
 platforms, an application author will not have to write special cases
@@ -609,8 +610,8 @@ Handling transport failures
 ---------------------------
 
 Oboe cannot know the correct behaviour when a connection is lost so this
-decision is left to the containing application. Generally on request
-failure one of two behaviours are expected: if the actions performed in
+decision is left to the containing application. On
+failure one of two behaviours is expected: if the actions performed in
 response to data so far remain valid in the absence of a full
 transmission their effects will be kept and a new request made for just
 the missed part; alternatively, if all the data is required for the
@@ -623,8 +624,8 @@ Oboe.js as a micro-library
 HTTP traffic is often compressed using gzip so that it transfers more
 quickly, particularly for entropy-sparse text formats such as
 Javascript. When measuring a library's download footprint it usually
-makes more sense to compare post-compression. For the sake of adoption
-smaller is better because site creators are sensitive to the download
+makes more sense to compare post-compression. Smaller is better 
+to encourage adoption because site creators are sensitive to the download
 size of their sites. Javascript micro-libraries are listed at
 [microjs.com](http://microjs.com), which includes this project. A
 library qualifies as being *micro* if it is delivered in 5kb or less,

@@ -105,8 +105,8 @@ hypertext and other resources -- and the HTML will be parsed and
 displayed incrementally while it is downloading, with resources such as
 images requested in parallel as soon as they are referenced. In the case
 of progressive JPEG or SVG[^2_Introduction1] the images themselves will also be
-presented incrementally. This incremental display is achieved through
-software created for a single purpose, to display web pages.
+presented incrementally. This incremental display is the product of
+specialised programming which applies only to displaying web pages.
 The contribution of this dissertation is to provide a generic
 analogue, applicable to any problem domain.
 
@@ -116,12 +116,12 @@ REST aggregation could be faster
 ![**Sequence diagram showing the aggregation of low-level REST resources
 by an intermediary.** A client fetches an author's publication list and
 then their first three articles. This sequence represents the most
-commonly used technique in which the client does not react util the
+commonly used technique in which the client does not react until the
 response is complete.
 \label{rest_timeline_1}](images/rest_timeline_1.png)
 
 ![**Revised aggregation sequence showing a client which progressively
-interprets the resources.** Because the arrows in a UML sequence diagrams
+interprets the resources.** Because UML sequence diagrams
 draw returned values as a one-off happening rather than a continuous
 process, the lighter arrow notation is added to represent
 fragments of an incremental response. Each request for an individual
@@ -177,10 +177,12 @@ the end of the list the next batch is automatically requested. When
 loaded, this new batch is converted to HTML and added to the bottom of
 the page. Applied repeatedly the illusion of an infinitely long page is
 maintained, albeit punctuated with pauses whenever new content is
-loaded. For the programmers working on this presentation layer there is
-a tradeoff between sporadically requesting many tweets, yielding long,
-infrequent delays and frequently requesting a few, giving an interface
-which stutters momentarily but often.
+loaded. 
+There is
+a tradeoff in the presentation layer between sporadically requesting many items
+and frequently requesting a few. At one extreme the interface  
+suffers long but occasional pauses, whereas at the other it regularly 
+falters momentarily.
 
 Progressive loading could render this tradeoff
 unnecessary by simultaneously delivering the best of both strategies. In
@@ -222,9 +224,9 @@ and when the signal later returns fetch only the lost 10%.
 
 The delivered part of a partially successful message may be used if we
 turn away from this polarised view of
-wholly successful/unsuccessful requests and conceptualise the message as
+wholly successful and unsuccessful requests. A message may be conceptualised as
 having many parts which are useful in themselves, in which the successful 
-delivery of each part is handled independently without knowing if the next will
+delivery of each part is handled independently before knowing if the next
 part will also arrive. 
 As well as allowing partially successful messages to be used,
 seeing the resource as a stream of small parts allows those parts
@@ -247,7 +249,7 @@ In most respects a SOA architecture fits well with the fast release
 cycle encouraged by Agile methodologies. Because in SOA we may consider
 that all data is local and that the components are
 loosely coupled and autonomous, frequent releases of any particular
-sub-system shouldn't pose a problem to the correct operation of the
+sub-system should pose no problem to the correct operation of the
 whole. In allowing a design to emerge organically it should be possible
 for the structure of resource formats to be realised slowly and
 iteratively while a greater understanding of the problem is gained.
@@ -284,12 +286,10 @@ Although an
 explicitly streaming server would improve the situation further, because
 all network data transfer may be thought of as a stream, it is
 not required to start taking advantage of progressive REST.
-In the
-interest of creating something new, whilst HTTP servers capable of
-streaming are quite common even if they are not always programmed as
-such, there seems to be no published general-purpose, streaming-receptive
+Whilst HTTP servers capable of
+streaming are quite common, there seems to be no published general-purpose, streaming-receptive
 REST client library.
-A streaming client is the MVP and is the code deliverable of this project.
+A streaming client is the MVP and is the programming deliverable for this project.
 
 Criteria for success
 --------------------
@@ -302,11 +302,10 @@ representative task or in a user's perception of application
 responsiveness. Because applications in the
 target domain are much more I/O-bound than CPU-bound, optimisation in
 terms of the execution time of algorithms will be de-emphasised unless
-especially egregious. Additionally, there will be a consideration of how 
-message semantics are incrementally realised as part of an emergent design.
-This will include commentary on if disruption given unanticipated
-format changes may be avoided by libraries which encourage data consumers
-to be loosely coupled to the formats that they consume.
+especially egregious. The delivered library should allow looser coupling
+to consumed resources  
+than is possible with the current best tools so that the service provider 
+can be upgraded without disruption. 
 
 [^2_Introduction1]: for quite an obviously visible example of progressive SVG loading,
     try loading this SVG using a recent version of Google Chrome:
@@ -320,7 +319,7 @@ to be loosely coupled to the formats that they consume.
 Background
 ==========
 
-![**Labelling nodes in an n-tier architecture**. By Although network
+![**Labelling nodes in an n-tier architecture**. Although network
 topology is often split about client and server side, for our purposes
 categorisation as data, middle, and presentation tier is the more
 meaningful distinction. According to this split the client- and
@@ -522,9 +521,9 @@ Javascript's syntax for literal values into a stand-alone serialisation
 language. For the graduate tackling JSON parsing the task is simpler
 still, being expressible as fifteen context free grammars.
 
-Whereas XML's markup can be traced to document formats, JSON's lineage
+Whereas XML markup can be traced to document formats, JSON's lineage
 is in a programming language. From these roots it isn't surprising that
-JSON maps more directly to the metamodel that most programmers think in.
+JSON maps more directly to the metamodels that most programmers think in.
 XML parsers produce Elements, Text, Attributes, ProcessingInstruction
 which require extra translation before they are convenient to use inside
 a programming language. Because JSON already closely resembles how a
@@ -554,8 +553,8 @@ the JSON object's likeness to Javascript objects whose iteration order
 is indeterminate [@ecma3 4.3.3]. In the example above the people objects
 would probably have been written based on either a class with two public
 properties or a hash map. On receiving this data the text would be
-demarshalled into similar orderless structures and that the data found
-an ordered expression during transport would be quickly forgotten. When
+demarshalled into similar orderless structures and it would be quickly forgotten
+that the data found an ordered expression during transport. When
 viewing a document as a stream and interpreting while still incomplete
 it is easier to mistakenly react differently according to field order.
 If nodes from the example above were used when only the first field has
@@ -642,10 +641,10 @@ client because only the translation from DTO to domain object must be
 updated but do not avoid change altogether if a service format is
 refactored. In the *Red Queen's race* it took "all the running you can
 do, to keep in the same place". Ideally a programmer should only have to
-expend effort so that their code does something new, or performs better
+expend effort so that their code does something new, or perform better
 something that it already did, not to stay still. Following an object
 oriented encapsulation of data such that a caller does not have to
-concern itself with the data structures behind an interface the internal
+concern itself with the data structures behind an interface, the internal
 implementation may be changed without disruptions to the rest of the
 code base. However, when the structure of the inter-object composition
 is revised, isolation from the changes is less often recognised as a
@@ -659,7 +658,7 @@ program. It is therefore harder to later understand the thinking behind
 a change or the reason for the change.
 
 Little languages for descending into fetched data
-------------------------------------------------
+-------------------------------------------------
 
 \label{jsonpathxpath}
 
@@ -667,28 +666,28 @@ To address the problem of drilling down to pertinent fragments of a
 message without tightly coupling to the format, consider if instead of
 programmatically descending step-by-step, a language were used which
 allows the right amount of specificity to be given regarding which parts
-to select. In VirtualStudio LINQ [@linq], which is based on lambda-calculus and
-resembles SQL is used to drill-down into data structures and may also
-modify the data that is found. However this style of programming requires the
-application developer to write significantly more code than in the simple 
-programmatic access above so it does not meet the aims of this project.
+to select. In VirtualStudio LINQ [@linq], which is based on
+lambda-calculus and resembles SQL, is used to drill-down into data
+structures and may also modify the data that is found. However this
+style of programming requires the application developer to write
+significantly more code than in the simple programmatic access above so
+it does not meet the aims of this project.
 
 Given model interrogation logic which is tightly coupled so that the
 model's structure cannot change, one suggested approach is Adaptive OOP
 [@adaptive] in which no detailed class structure is committed to when
-constructing the object oriented program. A REST
-resource could be dynamically configured into an OO model according to a
-formal specification in a specialisation that is capable of answering the desired queries. The
-model that is constructed would be sufficient to answer the queries
-without the programmer having to suppose any rigid form.
+constructing the object oriented program. A REST resource could be
+dynamically configured into an OO model according to a formal
+specification in a specialisation that is capable of answering the
+desired queries. The model that is constructed would be sufficient to
+answer the queries without the programmer having to suppose any rigid
+form.
 
-Certain markup languages come with associated query languages
-whose coupling is loose enough that not every node that is descended
-through must be specified. The best known is XPATH but there is also
-JSONPath, a JSON equivalent [@jsonpath].
-
-As far as possible, JSONPath's syntax resembles the equivalent
-Javascript:
+Certain markup languages come with associated query languages whose
+coupling is loose enough that not every node that is descended through
+must be specified. The best known is XPATH but there is also JSONPath, a
+JSON equivalent [@jsonpath]. As far as possible, JSONPath's syntax 
+resembles the equivalent Javascript:
 
 ~~~~ {.javascript}
 // in Javascript we can get the town of the second person as:
@@ -738,10 +737,12 @@ version below:
 }
 ~~~~
 
+formats tend to grow, not shrink
+
 Maintaining compatibility with unanticipated format revisions through
 selector languages is easier with JSON than XML. The XML metamodel
 contains overlapping representations of equivalent entities which a
-format being refactored is liable to switch between. Each XML element
+format is liable to switch between when being refactored. Each XML element
 has two distinct lists of child nodes, attribute children and node list
 children. From one perspective attributes are child nodes of their
 parent element but they can alternatively be considered as data stored
@@ -759,8 +760,8 @@ change.
 </people>
 ~~~~
 
-The XPath `//person@town` matches against the XML above but because of
-the switch from attribute to child element fails to match towns in the
+The XPath `//person@town` identifies the town in the XML above but because of
+the switch from attribute to sub-element fails in the
 revised version below.
 
 ~~~~ {.xml}
@@ -844,7 +845,7 @@ adding non-standard features; Internet Explorer made AJAX possible in
 2000 by exposing Microsoft's Active X *Xml Http Request* (XHR) class to
 the Javascript sandbox. This was widely copied and near equivalents were
 added to all major browsers. In 2006 the interface was eventually
-formalised by the W3C [@xhrWorkingDraft]. XHR's slow progresss to
+formalised by the W3C [@xhrWorkingDraft]. XHR's slow progress to
 standardisation reflected a period of general stagnation for web
 standards. HTML4 reached Recommendation status in 2001 but having
 subsequently found several evolutionary dead ends such as XHTML, there
@@ -983,8 +984,8 @@ abstraction the markup syntax is a distant concern whereas for SAX each
 element's opening and closing must be noted so the developer may not put
 the data's serialisation aside. SAX comes with the advantages that it
 may read a document progressively and has lower memory requirements
-because it does not store the parsed tree. Correspondingly, it it
-popular for embedded systems running on constrained hardware and may be
+because it does not store the parsed tree. It is a
+popular choice for embedded systems running on constrained hardware and may be
 used to handle documents larger than the available RAM.
 
 Suppose we have some JSON representing people and want to extract the
@@ -1105,8 +1106,8 @@ complete if we turn the established model for drilling-down inside-out.
 Under asynchronous I/O the programmer's callback traditionally receives
 the whole resource and then, inside the callback, locates the sub-parts
 that are required for a particular task. Inverting this process, the
-locating logic currently found inside the callback can be extracted from
-it, expressed as a selector language, and used it to declare the cases
+locating logic currently found inside the callback can be extracted,
+expressed as a selector language, and used to declare the cases
 in which the callback should be notified. The callback will receive
 complete fragments from the response once they have been selected
 according to this declaration.
@@ -1146,14 +1147,15 @@ loosely, specialising the matching by adding features which are likely
 to be useful when detecting entities in REST resources while avoid
 unnecessary code by dropping others. Later adding new features to a
 language is easier than removing them once a userbase has built up so
-where the utility isn't clear the default position is to not include. It
-is difficult to anticipate all real-world matching requirements but it
+where the utility of a feature is not clear the default position should 
+be to not include it.
+It is difficult to anticipate all real-world matching requirements but it
 should be possible to identify a core 20% of features that are likely to
-be useful in 80% of cases. For the time being any functionality which is
+be useful in 80% of cases. For the timebeing any functionality which is
 not included may be implemented by registering a more permissive
 selection and then further filtering programmatically from inside the
 callback. Patterns of programmatic filtering which arise from use in the
-wild can later mined and added to the selection language.
+wild can later be mined and added to the selection language.
 
 Detecting types in JSON
 -----------------------
@@ -1181,7 +1183,7 @@ programmers in creating their own.
 ~~~~ {.xml}
 <!--  
   XML leaves no doubt as to the labels we give to an Element's type 
-  type. Although we might further interpret, this is a 'person'
+  type. Although we might further interpret, this is a 'person'.
 -->
 <person  name='...' gender="male"
          age="45" height="175cm" profession="architect">
@@ -1443,7 +1445,7 @@ oboe("resources/people.json")
    })
    .fail( function() {
       console.log("There might may be more people but",
-                  "we don't know who they are yet.");
+                  "we do not know who they are yet.");
    });
 ~~~~
 
@@ -1560,8 +1562,8 @@ this by providing a `path` event following much the same style as
 ~~~~ {.javascript}
 oboe("events.json")
    .path( "medalWinners", function() {
-      // We don"t know the winners yet but we know we have some 
-      // so let's start drawing the table:    
+      // We do not know the winners yet but we know we have some 
+      // so we can start drawing the table:    
       gui.showMedalTable();
    })
    .node( "medalWinners.*", function(person, path) {    
@@ -1569,7 +1571,7 @@ oboe("events.json")
       gui.addPersonToMedalTable(person, metal);
    })
    .fail( function(){
-      // That didn"t work. Revert!
+      // Revert!
       gui.hideMedalTable();
    });
 ~~~~
@@ -1645,7 +1647,7 @@ not be used because they would result in a client which is unable to
 connect to the majority of REST services. Degrading gracefully, the best
 compatible behaviour is to wait until the document completes and then
 interpret the whole content as if it were streamed. Because nothing is
-done until the request is complete the callbacks will be fired later
+done until the request is complete, the callbacks will be fired later
 than on a more capable platform but will have the same content and be in
 the same order. By reverting to non-progressive AJAX on legacy
 platforms, an application author will not have to write special cases
@@ -1690,8 +1692,8 @@ Handling transport failures
 ---------------------------
 
 Oboe cannot know the correct behaviour when a connection is lost so this
-decision is left to the containing application. Generally on request
-failure one of two behaviours are expected: if the actions performed in
+decision is left to the containing application. On request
+failure one of two behaviours is expected: if the actions performed in
 response to data so far remain valid in the absence of a full
 transmission their effects will be kept and a new request made for just
 the missed part; alternatively, if all the data is required for the
@@ -1704,8 +1706,8 @@ Oboe.js as a micro-library
 HTTP traffic is often compressed using gzip so that it transfers more
 quickly, particularly for entropy-sparse text formats such as
 Javascript. When measuring a library's download footprint it usually
-makes more sense to compare post-compression. For the sake of adoption
-smaller is better because site creators are sensitive to the download
+makes more sense to compare post-compression. Smaller is better 
+to encourage adoption because site creators are sensitive to the download
 size of their sites. Javascript micro-libraries are listed at
 [microjs.com](http://microjs.com), which includes this project. A
 library qualifies as being *micro* if it is delivered in 5kb or less,
@@ -1857,15 +1859,15 @@ programming with the results of programming [@humanize pp.8-9]. If we
 bring together the medium and the message by viewing the result of code
 while we write it, we can build in a series of small, iterative, correct
 steps and programming can be more explorative and expressive. Running
-the tests subtly, automatically hundreds of times per day isn't merely
+the tests subtly, automatically, hundreds of times per day was not just
 convenient, this build process noticeably improved the quality of the
 project's programming.
 
 Integration tests are not run on save. They intentionally simulate a
 slow network so by the time they complete a programmer will have already
 context-switched to the next micro-task. Oboe's source is version
-controlled using git and hosted on Github. The integration tests are
-used as the final check before a branch in git is merged into the
+controlled using Git and hosted on Github. The integration tests are
+used as the final check before a branch in Git is merged into the
 master.
 
 Packaging to a single distributable file
@@ -1893,7 +1895,7 @@ of the build process that topologically sort the dependency graph before
 concatenation in order to find a suitable script order.
 
 Early in the project Require.js [@requirejs] was chosen for this task.
-Javascript doesn't have a built in import statement; Require adds one
+Javascript does not have an import statement; Require adds one
 from inside the language as an asynchronous `require` function. Calls to
 `require` AJAX in and execute the imported source, passing any exported
 items to the given callback. For non-trivial applications loading each
@@ -1903,8 +1905,8 @@ the `optimise` command which concatenates an application into a single
 file by using static analysis to deduce a workable source order. Because
 the `require` function may be called from anywhere, this is undecidable
 in the general case so when a safe concatenation order cannot be found
-Require falls back to lazy loading. In practice this isn't a problem
-because imports are generally not subject to branching. For larger
+Require falls back to lazy loading. In practice this is no problem
+because imports are not generally subject to branching. For larger
 webapps lazy loading is actually a feature because it speeds up the
 initial page load. The technique of *Asynchronous Module Definition*,
 AMD intentionally imports rarely-loaded modules in response to events;
@@ -1945,12 +1947,40 @@ to run under modern browsers.
 
 Javascript source can be made significantly smaller by *minification*
 techniques such as reducing scoped symbols to a single character or
-deleting the comments. For Oboe the popular minifier library Uglify
-[@uglify] was chosen. Uglify performs only surface optimisations,
-concentrating mostly on producing compact syntax by manipulating the
-code's abstract syntax tree. Google Closure Compiler [@closure], a more
+deleting the comments. For Oboe the popular minifier library, Uglify
+[@uglify] was chosen. Uglify performs surface optimisations,
+rearranging the syntax tree locally to create a compact expression.
+Consider the code below:
+
+``` {.javascript}
+// If the 'cached' flag is set, add a query parameter '_' with the value 
+// of the current timestamp to the url. This guarantees the the request 
+// will not be served from browser cache
+
+if( cached === false ) {
+           
+   if( baseUrl.indexOf('?') == -1 ) {
+      baseUrl += '?';
+   } else {
+      baseUrl += '&';
+   }
+   
+   baseUrl += '_=' + new Date().getTime();
+}
+return baseUrl;
+```      
+
+Uglify compresses this example by about 50%:
+
+``` {.javascript}
+return b === !1 && (a += -1 == a.indexOf("?") ? 
+"?" : "&", a += "_=" + (new Date).getTime()), a
+```      
+
+An alternative option would be
+Google Closure Compiler [@closure], a more
 sophisticated optimiser which leverages a deeper understanding of the
-program, would be an alternative option. Unfortunately, proving
+program. Unfortunately, proving
 equivalence in highly dynamic languages is often impossible and Closure
 Compiler is only safe given a well-advised subset of Javascript. It
 delivers no reasonable guarantee of equivalence if code is not written
@@ -1958,6 +1988,7 @@ as the Closure team expected. Integration tests would catch any such
 failures but for the time being it was decided that even constrained by
 micro-library size limits, a slightly larger file is a worthwhile
 tradeoff for a safer build process.
+
 
 Styles of programming
 ---------------------
@@ -1976,7 +2007,7 @@ values are not only private as would be seen in a Java-style OO model,
 they are inherently unaddressable.
 
 Although not following an established object-oriented metamodel, the
-high-level componentisation hasn't departed very far from how the
+high-level componentisation has not departed very far from how the
 project might be divided following that style and OO design patterns
 have influenced the layout considerably. If we wished to think in terms
 of the OO paradigm we might say that values trapped inside closures are
@@ -2007,7 +2038,7 @@ Since most monitors refresh at 60Hz, about 16ms is a fair target for the
 maximum duration of a browser script frame. In Node no limit can be
 implied from a display but any CPU-hogging task degrades the
 responsiveness of concurrent work. Switching tasks is cheap so
-effectively sharing the CPU prefers many small execution frames over a
+effective CPU sharing prefers many small execution frames over a
 few larger ones. Whether running in a browser or server, the bottleneck
 is more often I/O than processing speed; providing no task contiguously
 holds the CPU for an unusually long time an application can usually be
@@ -2023,10 +2054,10 @@ Incrementally building the parsed content
 
 As shown in figure \ref{overallDesign} on page \pageref{overallDesign},
 there is an *incremental content builder* and *ascent tracer* which
-handle SAX events from the Clarinet JSON parser. By presenting to the
-controller a simpler interface than is provided by Clarinet, taken
-together these might be considered as an Adaptor pattern, albeit
-modified to be event-driven rather than call-driven: we receive six
+handle SAX events from the Clarinet JSON parser. Taken
+together these components might be considered as an Adaptor [@despat p.139]
+that wraps Clarinet with a simpler interface, albeit a
+modified version of the pattern which is event-driven rather than call-driven: we receive six
 event types and in response emit from a vocabulary of two, `NODE_FOUND`
 and `PATH_FOUND`. The events received from Clarinet are low level,
 reporting the sequence of tokens in the markup; those emitted are at a
@@ -2201,7 +2232,7 @@ JSONPath engine will currently create two identical evaluators for
 against a pattern that requires matches at multiple depths in the JSON
 hierarchy, the same JSONPath term evaluator\
 will be tested many times against the parent element, always with the
-same result. Although Javascript doesn't come with functional caching,
+same result. Although Javascript comes without functional caching,
 it can be added using the language itself, probably the best known
 example being `memoize` from Underscore.js [@underscore_memo]. It is
 likely however that hashing the function parameters would be slower than
@@ -2234,10 +2265,10 @@ verifying more than one unit, the tokeniser and the compiler, and there
 is some redundancy since the tokenisation is tested both independently
 and through a proxy. A more purist approach would stub out the tokeniser
 functions before testing the compiled JSONPath expressions. This would
-certainly be a desirable if a general purpose compiler generator were
+be desirable if a general purpose compiler generator were
 being implemented but since the aim of the code is to work with only one
-language, removing the peculiarities of the language from the test would
-only decrease their effectiveness as an indicator of correct
+language, removing the peculiarities of the language from the tests would
+only decrease their ability to demonstrate correct
 interpretation.
 
 One limitation is that Oboe currently only supports selections which are
@@ -2257,10 +2288,13 @@ handing the result immediately to the callback. However, for cases where
 more of the document must be revealed before a match can be decided the
 term evaluators would have the option of listening to the parse until
 further document nodes are revealed, replying later when the necessary
-information is available. Luckily, a language with just the selectors
-that we able to evaluate when nodes are found is powerful enough to
-handle most cases so until a strong need is demonstrated the selector
-language will be kept in its curernt, relatively simple form.
+information is available. While a wider selection vocabulary would be
+available, such an expansion would make it difficult to guarantee
+callback order which may cause confusion for application developers. 
+Luckily, a language containing only selectors
+which may be evaluated against nodes as they are detected is powerful enough to
+handle most cases. Until a strong need is demonstrated the selector
+language will be kept in its current form.
 
 Differences in the working of programs that can be easily written using Oboe.js
 -------------------------------------------------------------------------------
@@ -2282,7 +2316,7 @@ oboe( fs.createReadStream( "/home/me/secretPlans.json" ) )
       }   
    })
    .on("done", function(){
-      console.log("*twiddles mustache*");
+      console.log("*twiddles moustache*");
    })
    .on("fail", function(){
       console.log("Drat! Foiled again!");   
@@ -2304,7 +2338,7 @@ fs.readFile("/home/me/secretPlans.json", function( err, plansJson ){
       console.log("Hmmm!", deviousPlot);
    });
       
-   console.log("*twiddles mustache*");   
+   console.log("*twiddles moustache*");   
 });
 ~~~~
 
@@ -2336,7 +2370,7 @@ linearly with the number of levels that must be traversed.
 
 [^5_Implementation2]: See
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/Object/freeze.
-    Although older engines don't provide any ability to create immutable
+    Although older engines provide no facility to create immutable
     objects, we can be fairly certain that the code does not mutate
     these objects or the tests would fail with attempts to modify in
     environments which are able to enforce it.
@@ -2353,8 +2387,8 @@ linearly with the number of levels that must be traversed.
     and
     https://github.com/jimhigson/oboe.js/blob/master/test/specs/jsonPathTokens.unit.spec.js
 
-[^5_Implementation5]: At time of writing, Firefox is the only engine supporting
-    WeakHashMap by default. In Chome it is implemented but not available
+[^5_Implementation5]: At time of writing Mozilla Firefox is the only browser supporting
+    WeakHashMap by default. In Google Chrome it is implemented but not available
     to Javascript unless explicitly enabled by a browser flag.
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/WeakMap
     retrieved 11th October 2013
@@ -2546,17 +2580,20 @@ When the test was later repeated with a simpler pattern Firefox showed
 by far the largest improvement, indicating that the functional JSONPath
 matching accounts for Firefox's lower than expected performance.
 
-During the project version 31 of Chrome was released that performed more
-than twice as quickly as version 30 due to an updated version of the v8
-Javascript engine. Node also uses v8 and should catch up when it is next
+Version 31 of Chrome was released during the project and 
+due to an updated version of the v8
+Javascript engine performs more than twice as quickly as version 30.
+Node also uses v8 and should catch up when it is next
 updated. This reflects Javascript engine writers targeting functional
 optimisation now that functional Javascript is becoming a more popular
 style.
 
 Of these results I find only the performance under old versions of
-Internet Explorer poor enough to be concerning. Since this platform
-forbids progressively interpreting the XHR response an improvement over
-the traditional model was known not to be possible but I did not expect
+Internet Explorer poor enough to be concerning. An improvement over
+the traditional model was known not to be possible
+since this platform
+forbids progressively interpreting the XHR response
+but I did not expect
 the performance to degrade by so much. Adding three seconds to a REST
 call will unacceptably impair the user experience of a webapp so it
 might be reasonable to conclude that for complex use cases Oboe is
@@ -2645,8 +2682,8 @@ intended aims, presenting a REST client library which in the best case
 allows the network to be used much more efficiently and in the worse
 case is very close to the previous best solution, at least when used
 with capable platforms. At the same time the produced solution requires
-less code, is less tightly coupled to JSON format specifics, and because
-of the declarative style I believe is easier to use than the previous
+less code, is less tightly coupled to JSON format specifics, and with
+a declarative style, I believe is easier to use than the previous
 simplest solution.
 
 [^6_Conclusion1]: In git repository,
@@ -2762,7 +2799,7 @@ events.js {#header_events}
 
 var // the events which are never exported are kept as 
     // the smallest possible representation, in numbers:
-    _S = 0,
+    _S = 1,
 
     // fired whenever a node is found in the JSON:
     NODE_FOUND    = _S++,
@@ -2805,6 +2842,7 @@ functional.js {#header_functional}
 
 ~~~~ {.javascript}
 /** 
+/** 
  * Partially complete a function.
  * 
  * Eg: 
@@ -2820,11 +2858,23 @@ functional.js {#header_functional}
  *    pirateGreeting("Guybrush Threepwood"); 
  *                         // gives "I'm Guybrush Threepwood, a mighty pirate!"
  */
-var partialComplete = varArgs(function( fn, boundArgs ) {
+var partialComplete = varArgs(function( fn, args ) {
+
+      // this isn't the shortest way to write this but it does
+      // avoid creating a new array each time to pass to fn.apply,
+      // otherwise could just call boundArgs.concat(callArgs)       
+
+      var numBoundArgs = args.length;
 
       return varArgs(function( callArgs ) {
-               
-         return fn.apply(this, boundArgs.concat(callArgs));
+         
+         for (var i = 0; i < callArgs.length; i++) {
+            args[numBoundArgs + i] = callArgs[i];
+         }
+         
+         args.length = numBoundArgs + callArgs.length;         
+                     
+         return fn.apply(this, args);
       }); 
    }),
 
@@ -2838,19 +2888,36 @@ var partialComplete = varArgs(function( fn, boundArgs ) {
  *    compose(f1, f2, f3)(x,y) = f1(f2(f3(x,y))))
  */
    compose = varArgs(function(fns) {
+      // TODO: can this be written using foldr1 and compose2?
 
       var fnsList = arrayAsList(fns);
    
       function next(params, curFn) {  
          return [apply(params, curFn)];   
       }
-      
+            
       return varArgs(function(startParams){
         
          return foldR(next, startParams, fnsList)[0];
       });
-   }),
+   });
 
+/**
+ * A more optimised version of compose that takes exactly two functions
+ * @param f1
+ * @param f2
+ */
+function compose2(f1, f2){
+   return function(){
+      return f1.call(this,f2.apply(this,arguments));
+   }
+}
+
+
+function attr(key) {
+   return new Function('o', 'return o["' + key + '"]' );
+}
+        
 /**
  * Call a list of functions with the same args until one returns a 
  * truthy result. Similar to the || operator.
@@ -2925,21 +2992,42 @@ function apply(args, fn) {
  */
 function varArgs(fn){
 
-   var numberOfFixedArguments = fn.length -1;
+   var numberOfFixedArguments = fn.length -1,
+       slice = Array.prototype.slice;          
          
-   return function(){
+                   
+   if( numberOfFixedArguments == 0 ) {
+      // an optimised case for when there are no fixed args:   
    
-      var numberOfVariableArguments = arguments.length - numberOfFixedArguments,
+      return function(){
+         return fn.call(this, slice.call(arguments));
+      }
       
-          argumentsToFunction = Array.prototype.slice.call(arguments);
-          
-      // remove the last n elements from the array and append it onto the end of
-      // itself as a sub-array
-      argumentsToFunction.push( 
-         argumentsToFunction.splice(numberOfFixedArguments, numberOfVariableArguments)
-      );   
-      
-      return fn.apply( this, argumentsToFunction );
+   } else if( numberOfFixedArguments == 1 ) {
+      // an optimised case for when there are is one fixed args:
+   
+      return function(){
+         return fn.call(this, arguments[0], slice.call(arguments, 1));
+      }
+   }
+   
+   // general case   
+
+   // we know how many arguments fn will always take. Create a
+   // fixed-size array to hold that many, to be re-used on
+   // every call to the returned function
+   var argsHolder = Array(fn.length);   
+                             
+   return function(){
+                            
+      for (var i = 0; i < numberOfFixedArguments; i++) {
+         argsHolder[i] = arguments[i];         
+      }
+
+      argsHolder[numberOfFixedArguments] = 
+         slice.call(arguments, numberOfFixedArguments);
+                                
+      return fn.apply( this, argsHolder);      
    }       
 }
 
@@ -2975,11 +3063,14 @@ function lazyIntersection(fn1, fn2) {
  */
 function noop(){}
 
+function always(){return true}
+
 function functor(val){
    return function(){
       return val;
    }
 }
+
 ~~~~
 
 
@@ -3025,8 +3116,11 @@ var ROOT_PATH = {};
  * Create a new set of handlers for clarinet's events, bound to the emit 
  * function given.  
  */ 
-function incrementalContentBuilder( emit ) {
+function incrementalContentBuilder( oboeBus ) {
 
+   var emitNodeFound = oboeBus(NODE_FOUND).emit,
+       emitRootFound = oboeBus(ROOT_FOUND).emit,
+       emitPathFound = oboeBus(PATH_FOUND).emit;
 
    function arrayIndicesAreKeys( possiblyInconsistentAscent, newDeepestNode) {
    
@@ -3053,8 +3147,8 @@ function incrementalContentBuilder( emit ) {
    function nodeFound( ascent, newDeepestNode ) {
       
       if( !ascent ) {
-         // we discovered the root node,
-         emit( ROOT_FOUND, newDeepestNode);
+         // we discovered the root node,         
+         emitRootFound( newDeepestNode);
                     
          return pathFound( ascent, ROOT_PATH, newDeepestNode);         
       }
@@ -3113,8 +3207,8 @@ function incrementalContentBuilder( emit ) {
                                             maybeNewDeepestNode), 
                                  ascent
                               );
-     
-      emit( PATH_FOUND, ascentWithNewPath);
+
+      emitPathFound( ascentWithNewPath);
  
       return ascentWithNewPath;
    }
@@ -3125,7 +3219,7 @@ function incrementalContentBuilder( emit ) {
     */
    function nodeFinished( ascent ) {
 
-      emit( NODE_FOUND, ascent);
+      emitNodeFound( ascent);
                           
       // pop the complete node and its path off the list:                                    
       return tail( ascent);
@@ -3170,7 +3264,7 @@ function incrementalContentBuilder( emit ) {
          Numbers, and null.
          Because these are always leaves in the JSON, we find and finish the 
          node in one step, expressed as functional composition: */
-      value: compose( nodeFinished, nodeFound ),
+      value: compose2( nodeFinished, nodeFound ),
       
       // we make no distinction in how we handle object and arrays closing.
       // For both, interpret as the end of the current node.
@@ -3191,79 +3285,60 @@ instanceApi.js {#header_instanceApi}
 \label{src_instanceApi}
 
 ~~~~ {.javascript}
-function instanceApi(emit, on, un, jsonPathCompiler){
+
+function instanceApi(oboeBus){
 
    var oboeApi,
        addDoneListener = partialComplete(
-                              addNodeOrPathListenerApi, 
-                              'node', '!');
-                              
-   function addPathOrNodeCallback( type, pattern, callback ) {
+           addNodeOrPathListenerApi, 
+           'node', '!');
    
-      var 
-          compiledJsonPath = jsonPathCompiler( pattern ),
-                
-          underlyingEvent = {node:NODE_FOUND, path:PATH_FOUND}[type],
+   
+   function addPathOrNodeListener( publicApiName, pattern, callback ) {
+   
+      var matchEventName = publicApiName + ':' + pattern,          
           
-          safeCallback = protectedCallback(callback);               
-          
-      on( underlyingEvent, function handler( ascent ){ 
- 
-         var maybeMatchingMapping = compiledJsonPath( ascent );
-     
-         /* Possible values for maybeMatchingMapping are now:
-
-            false: 
-               we did not match 
-  
-            an object/array/string/number/null: 
-               we matched and have the node that matched.
-               Because nulls are valid json values this can be null.
-  
-            undefined: 
-               we matched but don't have the matching node yet.
-               ie, we know there is an upcoming node that matches but we 
-               can't say anything else about it. 
+          safeCallback = protectedCallback(callback);
+                              
+      oboeBus(matchEventName).on(  function(node, ascent) {
+      
+         /* 
+            We're now calling back to outside of oboe where the Lisp-style 
+            lists that we are using internally will not be recognised 
+            so convert to standard arrays. 
+      
+            Also, reverse the order because it is more common to list paths 
+            "root to leaf" than "leaf to root" 
          */
-         if( maybeMatchingMapping !== false ) {                                 
-
-            if( !notifyCallback(safeCallback, nodeOf(maybeMatchingMapping), ascent) ) {
-            
-               un(underlyingEvent, handler);
-            }
+         var descent     = reverseList(ascent),
+         
+             // To make a path, strip off the last item which is the special
+             // ROOT_PATH token for the 'path' to the root node
+             path       = listAsArray(tail(map(keyOf,descent))),
+             ancestors  = listAsArray(map(nodeOf, descent)),
+             keep       = true;
+             
+         oboeApi.forget = function(){
+            keep = false;
+         };           
+         
+         safeCallback( node, path, ancestors );         
+               
+         delete oboeApi.forget;
+         
+         if(! keep ) {          
+            oboeBus(matchEventName).un( callback);
          }
-      });   
+                  
+      
+      }, callback)
+
    }   
    
-   function notifyCallback(callback, node, ascent) {
-      /* 
-         We're now calling back to outside of oboe where the Lisp-style 
-         lists that we are using internally will not be recognised 
-         so convert to standard arrays. 
-   
-         Also, reverse the order because it is more common to list paths 
-         "root to leaf" than "leaf to root" 
-      */
-            
-      var descent     = reverseList(ascent),
-      
-          // To make a path, strip off the last item which is the special
-          // ROOT_PATH token for the 'path' to the root node
-          path       = listAsArray(tail(map(keyOf,descent))),
-          ancestors  = listAsArray(map(nodeOf, descent)),
-          keep       = true;
-          
-      oboeApi.forget = function(){
-         keep = false;
-      };           
-      
-      callback( node, path, ancestors );         
-            
-      delete oboeApi.forget;
-      
-      return keep;          
+   function removePathOrNodeListener( publicApiName, pattern, callback ) {
+      oboeBus(publicApiName + ':' + pattern).un(callback)
    }
-      
+         
    function protectedCallback( callback ) {
       return function() {
          try{      
@@ -3271,18 +3346,9 @@ function instanceApi(emit, on, un, jsonPathCompiler){
          }catch(e)  {
          
             // An error occured during the callback, publish it on the event bus 
-            emit(FAIL_EVENT, errorReport(undefined, undefined, e));
+            oboeBus(FAIL_EVENT).emit( errorReport(undefined, undefined, e));
          }      
       }   
-   }
-
-   /** 
-    * a version of on which first wraps the callback with
-    * protection against errors being thrown
-    */
-   function safeOn( eventName, callback ){
-      on(eventName, protectedCallback(callback));
-      return oboeApi;
    }
       
    /**
@@ -3291,7 +3357,7 @@ function instanceApi(emit, on, un, jsonPathCompiler){
    function addListenersMap(eventId, listenerMap) {
    
       for( var pattern in listenerMap ) {
-         addPathOrNodeCallback(eventId, pattern, listenerMap[pattern]);
+         addPathOrNodeListener(eventId, pattern, listenerMap[pattern]);
       }
    }    
       
@@ -3301,7 +3367,7 @@ function instanceApi(emit, on, un, jsonPathCompiler){
    function addNodeOrPathListenerApi( eventId, jsonPathOrListenerMap, callback ){
    
       if( isString(jsonPathOrListenerMap) ) {
-         addPathOrNodeCallback( 
+         addPathOrNodeListener( 
             eventId, 
             jsonPathOrListenerMap,
             callback
@@ -3327,7 +3393,7 @@ function instanceApi(emit, on, un, jsonPathCompiler){
          // the even has no special handling, add it directly to
          // the event bus:         
          var listener = parameters[0]; 
-         on(eventId, listener);
+         oboeBus(eventId).on( listener);
       }
       
       return oboeApi;
@@ -3335,11 +3401,11 @@ function instanceApi(emit, on, un, jsonPathCompiler){
    
    // some interface methods are only filled in after we recieve
    // values and are noops before that:          
-   on(ROOT_FOUND, function(root) {
+   oboeBus(ROOT_FOUND).on( function(root) {
       oboeApi.root = functor(root);   
    });
    
-   on(HTTP_START, function(_statusCode, headers) {
+   oboeBus(HTTP_START).on( function(_statusCode, headers) {
       oboeApi.header = 
          function(name) {
             return name ? headers[name] 
@@ -3357,10 +3423,10 @@ function instanceApi(emit, on, un, jsonPathCompiler){
       done  :  addDoneListener,       
       node  :  partialComplete(addNodeOrPathListenerApi, 'node'),
       path  :  partialComplete(addNodeOrPathListenerApi, 'path'),      
-      start :  partialComplete(safeOn, HTTP_START),
+      start :  compose2( oboeBus(HTTP_START).on, protectedCallback ),
       // fail doesn't use safeOn because that could lead to non-terminating loops
-      fail  :  partialComplete(on, FAIL_EVENT),
-      abort :  partialComplete(emit, ABORTING),
+      fail  :  oboeBus(FAIL_EVENT).on,
+      abort :  oboeBus(ABORTING).emit,
       header:  noop,
       root  :  noop
    };   
@@ -3386,34 +3452,21 @@ instanceController.js {#header_instanceController}
  */
  
  
-function instanceController(  emit, on, 
+function instanceController(  oboeBus, 
                               clarinetParser, contentBuilderHandlers) {
                                 
-   on(STREAM_DATA,         
-      function (nextDrip) {
-         // callback for when a bit more data arrives from the streaming XHR         
-          
-         try {
-            
-            clarinetParser.write(nextDrip);            
-         } catch(e) { 
-            /* we don't have to do anything here because we always assign
-               a .onerror to clarinet which will have already been called 
-               by the time this exception is thrown. */                
-         }
-      }
-   );
+   oboeBus(STREAM_DATA).on( clarinetParser.write.bind(clarinetParser));      
    
    /* At the end of the http content close the clarinet parser.
       This will provide an error if the total content provided was not 
       valid json, ie if not all arrays, objects and Strings closed properly */
-   on(STREAM_END, clarinetParser.close.bind(clarinetParser));
+   oboeBus(STREAM_END).on( clarinetParser.close.bind(clarinetParser));
    
 
    /* If we abort this Oboe's request stop listening to the clarinet parser. 
       This prevents more tokens being found after we abort in the case where 
       we aborted during processing of an already filled buffer. */
-   on( ABORTING, function() {
+   oboeBus(ABORTING).on( function() {
       clarinetListenerAdaptor(clarinetParser, {});
    });   
 
@@ -3421,8 +3474,7 @@ function instanceController(  emit, on,
   
    // react to errors by putting them on the event bus
    clarinetParser.onerror = function(e) {          
-      emit(
-         FAIL_EVENT, 
+      oboeBus(FAIL_EVENT).emit(          
          errorReport(undefined, undefined, e)
       );
       
@@ -3467,7 +3519,8 @@ var jsonPathCompiler = jsonPathSyntax(function (pathNodeSyntax,
    var NAME_INDEX = 2;
    var FIELD_LIST_INDEX = 3;
 
-   var headKey = compose(keyOf, head);
+   var headKey  = compose2(keyOf, head),
+       headNode = compose2(nodeOf, head);
                    
    /**
     * Create an evaluator function for a named path node, expressed in the
@@ -3507,10 +3560,9 @@ var jsonPathCompiler = jsonPathSyntax(function (pathNodeSyntax,
                                     arrayAsList(fieldListStr.split(/\W+/))
                                  ),
                                  
-          isMatch =  compose( 
+          isMatch =  compose2( 
                         hasAllrequiredFields, 
-                        nodeOf, 
-                        head
+                        headNode
                      );
 
       return lazyIntersection(isMatch, previousExpr);
@@ -3570,7 +3622,7 @@ var jsonPathCompiler = jsonPathSyntax(function (pathNodeSyntax,
                /* We are not at the root of the ascent yet.
                   Move to the next level of the ascent by handing only 
                   the tail to the previous expression */ 
-               compose(previousExpr, tail) 
+               compose2(previousExpr, tail) 
       );
                                                                                                                
    }   
@@ -4062,18 +4114,36 @@ function foldR(fn, startValue, list) {
 }
 
 /**
+ * foldR implementation. Reduce a list down to a single value.
+ * 
+ * @pram {Function} fn     (rightEval, curVal) -> result 
+ */
+function foldR1(fn, list) {
+      
+   return tail(list) 
+            ? fn(foldR1(fn, tail(list)), head(list))
+            : head(list)
+            ;
+}
+
+
+/**
  * Return a list like the one given but with the first instance equal 
  * to item removed 
  */
-function without(list, item) {
+function without(list, test, removedFn) {
  
-  return list  
-            ?  ( head(list) == item 
-                     ? tail(list) 
-                     : cons(head(list), without(tail(list), item))
-               ) 
-            : emptyList
-            ;
+   return withoutInner(list, removedFn || noop);
+ 
+   function withoutInner(subList, removedFn) {
+      return subList  
+         ?  ( test(head(subList)) 
+                  ? (removedFn(head(subList)), tail(subList)) 
+                  : cons(head(subList), withoutInner(tail(subList), removedFn))
+            )
+         : emptyList
+         ;
+   }               
 }
 
 /** 
@@ -4083,22 +4153,22 @@ function without(list, item) {
 function all(fn, list) {
    
    return !list || 
-          fn(head(list)) && all(fn, tail(list));
+          ( fn(head(list)) && all(fn, tail(list)) );
 }
 
 /**
- * Call every function in a list of functions
+ * Call every function in a list of functions with the same arguments
  * 
  * This doesn't make any sense if we're doing pure functional because 
  * it doesn't return anything. Hence, this is only really useful if the
  * functions being called have side-effects. 
  */
-function applyEach(args, list) {
+function applyEach(fnList, arguments) {
 
-   if( list ) {  
-      apply(args, head(list))
+   if( fnList ) {  
+      head(fnList).apply(null, arguments);
       
-      applyEach(args, tail(list));
+      applyEach(tail(fnList), arguments);
    }
 }
 
@@ -4118,6 +4188,13 @@ function reverseList(list){
    }
 
    return reverseInner(list, emptyList);
+}
+
+function first(test, list) {
+   return   list &&
+               (test(head(list)) 
+                  ? head(list) 
+                  : first(test,tail(list))); 
 }
 ~~~~
 
@@ -4169,13 +4246,18 @@ patternAdapter.js {#header_patternAdapter}
 \label{src_patternAdapter}
 
 ~~~~ {.javascript}
-function patternAdapter(bus, jsonPathCompiler) {
+function patternAdapter(oboeBus, jsonPathCompiler) {
 
-   function addUnderlyingListener( matchEventName, predicateEventName, pattern ){
+   var predicateEventMap = {
+      node:oboeBus(NODE_FOUND)
+   ,  path:oboeBus(PATH_FOUND)
+   };
 
-      var compiledJsonPath = jsonPathCompiler( pattern );
+   function addUnderlyingListener( fullEventName, predicateEvent, compiledJsonPath ){
+
+      var emitMatch = oboeBus(fullEventName).emit;
    
-      bus.on(predicateEventName, function (ascent) {
+      predicateEvent.on( function (ascent) {
 
          var maybeMatchingMapping = compiledJsonPath(ascent);
 
@@ -4194,38 +4276,40 @@ function patternAdapter(bus, jsonPathCompiler) {
           can't say anything else about it. 
           */
          if (maybeMatchingMapping !== false) {
-             
-            bus.emit(matchEventName, nodeOf(maybeMatchingMapping), ascent);
+
+            emitMatch(nodeOf(maybeMatchingMapping), ascent);
          }
-      }, matchEventName);
+      }, fullEventName);
    
-   
-      bus.on('removeListener', function(removedEventName){
-   
+      oboeBus('removeListener').on( function(removedEventName){
+
          // if the match even listener is later removed, clean up by removing
          // the underlying listener if nothing else is using that pattern:
       
-         if( removedEventName == matchEventName ) {
+         if( removedEventName == fullEventName ) {
          
-            if( !bus.listeners( removedEventName )) {
-               bus.un( predicateEventName, matchEventName );
+            if( !oboeBus(removedEventName).listeners(  )) {
+               predicateEvent.un( fullEventName );
             }
          }
       });   
    }
 
-   bus.on('newListener', function(matchEventName){
+   oboeBus('newListener').on( function(fullEventName){
 
-      var match = /(\w+):(.*)/.exec(matchEventName),
-          predicateEventName = match && {node:NODE_FOUND, path:PATH_FOUND}[match[1]];
+      var match = /(node|path):(.*)/.exec(fullEventName);
+      
+      if( match ) {
+         var predicateEvent = predicateEventMap[match[1]];
                     
-      if( predicateEventName && !bus.hasListener(predicateEventName, matchEventName) ) {  
-               
-         addUnderlyingListener(
-            matchEventName,
-            predicateEventName, 
-            match[2]
-         );
+         if( !predicateEvent.hasListener( fullEventName) ) {  
+                  
+            addUnderlyingListener(
+               fullEventName,
+               predicateEvent, 
+               jsonPathCompiler( match[2] )
+            );
+         }
       }    
    })
 
@@ -4243,38 +4327,29 @@ pubSub.js {#header_pubSub}
 \label{src_pubSub}
 
 ~~~~ {.javascript}
-/**
- * Isn't this the cutest little pub-sub you've ever seen?
- * 
+/** 
  * Over time this should be refactored towards a Node-like
  *    EventEmitter so that under Node an actual EE acn be used.
  *    http://nodejs.org/api/events.html
  */
 function pubSub(){
 
-   var listeners = {};
-                             
-   return {
-
-      on:function( eventId, fn ) {
-         
-         listeners[eventId] = cons(fn, listeners[eventId]);
-
-         return this; // chaining
-      }, 
-    
-      emit:varArgs(function ( eventId, parameters ) {
-                                             
-         applyEach( 
-            parameters, 
-            listeners[eventId]
-         );
-      }),
+   var singles = {},
+       newListener = newSingle('newListener'),
+       removeListener = newSingle('removeListener'); 
       
-      un: function( eventId, handler ) {
-         listeners[eventId] = without(listeners[eventId], handler);
-      }           
+   function newSingle(eventName) {
+      return singles[eventName] = singleEventPubSub(eventName, newListener, removeListener);   
+   }      
+
+   return function( eventName ){   
+      if( !singles[eventName] ) {
+         return newSingle( eventName );
+      }
+      
+      return singles[eventName];   
    };
+   
 }
 ~~~~
 
@@ -4290,7 +4365,7 @@ publicApi.js {#header_publicApi}
 
 ~~~~ {.javascript}
 // export public API
-function apiMethod(defaultHttpMethod, arg1, arg2) {
+function oboe(arg1, arg2) {
 
    if (arg1.url) {
 
@@ -4298,8 +4373,8 @@ function apiMethod(defaultHttpMethod, arg1, arg2) {
       //    oboe({method:m, url:u, body:b, headers:{...}})
 
       return wire(
-         (arg1.method || defaultHttpMethod),
-         arg1.url,
+         (arg1.method || 'GET'),
+         url(arg1.url, arg1.cached),
          arg1.body,
          arg1.headers
       );
@@ -4309,20 +4384,129 @@ function apiMethod(defaultHttpMethod, arg1, arg2) {
       //    oboe( url )            
       //                                
       return wire(
-         defaultHttpMethod,
+         'GET',
          arg1, // url
          arg2  // body. Deprecated, use {url:u, body:b} instead
       );
    }
+   
+   function url(baseUrl, cached) {
+     
+      if( cached === false ) {
+           
+         if( baseUrl.indexOf('?') == -1 ) {
+            baseUrl += '?';
+         } else {
+            baseUrl += '&';
+         }
+         
+         baseUrl += '_=' + new Date().getTime();
+      }
+      return baseUrl;
+   }
 }
 
-var oboe = partialComplete(apiMethod, 'GET');
-// add deprecated methods, to be removed in v2.0.0:
-oboe.doGet    = oboe;
-oboe.doDelete = partialComplete(apiMethod, 'DELETE');
-oboe.doPost   = partialComplete(apiMethod, 'POST');
-oboe.doPut    = partialComplete(apiMethod, 'PUT');
-oboe.doPatch  = partialComplete(apiMethod, 'PATCH');
+~~~~
+
+
+
+
+\pagebreak
+
+singleEventPubSub.js {#header_singleEventPubSub}
+---
+
+\label{src_singleEventPubSub}
+
+~~~~ {.javascript}
+/** 
+ * A pub/sub which is responsible for a single event type
+ * 
+ * @param {String} eventType                   the name of the events managed by this singleEventPubSub
+ * @param {singleEventPubSub} [newListener]    place to notify of new listeners
+ * @param {singleEventPubSub} [removeListener] place to notify of when listeners are removed
+ */
+function singleEventPubSub(eventType, newListener, removeListener){
+
+   /** we are optimised for emitting events over firing them.
+    *  hence, as well as the tuple list which stores event ids and listeners,
+    *  there is also a listener list which can be iterated more quickly
+    *  when we are emitting
+    */
+   var listenerTupleList,
+       listenerList;
+
+   function hasId(id){
+      return function(tuple) {
+         return tuple.id == id;      
+      };  
+   }
+              
+   return {
+
+      /**
+       * @param {Function} listener
+       * @param {*} listenerId 
+       *    an id that this listener can later by removed by. 
+       *    Can be of any type, to be compared to other ids using ==
+       */
+      on:function( listener, listenerId ) {
+         
+         var tuple = {
+            listener: listener
+         ,  id:       listenerId || listener // when no id is given use the
+                                             // listener function as the id
+         };
+
+         if( newListener ) {
+            newListener.emit(eventType, listener, tuple.id);
+         }
+         
+         listenerTupleList = cons( tuple,    listenerTupleList );
+         listenerList      = cons( listener, listenerList      );
+
+         return this; // chaining
+      },
+     
+      emit:function () {                                                                                           
+         applyEach( listenerList, arguments );
+      },
+      
+      un: function( listenerId ) {
+             
+         var removed;             
+              
+         listenerTupleList = without(
+            listenerTupleList,
+            hasId(listenerId),
+            function(tuple){
+               removed = tuple;
+            }
+         );    
+         
+         if( removed ) {
+            listenerList = without( listenerList, function(listener){
+               return listener == removed.listener;
+            });
+         
+            if( removeListener ) {
+               removeListener.emit(eventType, removed.listener, removed.id);
+            }
+         }
+      },
+      
+      listeners: function(){
+         // differs from Node EventEmitter: returns list, not array
+         return listenerList;
+      },
+      
+      hasListener: function(listenerId){
+         var test = listenerId? hasId(listenerId) : always;
+      
+         return defined(first( test, listenerTupleList));
+      }
+   };
+}
 ~~~~
 
 
@@ -4348,8 +4532,7 @@ function httpTransport(){
  * content is given in a single call. For newer ones several events
  * should be raised, allowing progressive interpretation of the response.
  *      
- * @param {Function} emit a function to pass events to when something happens
- * @param {Function} on a function to use to subscribe to events
+ * @param {Function} oboeBus an event bus local to this Oboe instance
  * @param {XMLHttpRequest} xhr the xhr to use as the transport. Under normal
  *          operation, will have been created using httpTransport() above
  *          but for tests a stub can be provided instead.
@@ -4359,13 +4542,15 @@ function httpTransport(){
  *                        Only valid if method is POST or PUT.
  * @param {Object} [headers] the http request headers to send                       
  */  
-function streamingHttp(emit, on, xhr, method, url, data, headers) {
-        
-   var numberOfCharsAlreadyGivenToCallback = 0;
+function streamingHttp(oboeBus, xhr, method, url, data, headers) {
+           
+   var emitStreamData = oboeBus(STREAM_DATA).emit,
+       emitFail       = oboeBus(FAIL_EVENT).emit,
+       numberOfCharsAlreadyGivenToCallback = 0;      
 
    // When an ABORTING message is put on the event bus abort 
    // the ajax request         
-   on( ABORTING, function(){
+   oboeBus( ABORTING ).on( function(){
   
       // if we keep the onreadystatechange while aborting the XHR gives 
       // a callback like a successful call so first remove this listener
@@ -4403,7 +4588,7 @@ function streamingHttp(emit, on, xhr, method, url, data, headers) {
          last progress. */
          
       if( newText ) {
-         emit( STREAM_DATA, newText );
+         emitStreamData( newText );
       } 
 
       numberOfCharsAlreadyGivenToCallback = len(textSoFar);
@@ -4420,8 +4605,7 @@ function streamingHttp(emit, on, xhr, method, url, data, headers) {
                
          case 2:       
          
-            emit(
-               HTTP_START, 
+            oboeBus( HTTP_START ).emit( 
                xhr.status,
                parseResponseHeaders(xhr.getAllResponseHeaders()) );
             return;
@@ -4439,16 +4623,13 @@ function streamingHttp(emit, on, xhr, method, url, data, headers) {
                // progress event for each part of the response
                handleProgress();
                
-               emit( STREAM_END );
+               oboeBus(STREAM_END).emit();
             } else {
-            
-               emit( 
-                  FAIL_EVENT, 
-                  errorReport(
-                     xhr.status, 
-                     xhr.responseText
-                  )
-               );
+
+               emitFail( errorReport(
+                  xhr.status, 
+                  xhr.responseText
+               ));
             }
       }
    };
@@ -4471,14 +4652,11 @@ function streamingHttp(emit, on, xhr, method, url, data, headers) {
       // the event could be useful. For both these reasons defer the
       // firing to the next JS frame.  
       window.setTimeout(
-         partialComplete(emit, FAIL_EVENT, 
-             errorReport(undefined, undefined, e)
-         )
+         partialComplete(emitFail, errorReport(undefined, undefined, e))
       ,  0
       );
    }            
 }
-
 ~~~~
 
 
@@ -4504,8 +4682,7 @@ function httpTransport(){
  * content is given in a single call. For newer ones several events
  * should be raised, allowing progressive interpretation of the response.
  *      
- * @param {Function} emit a function to pass events to when something happens
- * @param {Function} on a function to use to subscribe to events
+ * @param {Function} oboeBus an event bus local to this Oboe instance
  * @param {XMLHttpRequest} http the http implementation to use as the transport. Under normal
  *          operation, will have been created using httpTransport() above
  *          and therefore be Node's http
@@ -4516,19 +4693,20 @@ function httpTransport(){
  *                        Only valid if method is POST or PUT.
  * @param {Object} [headers] the http request headers to send                       
  */  
-function streamingHttp(emit, on, http, method, contentSource, data, headers) {
+function streamingHttp(oboeBus, http, method, contentSource, data, headers) {
+   "use strict";
 
    function readStreamToEventBus(readableStream) {
          
       // use stream in flowing mode   
       readableStream.on('data', function (chunk) {
                                              
-         emit( STREAM_DATA, chunk.toString() );
+         oboeBus(STREAM_DATA).emit( chunk.toString() );
       });
       
       readableStream.on('end', function() {
                
-         emit( STREAM_END );
+         oboeBus( STREAM_END ).emit();
       });
    }
    
@@ -4565,7 +4743,7 @@ function streamingHttp(emit, on, http, method, contentSource, data, headers) {
          var statusCode = res.statusCode,
              sucessful = String(statusCode)[0] == 2;
                                                    
-         emit(HTTP_START, res.statusCode, res.headers);                                
+         oboeBus(HTTP_START).emit( res.statusCode, res.headers);                                
                                 
          if( sucessful ) {          
                
@@ -4573,8 +4751,7 @@ function streamingHttp(emit, on, http, method, contentSource, data, headers) {
             
          } else {
             readStreamToEnd(res, function(errorBody){
-               emit( 
-                  FAIL_EVENT, 
+               oboeBus(FAIL_EVENT).emit( 
                   errorReport( statusCode, errorBody )
                );
             });
@@ -4582,13 +4759,12 @@ function streamingHttp(emit, on, http, method, contentSource, data, headers) {
       });
       
       req.on('error', function(e) {
-         emit( 
-            FAIL_EVENT, 
+         oboeBus(FAIL_EVENT).emit( 
             errorReport(undefined, undefined, e )
          );
       });
       
-      on( ABORTING, function(){              
+      oboeBus(ABORTING).on( function(){              
          req.abort();
       });
          
@@ -4634,12 +4810,8 @@ util.js {#header_util}
 function isOfType(T, maybeSomething){
    return maybeSomething && maybeSomething.constructor === T;
 }
-function pluck(key, object){
-   return object[key];
-}
 
-var attr = partialComplete(partialComplete, pluck),
-    len = attr('length'),    
+var len = attr('length'),    
     isString = partialComplete(isOfType, String);
 
 /** 
@@ -4656,8 +4828,6 @@ var attr = partialComplete(partialComplete, pluck),
 function defined( value ) {
    return value !== undefined;
 }
-
-function always(){return true}
 
 /**
  * Returns true if object o has a key named like every property in 
@@ -4693,19 +4863,21 @@ wire.js {#header_wire}
 
 function wire (httpMethodName, contentSource, body, headers){
 
-   var eventBus = pubSub();
+   var oboeBus = pubSub();
                
-   streamingHttp( eventBus.emit, eventBus.on,
+   streamingHttp( oboeBus,
                   httpTransport(), 
                   httpMethodName, contentSource, body, headers );                              
      
    instanceController( 
-               eventBus.emit, eventBus.on, 
+               oboeBus, 
                clarinet.parser(), 
-               incrementalContentBuilder(eventBus.emit) 
+               incrementalContentBuilder(oboeBus) 
    );
       
-   return new instanceApi(eventBus.emit, eventBus.on, eventBus.un, jsonPathCompiler);
+   patternAdapter(oboeBus, jsonPathCompiler);      
+      
+   return new instanceApi(oboeBus);
 }
 
 ~~~~

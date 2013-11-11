@@ -131,15 +131,15 @@ programming with the results of programming [@humanize pp.8-9]. If we
 bring together the medium and the message by viewing the result of code
 while we write it, we can build in a series of small, iterative, correct
 steps and programming can be more explorative and expressive. Running
-the tests subtly, automatically hundreds of times per day isn't merely
-convenient, this build process noticeably improved the quality of the
+the tests subtly, automatically, hundreds of times per day is not merely
+time-saving, this build process noticeably improved the quality of the
 project's programming.
 
 Integration tests are not run on save. They intentionally simulate a
 slow network so by the time they complete a programmer will have already
 context-switched to the next micro-task. Oboe's source is version
-controlled using git and hosted on Github. The integration tests are
-used as the final check before a branch in git is merged into the
+controlled using Git and hosted on Github. The integration tests are
+used as the final check before a branch in Git is merged into the
 master.
 
 Packaging to a single distributable file
@@ -167,7 +167,7 @@ of the build process that topologically sort the dependency graph before
 concatenation in order to find a suitable script order.
 
 Early in the project Require.js [@requirejs] was chosen for this task.
-Javascript doesn't have a built in import statement; Require adds one
+Javascript does not have an import statement; Require adds one
 from inside the language as an asynchronous `require` function. Calls to
 `require` AJAX in and execute the imported source, passing any exported
 items to the given callback. For non-trivial applications loading each
@@ -177,8 +177,8 @@ the `optimise` command which concatenates an application into a single
 file by using static analysis to deduce a workable source order. Because
 the `require` function may be called from anywhere, this is undecidable
 in the general case so when a safe concatenation order cannot be found
-Require falls back to lazy loading. In practice this isn't a problem
-because imports are generally not subject to branching. For larger
+Require falls back to lazy loading. In practice this is no problem
+because imports are not generally subject to branching. For larger
 webapps lazy loading is actually a feature because it speeds up the
 initial page load. The technique of *Asynchronous Module Definition*,
 AMD intentionally imports rarely-loaded modules in response to events;
@@ -219,12 +219,41 @@ to run under modern browsers.
 
 Javascript source can be made significantly smaller by *minification*
 techniques such as reducing scoped symbols to a single character or
-deleting the comments. For Oboe the popular minifier library Uglify
-[@uglify] was chosen. Uglify performs only surface optimisations,
-concentrating mostly on producing compact syntax by manipulating the
-code's abstract syntax tree. Google Closure Compiler [@closure], a more
-sophisticated optimiser which leverages a deeper understanding of the
-program, would be an alternative option. Unfortunately, proving
+deleting the comments. For Oboe the popular minifier library, Uglify
+[@uglify] was chosen. Uglify performs surface optimisations,
+rearranging the syntax tree locally to create a compact expression.
+Consider the code below:
+
+``` {.javascript}
+// If the 'cached' flag is set, add a query parameter '_' with the value 
+// of the current timestamp to the url. This guarantees the the request 
+// will not be served from browser cache
+
+if( cached === false ) {
+           
+   if( baseUrl.indexOf('?') == -1 ) {
+      baseUrl += '?';
+   } else {
+      baseUrl += '&';
+   }
+   
+   baseUrl += '_=' + new Date().getTime();
+}
+return baseUrl;
+```      
+
+Uglify compresses this example into a single statement, reducing the size 
+by about 55%.
+
+``` {.javascript}
+return b === !1 && (a += -1 == a.indexOf("?") ? 
+"?" : "&", a += "_=" + (new Date).getTime()), a
+```      
+
+An alternative minifier would be
+Google Closure Compiler [@closure], a more
+sophisticated project which leverages a deeper understanding of the
+programming it reduces. Unfortunately, proving
 equivalence in highly dynamic languages is often impossible and Closure
 Compiler is only safe given a well-advised subset of Javascript. It
 delivers no reasonable guarantee of equivalence if code is not written
@@ -250,7 +279,7 @@ values are not only private as would be seen in a Java-style OO model,
 they are inherently unaddressable.
 
 Although not following an established object-oriented metamodel, the
-high-level componentisation hasn't departed very far from how the
+high-level componentisation has not departed very far from how the
 project might be divided following that style and OO design patterns
 have influenced the layout considerably. If we wished to think in terms
 of the OO paradigm we might say that values trapped inside closures are
@@ -281,7 +310,7 @@ Since most monitors refresh at 60Hz, about 16ms is a fair target for the
 maximum duration of a browser script frame. In Node no limit can be
 implied from a display but any CPU-hogging task degrades the
 responsiveness of concurrent work. Switching tasks is cheap so
-effectively sharing the CPU prefers many small execution frames over a
+effective CPU sharing prefers many small execution frames over a
 few larger ones. Whether running in a browser or server, the bottleneck
 is more often I/O than processing speed; providing no task contiguously
 holds the CPU for an unusually long time an application can usually be
@@ -297,10 +326,10 @@ Incrementally building the parsed content
 
 As shown in figure \ref{overallDesign} on page \pageref{overallDesign},
 there is an *incremental content builder* and *ascent tracer* which
-handle SAX events from the Clarinet JSON parser. By presenting to the
-controller a simpler interface than is provided by Clarinet, taken
-together these might be considered as an Adaptor pattern, albeit
-modified to be event-driven rather than call-driven: we receive six
+handle SAX events from the Clarinet JSON parser. Taken
+together these components might be considered as an Adaptor [@despat p.139]
+that wraps Clarinet with a simpler interface, albeit a
+modified version of the pattern which is event-driven rather than call-driven: we receive six
 event types and in response emit from a vocabulary of two, `NODE_FOUND`
 and `PATH_FOUND`. The events received from Clarinet are low level,
 reporting the sequence of tokens in the markup; those emitted are at a
@@ -475,7 +504,7 @@ JSONPath engine will currently create two identical evaluators for
 against a pattern that requires matches at multiple depths in the JSON
 hierarchy, the same JSONPath term evaluator\
 will be tested many times against the parent element, always with the
-same result. Although Javascript doesn't come with functional caching,
+same result. Although Javascript comes without functional caching,
 it can be added using the language itself, probably the best known
 example being `memoize` from Underscore.js [@underscore_memo]. It is
 likely however that hashing the function parameters would be slower than
@@ -508,11 +537,11 @@ verifying more than one unit, the tokeniser and the compiler, and there
 is some redundancy since the tokenisation is tested both independently
 and through a proxy. A more purist approach would stub out the tokeniser
 functions before testing the compiled JSONPath expressions. This would
-certainly be a desirable if a general purpose compiler generator were
+be desirable if a general purpose compiler generator were
 being implemented but since the aim of the code is to work with only one
-language, removing the peculiarities of the language from the test would
-only decrease their effectiveness as an indicator of correct
-interpretation.
+language, removing the peculiarities of the tokenisation from the tests would
+only decrease their ability to demonstrate the correct interpretation of the
+JSONPath language as a whole.
 
 One limitation is that Oboe currently only supports selections which are
 decidable at the time that the candidate node is discovered. This
@@ -531,10 +560,13 @@ handing the result immediately to the callback. However, for cases where
 more of the document must be revealed before a match can be decided the
 term evaluators would have the option of listening to the parse until
 further document nodes are revealed, replying later when the necessary
-information is available. Luckily, a language with just the selectors
-that we able to evaluate when nodes are found is powerful enough to
-handle most cases so until a strong need is demonstrated the selector
-language will be kept in its curernt, relatively simple form.
+information is available. While a wider selection vocabulary might be
+useful, such an expansion would make it difficult to offer a predictable
+callback order and could cause confusion for application developers. 
+A language containing only selectors
+which may be evaluated against nodes as they are detected is powerful enough to
+handle most cases. Until a strong need is demonstrated the selector
+language will be kept in its current form.
 
 Differences in the working of programs that can be easily written using Oboe.js
 -------------------------------------------------------------------------------
@@ -556,7 +588,7 @@ oboe( fs.createReadStream( "/home/me/secretPlans.json" ) )
       }   
    })
    .on("done", function(){
-      console.log("*twiddles mustache*");
+      console.log("*twiddles moustache*");
    })
    .on("fail", function(){
       console.log("Drat! Foiled again!");   
@@ -578,7 +610,7 @@ fs.readFile("/home/me/secretPlans.json", function( err, plansJson ){
       console.log("Hmmm!", deviousPlot);
    });
       
-   console.log("*twiddles mustache*");   
+   console.log("*twiddles moustache*");   
 });
 ~~~~
 
@@ -610,7 +642,7 @@ linearly with the number of levels that must be traversed.
 
 [^2]: See
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/Object/freeze.
-    Although older engines don't provide any ability to create immutable
+    Although older engines provide no facility to create immutable
     objects, we can be fairly certain that the code does not mutate
     these objects or the tests would fail with attempts to modify in
     environments which are able to enforce it.
@@ -627,8 +659,8 @@ linearly with the number of levels that must be traversed.
     and
     https://github.com/jimhigson/oboe.js/blob/master/test/specs/jsonPathTokens.unit.spec.js
 
-[^5]: At time of writing, Firefox is the only engine supporting
-    WeakHashMap by default. In Chome it is implemented but not available
+[^5]: At time of writing, Mozilla Firefox is the only browser supporting
+    WeakHashMap by default. In Google Chrome it is implemented but not available
     to Javascript unless explicitly enabled by a browser flag.
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/WeakMap
     retrieved 11th October 2013

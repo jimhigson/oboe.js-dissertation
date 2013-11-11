@@ -689,7 +689,20 @@
       "url":"http://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx",
       "issued": { "date-parts":[ [2013] ] },
       "type":"webpage"                  
-   }          
+   },
+   
+   {
+      "id":"despat",
+      "title":"Design Patterns: Elements of Reusable Object-Oriented Software",
+      "author":[         
+         { "family": "Gamma", "given":"Erich"},
+         { "family": "Helm", "given":"Richard"},
+         { "family": "Johnson", "given":"Ralph"},
+         { "family": "Vlissides", "given":"John"}
+      ],
+      "issued": { "date-parts":[ [1994] ] },
+      "type":"book"                  
+   }
    
 ]
 

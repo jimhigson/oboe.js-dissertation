@@ -167,8 +167,8 @@ of the build process that topologically sort the dependency graph before
 concatenation in order to find a suitable script order.
 
 Early in the project Require.js [@requirejs] was chosen for this task.
-Javascript does not have an import statement; Require adds one
-from inside the language as an asynchronous `require` function. Calls to
+Javascript does not have an import statement; Require adds one from
+inside the language as an asynchronous `require` function. Calls to
 `require` AJAX in and execute the imported source, passing any exported
 items to the given callback. For non-trivial applications loading each
 dependency individually over AJAX is intended only for debugging because
@@ -220,11 +220,11 @@ to run under modern browsers.
 Javascript source can be made significantly smaller by *minification*
 techniques such as reducing scoped symbols to a single character or
 deleting the comments. For Oboe the popular minifier library, Uglify
-[@uglify] was chosen. Uglify performs surface optimisations,
-rearranging the syntax tree locally to create a compact expression.
-Consider the code below:
+[@uglify] was chosen. Uglify performs surface optimisations, rearranging
+the syntax tree locally to create a compact expression. Consider the
+code below:
 
-``` {.javascript}
+~~~~ {.javascript}
 // If the 'cached' flag is set, add a query parameter '_' with the value 
 // of the current timestamp to the url. This guarantees the the request 
 // will not be served from browser cache
@@ -240,27 +240,26 @@ if( cached === false ) {
    baseUrl += '_=' + new Date().getTime();
 }
 return baseUrl;
-```      
+~~~~
 
-Uglify compresses this example into a single statement, reducing the size 
-by about 55%.
+Uglify compresses this example into a single statement, reducing the
+size by about 55%.
 
-``` {.javascript}
+~~~~ {.javascript}
 return b === !1 && (a += -1 == a.indexOf("?") ? 
 "?" : "&", a += "_=" + (new Date).getTime()), a
-```      
+~~~~
 
-An alternative minifier would be
-Google Closure Compiler [@closure], a more
-sophisticated project which leverages a deeper understanding of the
-programming it reduces. Unfortunately, proving
-equivalence in highly dynamic languages is often impossible and Closure
-Compiler is only safe given a well-advised subset of Javascript. It
-delivers no reasonable guarantee of equivalence if code is not written
-as the Closure team expected. Integration tests would catch any such
-failures but for the time being it was decided that even constrained by
-micro-library size limits, a slightly larger file is a worthwhile
-tradeoff for a safer build process.
+An alternative minifier would be Google Closure Compiler [@closure], a
+more sophisticated project which leverages a deeper understanding of the
+programming it reduces. Unfortunately, proving equivalence in highly
+dynamic languages is often impossible and Closure Compiler is only safe
+given a well-advised subset of Javascript. It delivers no reasonable
+guarantee of equivalence if code is not written as the Closure team
+expected. Integration tests would catch any such failures but for the
+time being it was decided that even constrained by micro-library size
+limits, a slightly larger file is a worthwhile tradeoff for a safer
+build process.
 
 Styles of programming
 ---------------------
@@ -309,27 +308,27 @@ rendering it is important that no task occupies the CPU for very long.
 Since most monitors refresh at 60Hz, about 16ms is a fair target for the
 maximum duration of a browser script frame. In Node no limit can be
 implied from a display but any CPU-hogging task degrades the
-responsiveness of concurrent work. Switching tasks is cheap so
-effective CPU sharing prefers many small execution frames over a
-few larger ones. Whether running in a browser or server, the bottleneck
-is more often I/O than processing speed; providing no task contiguously
-holds the CPU for an unusually long time an application can usually be
-considered fast enough. Oboe's progressive model favours sharing because
-it naturally splits the work over many execution frames which by a
-non-progressive mode would be performed during a single frame. Although
-the overall CPU time will be higher, Oboe should share the processor
-more cooperatively and because of better I/O management the overall
-system responsiveness should be improved.
+responsiveness of concurrent work. Switching tasks is cheap so effective
+CPU sharing prefers many small execution frames over a few larger ones.
+Whether running in a browser or server, the bottleneck is more often I/O
+than processing speed; providing no task contiguously holds the CPU for
+an unusually long time an application can usually be considered fast
+enough. Oboe's progressive model favours sharing because it naturally
+splits the work over many execution frames which by a non-progressive
+mode would be performed during a single frame. Although the overall CPU
+time will be higher, Oboe should share the processor more cooperatively
+and because of better I/O management the overall system responsiveness
+should be improved.
 
 Incrementally building the parsed content
 -----------------------------------------
 
 As shown in figure \ref{overallDesign} on page \pageref{overallDesign},
 there is an *incremental content builder* and *ascent tracer* which
-handle SAX events from the Clarinet JSON parser. Taken
-together these components might be considered as an Adaptor [@despat p.139]
-that wraps Clarinet with a simpler interface, albeit a
-modified version of the pattern which is event-driven rather than call-driven: we receive six
+handle SAX events from the Clarinet JSON parser. Taken together these
+components might be considered as an Adaptor [@despat p.139] that wraps
+Clarinet with a simpler interface, albeit a modified version of the
+pattern which is event-driven rather than call-driven: we receive six
 event types and in response emit from a vocabulary of two, `NODE_FOUND`
 and `PATH_FOUND`. The events received from Clarinet are low level,
 reporting the sequence of tokens in the markup; those emitted are at a
@@ -504,10 +503,10 @@ JSONPath engine will currently create two identical evaluators for
 against a pattern that requires matches at multiple depths in the JSON
 hierarchy, the same JSONPath term evaluator\
 will be tested many times against the parent element, always with the
-same result. Although Javascript comes without functional caching,
-it can be added using the language itself, probably the best known
-example being `memoize` from Underscore.js [@underscore_memo]. It is
-likely however that hashing the function parameters would be slower than
+same result. Although Javascript comes without functional caching, it
+can be added using the language itself, probably the best known example
+being `memoize` from Underscore.js [@underscore_memo]. It is likely
+however that hashing the function parameters would be slower than
 performing the matching. Although the parameters are all immutable and
 could in theory be hashed by object identity, in practice there is no
 way to access an object ID from inside the language so any hash function
@@ -537,11 +536,11 @@ verifying more than one unit, the tokeniser and the compiler, and there
 is some redundancy since the tokenisation is tested both independently
 and through a proxy. A more purist approach would stub out the tokeniser
 functions before testing the compiled JSONPath expressions. This would
-be desirable if a general purpose compiler generator were
-being implemented but since the aim of the code is to work with only one
-language, removing the peculiarities of the tokenisation from the tests would
-only decrease their ability to demonstrate the correct interpretation of the
-JSONPath language as a whole.
+be desirable if a general purpose compiler generator were being
+implemented but since the aim of the code is to work with only one
+language, removing the peculiarities of the tokenisation from the tests
+would only decrease their ability to demonstrate the correct
+interpretation of the JSONPath language as a whole.
 
 One limitation is that Oboe currently only supports selections which are
 decidable at the time that the candidate node is discovered. This
@@ -562,11 +561,11 @@ term evaluators would have the option of listening to the parse until
 further document nodes are revealed, replying later when the necessary
 information is available. While a wider selection vocabulary might be
 useful, such an expansion would make it difficult to offer a predictable
-callback order and could cause confusion for application developers. 
-A language containing only selectors
-which may be evaluated against nodes as they are detected is powerful enough to
-handle most cases. Until a strong need is demonstrated the selector
-language will be kept in its current form.
+callback order and could cause confusion for application developers. A
+language containing only selectors which may be evaluated against nodes
+as they are detected is powerful enough to handle most cases. Until a
+strong need is demonstrated the selector language will be kept in its
+current form.
 
 Differences in the working of programs that can be easily written using Oboe.js
 -------------------------------------------------------------------------------
@@ -660,8 +659,8 @@ linearly with the number of levels that must be traversed.
     https://github.com/jimhigson/oboe.js/blob/master/test/specs/jsonPathTokens.unit.spec.js
 
 [^5]: At time of writing, Mozilla Firefox is the only browser supporting
-    WeakHashMap by default. In Google Chrome it is implemented but not available
-    to Javascript unless explicitly enabled by a browser flag.
+    WeakHashMap by default. In Google Chrome it is implemented but not
+    available to Javascript unless explicitly enabled by a browser flag.
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/WeakMap
     retrieved 11th October 2013
 

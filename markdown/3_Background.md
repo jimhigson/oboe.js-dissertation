@@ -203,18 +203,19 @@ Javascript's syntax for literal values into a stand-alone serialisation
 language. For the graduate tackling JSON parsing the task is simpler
 still, being expressible as fifteen context free grammars.
 
-Whereas XML markup can be traced to document formats, JSON's lineage
-is in a programming language. From these roots it isn't surprising that
-JSON maps more directly to the metamodels that most programmers think in.
-XML parsers produce Elements, Text, Attributes, ProcessingInstruction
-which require extra translation before they are convenient to use inside
-a programming language. Because JSON already closely resembles how a
-programmer would construct a runtime model of their data, fewer steps
-are required before using the deserialised form. The JSON nodes:
-*strings*, *numbers*, *objects* and *arrays* will in many cases map
-directly onto language types and, for loosely typed languages at least,
-the parser output bears enough similarity to domain model objects that
-it may be used directly without any further transformation.
+Whereas XML markup can be traced to document formats, JSON's lineage is
+in a programming language. From these roots it isn't surprising that
+JSON maps more directly to the metamodels that most programmers think
+in. XML parsers produce items such as Element, Text, Attribute,
+ProcessingInstruction, which require extra translation before they are
+convenient to use inside a programming language. Because JSON already
+closely resembles how a programmer would construct a runtime model of
+their data, fewer steps are required before using the deserialised form.
+The JSON nodes: *strings*, *numbers*, *objects* and *arrays* will in
+many cases map directly onto language types and, for loosely typed
+languages at least, the parser output bears enough similarity to domain
+model objects that it may be used directly without any further
+transformation.
 
 ~~~~ {.javascript}
 {
@@ -235,16 +236,17 @@ the JSON object's likeness to Javascript objects whose iteration order
 is indeterminate [@ecma3 4.3.3]. In the example above the people objects
 would probably have been written based on either a class with two public
 properties or a hash map. On receiving this data the text would be
-demarshalled into similar orderless structures and it would be quickly forgotten
-that the data found an ordered expression during transport. When
-viewing a document as a stream and interpreting while still incomplete
-it is easier to mistakenly react differently according to field order.
-If nodes from the example above were used when only the first field has
-arrived Sally would find a different handling than John or Jack. Because
-the serialisation will contain items which are written to follow an
-indeterminate order it will be important to ensure that, despite the
-streaming, the REST client does not encourage programming in a way that
-gives different results depending on the order that fields are received.
+demarshalled into similar orderless structures and it would be quickly
+forgotten that the data found an ordered expression during transport.
+When viewing a document as a stream and interpreting while still
+incomplete it is easier to mistakenly react differently according to
+field order. If nodes from the example above were used when only the
+first field has arrived Sally would find a different handling than John
+or Jack. Because the serialisation will contain items which are written
+to follow an indeterminate order it will be important to ensure that,
+despite the streaming, the REST client does not encourage programming in
+a way that gives different results depending on the order that fields
+are received.
 
 Common patterns for connecting to REST services
 -----------------------------------------------
@@ -326,13 +328,13 @@ do, to keep in the same place". Ideally a programmer should only have to
 expend effort so that their code does something new, or perform better
 something that it already did, not to stay still. Following an object
 oriented encapsulation of data such that a caller does not have to
-concern itself with the data structures behind an interface, the internal
-implementation may be changed without disruptions to the rest of the
-code base. However, when the structure of the inter-object composition
-is revised, isolation from the changes is less often recognised as a
-desirable trait. A method of programming which truly embraced extreme
-programming would allow structural refactoring to occur without
-disparate parts having to be modified in parallel.
+concern itself with the data structures behind an interface, the
+internal implementation may be changed without disruptions to the rest
+of the code base. However, when the structure of the inter-object
+composition is revised, isolation from the changes is less often
+recognised as a desirable trait. A method of programming which truly
+embraced extreme programming would allow structural refactoring to occur
+without disparate parts having to be modified in parallel.
 
 Extraneous changes also dilute a VCS changelog, making it difficult to
 later follow a narrative of updates to the logic expressed by the
@@ -368,7 +370,7 @@ form.
 Certain markup languages come with associated query languages whose
 coupling is loose enough that not every node that is descended through
 must be specified. The best known is XPATH but there is also JSONPath, a
-JSON equivalent [@jsonpath]. As far as possible, JSONPath's syntax 
+JSON equivalent [@jsonpath]. As far as possible, JSONPath's syntax
 resembles the equivalent Javascript:
 
 ~~~~ {.javascript}
@@ -424,14 +426,14 @@ formats tend to grow, not shrink
 Maintaining compatibility with unanticipated format revisions through
 selector languages is easier with JSON than XML. The XML metamodel
 contains overlapping representations of equivalent entities which a
-format is liable to switch between when being refactored. Each XML element
-has two distinct lists of child nodes, attribute children and node list
-children. From one perspective attributes are child nodes of their
-parent element but they can alternatively be considered as data stored
-in the element. Because of this classification ambiguity an XML document
-can't be said to form a single n-way tree. XML attributes may only
-contain strings and have a lesser expressivity than child nodes which
-allow recursive structure; it is a common refactor to change from
+format is liable to switch between when being refactored. Each XML
+element has two distinct lists of child nodes, attribute children and
+node list children. From one perspective attributes are child nodes of
+their parent element but they can alternatively be considered as data
+stored in the element. Because of this classification ambiguity an XML
+document can't be said to form a single n-way tree. XML attributes may
+only contain strings and have a lesser expressivity than child nodes
+which allow recursive structure; it is a common refactor to change from
 attributes to elements when a scalar value is upgraded to a compound.
 XPath selectors written in the most natural way do not track this
 change.
@@ -442,9 +444,9 @@ change.
 </people>
 ~~~~
 
-The XPath `//person@town` identifies the town in the XML above but because of
-the switch from attribute to sub-element fails in the
-revised version below.
+The XPath `//person@town` identifies the town in the XML above but
+because of the switch from attribute to sub-element fails in the revised
+version below.
 
 ~~~~ {.xml}
 <people>
@@ -666,9 +668,9 @@ abstraction the markup syntax is a distant concern whereas for SAX each
 element's opening and closing must be noted so the developer may not put
 the data's serialisation aside. SAX comes with the advantages that it
 may read a document progressively and has lower memory requirements
-because it does not store the parsed tree. It is a
-popular choice for embedded systems running on constrained hardware and may be
-used to handle documents larger than the available RAM.
+because it does not store the parsed tree. It is a popular choice for
+embedded systems running on constrained hardware and may be used to
+handle documents larger than the available RAM.
 
 Suppose we have some JSON representing people and want to extract the
 name of the first person. Given a DOM parser this may be written quite

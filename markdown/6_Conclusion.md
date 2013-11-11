@@ -182,20 +182,17 @@ When the test was later repeated with a simpler pattern Firefox showed
 by far the largest improvement, indicating that the functional JSONPath
 matching accounts for Firefox's lower than expected performance.
 
-Version 31 of Chrome was released during the project and 
-due to an updated version of the v8
-Javascript engine performs more than twice as quickly as version 30.
-Node also uses v8 and should catch up when it is next
-updated. This reflects Javascript engine writers targeting functional
-optimisation now that functional Javascript is becoming a more popular
-style.
+Version 31 of Chrome was released during the project and due to an
+updated version of the v8 Javascript engine performs more than twice as
+quickly as version 30. Node also uses v8 and should catch up when it is
+next updated. This reflects Javascript engine writers targeting
+functional optimisation now that functional Javascript is becoming a
+more popular style.
 
 Of these results I find only the performance under old versions of
-Internet Explorer poor enough to be concerning. An improvement over
-the traditional model was known not to be possible
-since this platform
-forbids progressively interpreting the XHR response
-but I did not expect
+Internet Explorer poor enough to be concerning. An improvement over the
+traditional model was known not to be possible since this platform
+forbids progressively interpreting the XHR response but I did not expect
 the performance to degrade by so much. Adding three seconds to a REST
 call will unacceptably impair the user experience of a webapp so it
 might be reasonable to conclude that for complex use cases Oboe is
@@ -284,9 +281,9 @@ intended aims, presenting a REST client library which in the best case
 allows the network to be used much more efficiently and in the worse
 case is very close to the previous best solution, at least when used
 with capable platforms. At the same time the produced solution requires
-less code, is less tightly coupled to JSON format specifics, and with
-a declarative style, I believe is easier to use than the previous
-simplest solution.
+less code, is less tightly coupled to JSON format specifics, and with a
+declarative style, I believe is easier to use than the previous simplest
+solution.
 
 [^1]: In git repository,
     [test/specs/oboe.performance.spec.js](https://github.com/jimhigson/oboe.js/blob/master/test/specs/oboe.performance.spec.js)

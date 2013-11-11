@@ -95,6 +95,9 @@ stream; nor SAX nor DOM}
 
 \begin{center}
 {\large Supervised by Jeremy Gibbons}
+
+A dissertation submitted in partial fulfilment of the requirements for the degree of 
+Master of Science in Software Engineering.
 \end{center}
 
 \begin{abstract}
@@ -414,7 +417,7 @@ responsiveness. Because applications in the target domain are much more
 I/O-bound than CPU-bound, optimisation in terms of the execution time of
 algorithms will be de-emphasised unless especially egregious. The
 delivered library should allow looser coupling to the format of consumed
-resources\\than is possible with the current best tools so that it is
+resources than is possible with the current best tools so that it is
 less disruptive when services are upgraded.
 
 \section{Background}\label{background}
@@ -638,8 +641,8 @@ is simpler still, being expressible as fifteen context free grammars.
 Whereas XML markup can be traced to document formats, JSON's lineage is
 in a programming language. From these roots it isn't surprising that
 JSON maps more directly to the metamodels that most programmers think
-in. XML parsers produce Elements, Text, Attributes,
-ProcessingInstruction which require extra translation before they are
+in. XML parsers produce items such as Element, Text, Attribute,
+ProcessingInstruction, which require extra translation before they are
 convenient to use inside a programming language. Because JSON already
 closely resembles how a programmer would construct a runtime model of
 their data, fewer steps are required before using the deserialised form.

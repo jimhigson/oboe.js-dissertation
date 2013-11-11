@@ -25,10 +25,10 @@ Under asynchronous I/O the programmer's callback traditionally receives
 the whole resource and then, inside the callback, locates the sub-parts
 that are required for a particular task. Inverting this process, the
 locating logic currently found inside the callback can be extracted,
-expressed as a selector language, and used to declare the cases
-in which the callback should be notified. The callback will receive
-complete fragments from the response once they have been selected
-according to this declaration.
+expressed as a selector language, and used to declare the cases in which
+the callback should be notified. The callback will receive complete
+fragments from the response once they have been selected according to
+this declaration.
 
 Javascript will be used to implement the software deliverables because
 it has good support for non-blocking I/O and covers both environments
@@ -65,15 +65,15 @@ loosely, specialising the matching by adding features which are likely
 to be useful when detecting entities in REST resources while avoid
 unnecessary code by dropping others. Later adding new features to a
 language is easier than removing them once a userbase has built up so
-where the utility of a feature is not clear the default position should 
-be to not include it.
-It is difficult to anticipate all real-world matching requirements but it
-should be possible to identify a core 20% of features that are likely to
-be useful in 80% of cases. For the timebeing any functionality which is
-not included may be implemented by registering a more permissive
-selection and then further filtering programmatically from inside the
-callback. Patterns of programmatic filtering which arise from use in the
-wild can later be mined and added to the selection language.
+where the utility of a feature is not clear the default position should
+be to not include it. It is difficult to anticipate all real-world
+matching requirements but it should be possible to identify a core 20%
+of features that are likely to be useful in 80% of cases. For the
+timebeing any functionality which is not included may be implemented by
+registering a more permissive selection and then further filtering
+programmatically from inside the callback. Patterns of programmatic
+filtering which arise from use in the wild can later be mined and added
+to the selection language.
 
 Detecting types in JSON
 -----------------------
@@ -577,10 +577,10 @@ would be shown until they had all been called.
 One benefit of a unified model for streamed and finite-size content is
 that it allows a simpler security model. Because the demands of the
 transport are different, streaming security is usually implemented
-separately from other HTTP requests. Schneier often argues that "complexity is
-the worst enemy of security" [@simpleschneier Software Complexity and
-Security] and in one online debate paints a buildings analogy
-[@schneierdoors]:
+separately from other HTTP requests. Schneier often argues that
+"complexity is the worst enemy of security" [@simpleschneier Software
+Complexity and Security] and in one online debate paints a buildings
+analogy [@schneierdoors]:
 
 > More specifically, simplicity tends to completely remove potential
 > avenues of attack. An easy example might be to think of a building.
@@ -610,13 +610,13 @@ Handling transport failures
 ---------------------------
 
 Oboe cannot know the correct behaviour when a connection is lost so this
-decision is left to the containing application. On
-failure one of two behaviours is expected: if the actions performed in
-response to data so far remain valid in the absence of a full
-transmission their effects will be kept and a new request made for just
-the missed part; alternatively, if all the data is required for the
-actions to be valid, the application should take an optimistic locking
-approach and perform rollback.
+decision is left to the containing application. On failure one of two
+behaviours is expected: if the actions performed in response to data so
+far remain valid in the absence of a full transmission their effects
+will be kept and a new request made for just the missed part;
+alternatively, if all the data is required for the actions to be valid,
+the application should take an optimistic locking approach and perform
+rollback.
 
 Oboe.js as a micro-library
 --------------------------
@@ -624,21 +624,21 @@ Oboe.js as a micro-library
 HTTP traffic is often compressed using gzip so that it transfers more
 quickly, particularly for entropy-sparse text formats such as
 Javascript. When measuring a library's download footprint it usually
-makes more sense to compare post-compression. Smaller is better 
-to encourage adoption because site creators are sensitive to the download
+makes more sense to compare post-compression. Smaller is better to
+encourage adoption because site creators are sensitive to the download
 size of their sites. Javascript micro-libraries are listed at
 [microjs.com](http://microjs.com), which includes this project. A
 library qualifies as being *micro* if it is delivered in 5kb or less,
 5120 bytes, but micro-libraries also tend to follow the ethos that it is
 better for an application developer to gather together several tiny,
 simple libraries than find a complex one which aims to solve many
-problems. As well as being small, a micro-library
-should impose as few restrictions as possible on its use and be agnostic
-as to which other libraries or programming styles it will be combined
-with, echoing the UNIX philosophy for small, easily combined 
-programs [@unixbasics].
+problems. As well as being small, a micro-library should impose as few
+restrictions as possible on its use and be agnostic as to which other
+libraries or programming styles it will be combined with, echoing the
+UNIX philosophy for small, easily combined programs [@unixbasics].
 
 > This is the Unix philosophy:\
 > Do one thing and do it well.\
 > Write programs to work together.\
-> Write programs to handle text streams, because that is a universal interface.
+> Write programs to handle text streams, because that is a universal
+> interface.

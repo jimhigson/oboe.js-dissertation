@@ -161,45 +161,46 @@ accommodation for REST resources.
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
 documents received over the web are often interpreted in a streaming
 fashion, to date REST resources are not commonly examined in this way.
-For most practical cases where we wish to be increase the speed of a
-system there is no reasonable distinction between acting \emph{earlier}
-and being \emph{quicker}. In the interest of creating efficient software
-we should use data at the first possible opportunity: examining content
+For most practical cases where we wish to increase the speed of a system
+there is no reasonable distinction between acting \emph{earlier} and
+being \emph{quicker}. In the interest of creating efficient software we
+should use data at the first possible opportunity: examining content
 \emph{while it streams} rather than holding it unexamined until it is
 wholly available. The purpose of this dissertation is to explore
 tangible benefits which may be realised if we fold HTTP streaming into
 the REST paradigm.
 
 Natural languages encourage our thinking to follow patterns that they
-easily support (Whorf 1956). This idea has been applied to programming,
-for example Ruby is intentionally designed to discourage global
-variables by using a less attractive notation (Yukihiro 2003). It may be
-useful when exploring new techniques to question which established
-constructs are as they are because of languages which unintentionally
-suggest that formulation; it is perhaps significant that REST clients
-tend to style the calling of remote resources similarly to the call
-style of the host programming language. In practice one of two schemas
-is generally followed: a synchronous, blocking style in which an
-invocation halts execution for the duration of the request before
-evaluating to the fetched resource; or an asynchronous, non-blocking
-form in which some logic is specified to be applied to the response once
-it is available. Languages which promote concurrency though threading
-generally consider blocking in a single thread to be acceptable and will
-prefer the synchronous mode whereas languages with first class functions
-are naturally conversant in callbacks and will prefer asynchronous I/O.
-In programming the language limits the patterns that we readily see and
-the schemes which map most easily onto our languages are not necessarily
-the best possible organisation. For any multi-packet message sent via a
-network some parts will arrive before others, at least approximately
-in-order, but viewed from inside a language whose phasing encourages
-statements to yield single, wholly evaluated results it is comfortable
-to conceptualise the REST response as a discrete event. This
-establishment of a `limiting comfort' extends to graphical notations
-such as UML whose constructs strongly reflect the textual languages of
-the day. UML sequence diagrams include the syntax for instantaneously
-delivered return values but, despite being commonly used to draw network
-data transfer, provide no corresponding notation for a resource whose
-data is progressively revealed.
+comfortably support (Whorf 1956). This idea has been applied to
+programming, for example the language Ruby is intentionally designed to
+discourage global variables by using a less attractive notation
+(Yukihiro 2003). It may be useful when exploring new techniques to
+question which established constructs are as they are because of
+languages which unintentionally suggest that formulation; it is perhaps
+significant that REST clients tend to style the calling of remote
+resources similarly to the call style of the host programming language.
+In practice one of two schemas is generally followed: a synchronous,
+blocking style in which an invocation halts execution for the duration
+of the request before evaluating to the fetched resource; or an
+asynchronous, non-blocking form in which some logic is specified to be
+applied to the response once it is available. Languages which promote
+concurrency though threading generally consider blocking in a single
+thread to be acceptable and will prefer the synchronous mode whereas
+languages with first class functions are naturally conversant in
+callbacks and will prefer asynchronous I/O. In programming the language
+limits the patterns that we readily see and the schemes which map most
+easily onto our languages are not necessarily the best possible
+organisation. For any multi-packet message sent via a network some parts
+will arrive before others, at least approximately in-order, but viewed
+from inside a language whose phasing encourages statements to yield
+single, wholly evaluated results it is comfortable to conceptualise the
+REST response as a discrete event. This establishment of a `limiting
+comfort' extends to graphical notations such as UML whose constructs
+strongly reflect the textual languages of the day. UML sequence diagrams
+include the syntax for instantaneously delivered return values but,
+despite being commonly used to draw network data transfer, provide no
+corresponding notation for a resource whose data is progressively
+revealed.
 
 No new computing techniques need be invented before this dissertation
 can be implemented. As a minimum it requires an HTTP client which
@@ -339,9 +340,9 @@ messages without inspection. For the user checking her email, even if
 application will behave as if it received none and show her nothing.
 Later, when the network is available the inbox will be downloaded from
 scratch including the 90\% which has already been successfully
-delivered. A more efficient system would allow the 90\% from the aborted
-first request to be used straight away and when the signal later returns
-fetch only the lost 10\%.
+delivered. The system would be more user friendly and efficient if it
+used the 90\% from the first request when it arrives and fetched only
+the lost 10\% when network connectivity returns.
 
 The delivered part of a partially successful message may be used if we
 turn away from this polarised view of wholly successful and unsuccessful
@@ -390,15 +391,15 @@ message.
 
 To avoid feature creep the scope of the software deliverables is pared
 down to the smallest work which can be said to realise the goals of the
-project, the guiding principle being that it is preferable to produce a
-little well than more badly. Amongst commentators on start-up companies
-this is known as a \emph{zoom-in pivot} (Reis 2011 p172) and the work it
-produces should be the \emph{Minimum Viable Product} or MVP (Reis 2011
-p106-110). It would not be feasible to deliver a full stack so we are
-obliged to focus on solutions which interoperate with existing
-deployments. To a third party wishing to adopt the technology it is also
-more inviting to add small enhancements to the existing architecture
-than to action a shift which requires wholesale change.
+project. Amongst commentators on start-up companies this is known as a
+\emph{zoom-in pivot} (Reis 2011 p172) and the work it produces should be
+the \emph{Minimum Viable Product} or MVP (Reis 2011 p106-110). Given
+reasonable time constraints it would not be feasible to deliver a full
+stack while concentrating on software quality so we are obliged to focus
+on solutions which interoperate with existing deployments. To a third
+party wishing to adopt the technology it is more inviting to add small
+enhancements to the existing architecture than to action a shift which
+requires wholesale change.
 
 Although an explicitly streaming server would improve the situation
 further, because all network data transfer may be thought of as a
@@ -2802,24 +2803,28 @@ Firefox 24.0.0 & 547ms & 1.47
 IE 8.0.0 (Windows XP) & 3,048ms & 0.26
 \\\noalign{\medskip}
 \hline
+\noalign{\medskip}
+\caption{time taken to match approximately 800 JSON nodes against a
+complex JSONPath expression under several Javascript engines
+\label{browsers}}
 \end{longtable}
 
-We can see that Firefox is slower than other modern browsers despite
-normally being quite fast. This is probably explicable by SpiderMonkey,
-the Mozilla just-in-time Javascript compiler being poor at optimising
-functional Javascript (Guo 2013). The JSON nodes are not of a common
-type so many of the library's internal callsites are not monomorphic
-which is also optimised poorly (Guo 2013). When the test was later
-repeated with a simpler pattern Firefox showed by far the largest
-improvement, indicating that the functional JSONPath matching accounts
-for Firefox's lower than expected performance.
+From table \ref{browsers} we can see that Firefox executes the library
+more slowly than other modern desktop browsers. This is probably
+explicable by SpiderMonkey, the Mozilla just-in-time Javascript compiler
+being poor at optimising functional Javascript (Guo 2013). The JSON
+nodes are not of a common type so many of the library's internal
+callsites are not monomorphic which is also optimised poorly (Guo 2013).
+When the test was later repeated with a simpler pattern Firefox showed
+by far the largest improvement, indicating that the functional JSONPath
+matching accounts for Firefox's lower than expected performance.
 
-Version 31 of Chrome was released during the project and due to an
-updated version of the v8 Javascript engine performs more than twice as
-quickly as version 30. Node also uses v8 and should catch up when it is
-next updated. This reflects Javascript engine writers targeting
-functional optimisation now that functional Javascript is becoming a
-more popular style.
+Version 31 of Chrome for OSX was released during the project and due to
+an updated version of the v8 Javascript engine performs more than twice
+as quickly as version 30. This reflects Javascript engine writers
+targeting functional optimisation now that functional Javascript is
+becoming a more popular style. Node and Chrome for iOS also use v8 and
+should catch up when they are next updated.
 
 Of these results I find only the performance under old versions of
 Internet Explorer poor enough to be concerning. An improvement over the
@@ -2896,7 +2901,7 @@ when examining nodes for pattern matches by checking every registered
 JSONPath expression against every node parsed from the JSON. For many
 expressions we should be able to say that there will be no matches
 inside a particular JSON subtree, either because we have already matched
-or because the the subtree's ancestors invariably imply failure. A more
+or because the subtree's ancestors invariably imply failure. A more
 sophisticated implementation might subdue provably unsatisfiable
 handlers until the SAX parser leaves an unmatchable subtree.
 
@@ -3515,34 +3520,73 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 \KeywordTok{function} \FunctionTok{instanceApi}\NormalTok{(oboeBus)\{}
 
    \KeywordTok{var} \NormalTok{oboeApi,}
-       \NormalTok{addDoneListener = }\FunctionTok{partialComplete}\NormalTok{(}
-           \NormalTok{addNodeOrPathListenerApi, }
-           \StringTok{'node'}\NormalTok{, }\StringTok{'!'}\NormalTok{);}
-   
-   
-   \KeywordTok{function} \FunctionTok{addPathOrNodeListener}\NormalTok{( publicApiName, pattern, callback ) \{}
-   
-      \KeywordTok{var} \NormalTok{matchEventName = publicApiName + }\StringTok{':'} \NormalTok{+ pattern,          }
+       \NormalTok{fullyQualifiedNamePattern = }\OtherTok{/}\FloatTok{^(}\OtherTok{node}\FloatTok{|}\OtherTok{path}\FloatTok{)}\OtherTok{:./}\NormalTok{,}
           
-          \NormalTok{safeCallback = }\FunctionTok{protectedCallback}\NormalTok{(callback);}
-                              
-      \FunctionTok{oboeBus}\NormalTok{(matchEventName).}\FunctionTok{on}\NormalTok{(  }\KeywordTok{function}\NormalTok{(node, ascent) \{}
+       \NormalTok{addListener = }\FunctionTok{varArgs}\NormalTok{(}\KeywordTok{function}\NormalTok{( eventId, parameters )\{}
+             
+            \KeywordTok{if}\NormalTok{( oboeApi[eventId] ) \{}
+       
+               \CommentTok{// for events added as .on(event), if there is a }
+               \CommentTok{// special .event equivalent, pass through to that }
+               \FunctionTok{apply}\NormalTok{(parameters, oboeApi[eventId]);                     }
+            \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
+       
+               \CommentTok{// we have a standard Node.js EventEmitter 2-argument call.}
+               \CommentTok{// The first parameter is the listener.}
+               \KeywordTok{var} \NormalTok{listener = parameters[}\DecValTok{0}\NormalTok{];}
+       
+               \KeywordTok{if}\NormalTok{( }\OtherTok{fullyQualifiedNamePattern}\NormalTok{.}\FunctionTok{test}\NormalTok{(eventId) ) \{}
+                
+                  \CommentTok{// allow fully-qualified node/path listeners }
+                  \CommentTok{// to be added                                             }
+                  \FunctionTok{addPathOrNodeListener}\NormalTok{(eventId, listener);                  }
+               \NormalTok{\} }\KeywordTok{else}  \NormalTok{\{}
+       
+                  \CommentTok{// the event has no special handling, pass through }
+                  \CommentTok{// directly onto the event bus:          }
+                  \FunctionTok{oboeBus}\NormalTok{(eventId).}\FunctionTok{on}\NormalTok{( listener);}
+               \NormalTok{\}}
+            \NormalTok{\}}
+                
+            \KeywordTok{return} \NormalTok{oboeApi; }\CommentTok{// chaining}
+       \NormalTok{\}),}
+ 
+       \NormalTok{removeListener = }\KeywordTok{function}\NormalTok{( eventId, p2, p3 )\{}
+             
+            \KeywordTok{if}\NormalTok{( eventId == }\StringTok{'node'} \NormalTok{|| eventId == }\StringTok{'path'} \NormalTok{) \{}
       
-         \CommentTok{/* }
-\CommentTok{            We're now calling back to outside of oboe where the Lisp-style }
-\CommentTok{            lists that we are using internally will not be recognised }
-\CommentTok{            so convert to standard arrays. }
-\CommentTok{      }
-\CommentTok{            Also, reverse the order because it is more common to list paths }
-\CommentTok{            "root to leaf" than "leaf to root" }
-\CommentTok{         */}
-         \KeywordTok{var} \NormalTok{descent     = }\FunctionTok{reverseList}\NormalTok{(ascent),}
-         
-             \CommentTok{// To make a path, strip off the last item which is the special}
-             \CommentTok{// ROOT_PATH token for the 'path' to the root node}
-             \NormalTok{path       = }\FunctionTok{listAsArray}\NormalTok{(}\FunctionTok{tail}\NormalTok{(}\FunctionTok{map}\NormalTok{(keyOf,descent))),}
-             \NormalTok{ancestors  = }\FunctionTok{listAsArray}\NormalTok{(}\FunctionTok{map}\NormalTok{(nodeOf, descent)),}
-             \NormalTok{keep       = }\KeywordTok{true}\NormalTok{;}
+               \CommentTok{// allow removal of node and path }
+               \FunctionTok{removePathOrNodeListener}\NormalTok{(eventId + }\StringTok{':'} \NormalTok{+ p2, p3);          }
+            \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
+      
+               \CommentTok{// we have a standard Node.js EventEmitter 2-argument call.}
+               \CommentTok{// The first parameter is the listener.}
+               \KeywordTok{var} \NormalTok{listener = p2;}
+
+               \KeywordTok{if}\NormalTok{( }\OtherTok{fullyQualifiedNamePattern}\NormalTok{.}\FunctionTok{test}\NormalTok{(eventId) ) \{}
+               
+                  \CommentTok{// allow fully-qualified node/path listeners }
+                  \CommentTok{// to be added                                             }
+                  \FunctionTok{removePathOrNodeListener}\NormalTok{(eventId, listener);                  }
+               \NormalTok{\} }\KeywordTok{else}  \NormalTok{\{}
+      
+                  \CommentTok{// the event has no special handling, pass through }
+                  \CommentTok{// directly onto the event bus:          }
+                  \FunctionTok{oboeBus}\NormalTok{(eventId).}\FunctionTok{un}\NormalTok{( listener);}
+               \NormalTok{\}}
+            \NormalTok{\}}
+               
+            \KeywordTok{return} \NormalTok{oboeApi; }\CommentTok{// chaining      }
+       \NormalTok{\};                               }
+   
+   
+   \KeywordTok{function} \FunctionTok{addPathOrNodeListener}\NormalTok{( fullyQualifiedName, callback ) \{}
+      
+      \KeywordTok{var} \NormalTok{safeCallback = }\FunctionTok{protectedCallback}\NormalTok{(callback);}
+                              
+      \FunctionTok{oboeBus}\NormalTok{(fullyQualifiedName).}\FunctionTok{on}\NormalTok{( }\KeywordTok{function}\NormalTok{(node, path, ancestors) \{}
+      
+         \KeywordTok{var} \NormalTok{keep       = }\KeywordTok{true}\NormalTok{;}
              
          \OtherTok{oboeApi}\NormalTok{.}\FunctionTok{forget} \NormalTok{= }\KeywordTok{function}\NormalTok{()\{}
             \NormalTok{keep = }\KeywordTok{false}\NormalTok{;}
@@ -3553,16 +3597,13 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
          \KeywordTok{delete} \OtherTok{oboeApi}\NormalTok{.}\FunctionTok{forget}\NormalTok{;}
          
          \KeywordTok{if}\NormalTok{(! keep ) \{          }
-            \FunctionTok{oboeBus}\NormalTok{(matchEventName).}\FunctionTok{un}\NormalTok{( callback);}
+            \FunctionTok{oboeBus}\NormalTok{(fullyQualifiedName).}\FunctionTok{un}\NormalTok{( callback);}
          \NormalTok{\}}
-                  
-      
       \NormalTok{\}, callback)}
-
    \NormalTok{\}   }
    
-   \KeywordTok{function} \FunctionTok{removePathOrNodeListener}\NormalTok{( publicApiName, pattern, callback ) \{}
-      \FunctionTok{oboeBus}\NormalTok{(publicApiName + }\StringTok{':'} \NormalTok{+ pattern).}\FunctionTok{un}\NormalTok{(callback)}
+   \KeywordTok{function} \FunctionTok{removePathOrNodeListener}\NormalTok{( fullyQualifiedName, callback ) \{}
+      \FunctionTok{oboeBus}\NormalTok{(fullyQualifiedName).}\FunctionTok{un}\NormalTok{(callback)}
    \NormalTok{\}}
          
    \KeywordTok{function} \FunctionTok{protectedCallback}\NormalTok{( callback ) \{}
@@ -3583,7 +3624,10 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
    \KeywordTok{function} \FunctionTok{addListenersMap}\NormalTok{(eventId, listenerMap) \{}
    
       \KeywordTok{for}\NormalTok{( }\KeywordTok{var} \NormalTok{pattern }\KeywordTok{in} \NormalTok{listenerMap ) \{}
-         \FunctionTok{addPathOrNodeListener}\NormalTok{(eventId, pattern, listenerMap[pattern]);}
+         \FunctionTok{addPathOrNodeListener}\NormalTok{(}
+            \NormalTok{eventId + }\StringTok{':'} \NormalTok{+ pattern, }
+            \NormalTok{listenerMap[pattern]}
+         \NormalTok{);}
       \NormalTok{\}}
    \NormalTok{\}    }
       
@@ -3594,8 +3638,7 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
    
       \KeywordTok{if}\NormalTok{( }\FunctionTok{isString}\NormalTok{(jsonPathOrListenerMap) ) \{}
          \FunctionTok{addPathOrNodeListener}\NormalTok{( }
-            \NormalTok{eventId, }
-            \NormalTok{jsonPathOrListenerMap,}
+            \NormalTok{eventId + }\StringTok{':'} \NormalTok{+ jsonPathOrListenerMap,}
             \NormalTok{callback}
          \NormalTok{);}
       \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
@@ -3605,25 +3648,6 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
       \KeywordTok{return} \NormalTok{oboeApi; }\CommentTok{// chaining}
    \NormalTok{\}}
       
-   \CommentTok{/**}
-\CommentTok{    * implementation behind oboe().on()}
-\CommentTok{    */}       
-   \KeywordTok{var} \NormalTok{addListener = }\FunctionTok{varArgs}\NormalTok{(}\KeywordTok{function}\NormalTok{( eventId, parameters )\{}
-
-      \KeywordTok{if}\NormalTok{( oboeApi[eventId] ) \{}
-      
-         \CommentTok{// event has some special handling:}
-         \FunctionTok{apply}\NormalTok{(parameters, oboeApi[eventId]);}
-      \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
-      
-         \CommentTok{// the even has no special handling, add it directly to}
-         \CommentTok{// the event bus:         }
-         \KeywordTok{var} \NormalTok{listener = parameters[}\DecValTok{0}\NormalTok{]; }
-         \FunctionTok{oboeBus}\NormalTok{(eventId).}\FunctionTok{on}\NormalTok{( listener);}
-      \NormalTok{\}}
-      
-      \KeywordTok{return} \NormalTok{oboeApi;}
-   \NormalTok{\});   }
    
    \CommentTok{// some interface methods are only filled in after we recieve}
    \CommentTok{// values and are noops before that:          }
@@ -3632,31 +3656,42 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
    \NormalTok{\});}
    
    \FunctionTok{oboeBus}\NormalTok{(HTTP_START).}\FunctionTok{on}\NormalTok{( }\KeywordTok{function}\NormalTok{(_statusCode, headers) \{}
-      \OtherTok{oboeApi}\NormalTok{.}\FunctionTok{header} \NormalTok{= }
-         \KeywordTok{function}\NormalTok{(name) \{}
-            \KeywordTok{return} \NormalTok{name ? headers[name] }
-                        \NormalTok{: headers}
-                        \NormalTok{;}
-         \NormalTok{\}}
+   
+      \OtherTok{oboeApi}\NormalTok{.}\FunctionTok{header} \NormalTok{=  }\KeywordTok{function}\NormalTok{(name) \{}
+                           \KeywordTok{return} \NormalTok{name ? headers[name] }
+                                       \NormalTok{: headers}
+                                       \NormalTok{;}
+                        \NormalTok{\}}
    \NormalTok{\});}
-      
+         
    \CommentTok{/**}
 \CommentTok{    * Construct and return the public API of the Oboe instance to be }
 \CommentTok{    * returned to the calling application}
 \CommentTok{    */}       
    \KeywordTok{return} \NormalTok{oboeApi = \{}
-      \DataTypeTok{on    }\NormalTok{:  addListener,   }
-      \DataTypeTok{done  }\NormalTok{:  addDoneListener,       }
-      \DataTypeTok{node  }\NormalTok{:  }\FunctionTok{partialComplete}\NormalTok{(addNodeOrPathListenerApi, }\StringTok{'node'}\NormalTok{),}
-      \DataTypeTok{path  }\NormalTok{:  }\FunctionTok{partialComplete}\NormalTok{(addNodeOrPathListenerApi, }\StringTok{'path'}\NormalTok{),      }
-      \DataTypeTok{start }\NormalTok{:  }\FunctionTok{compose2}\NormalTok{( }\FunctionTok{oboeBus}\NormalTok{(HTTP_START).}\FunctionTok{on}\NormalTok{, protectedCallback ),}
-      \CommentTok{// fail doesn't use safeOn because that could lead to non-terminating loops}
-      \DataTypeTok{fail  }\NormalTok{:  }\FunctionTok{oboeBus}\NormalTok{(FAIL_EVENT).}\FunctionTok{on}\NormalTok{,}
-      \DataTypeTok{abort }\NormalTok{:  }\FunctionTok{oboeBus}\NormalTok{(ABORTING).}\FunctionTok{emit}\NormalTok{,}
-      \DataTypeTok{header}\NormalTok{:  noop,}
-      \DataTypeTok{root  }\NormalTok{:  noop}
+      \DataTypeTok{on             }\NormalTok{: addListener,}
+      \DataTypeTok{addListener    }\NormalTok{: addListener, }
+      \DataTypeTok{removeListener }\NormalTok{: removeListener,}
+      \DataTypeTok{emit           }\NormalTok{: }\OtherTok{oboeBus}\NormalTok{.}\FunctionTok{emit}\NormalTok{,                }
+                
+      \DataTypeTok{node           }\NormalTok{: }\FunctionTok{partialComplete}\NormalTok{(addNodeOrPathListenerApi, }\StringTok{'node'}\NormalTok{),}
+      \DataTypeTok{path           }\NormalTok{: }\FunctionTok{partialComplete}\NormalTok{(addNodeOrPathListenerApi, }\StringTok{'path'}\NormalTok{),}
+      
+      \DataTypeTok{done           }\NormalTok{: }\FunctionTok{partialComplete}\NormalTok{(addNodeOrPathListenerApi, }\StringTok{'node'}\NormalTok{, }\StringTok{'!'}\NormalTok{),            }
+      \DataTypeTok{start          }\NormalTok{: }\FunctionTok{compose2}\NormalTok{( }\FunctionTok{oboeBus}\NormalTok{(HTTP_START).}\FunctionTok{on}\NormalTok{, protectedCallback ),}
+      
+      \CommentTok{// fail doesn't use protectedCallback because }
+      \CommentTok{// could lead to non-terminating loops}
+      \DataTypeTok{fail           }\NormalTok{: }\FunctionTok{oboeBus}\NormalTok{(FAIL_EVENT).}\FunctionTok{on}\NormalTok{,}
+      
+      \CommentTok{// public api calling abort fires the ABORTING event}
+      \DataTypeTok{abort          }\NormalTok{: }\FunctionTok{oboeBus}\NormalTok{(ABORTING).}\FunctionTok{emit}\NormalTok{,}
+      
+      \CommentTok{// initially return nothing for header and root}
+      \DataTypeTok{header         }\NormalTok{: noop,}
+      \DataTypeTok{root           }\NormalTok{: noop}
    \NormalTok{\};   }
-\NormalTok{\}   }
+\NormalTok{\} }
    
 \end{Highlighting}
 \end{Shaded}
@@ -4465,9 +4500,29 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
       \DataTypeTok{node}\NormalTok{:}\FunctionTok{oboeBus}\NormalTok{(NODE_FOUND)}
    \NormalTok{,  }\DataTypeTok{path}\NormalTok{:}\FunctionTok{oboeBus}\NormalTok{(PATH_FOUND)}
    \NormalTok{\};}
+     
+   \KeywordTok{function} \FunctionTok{emitMatchingNode}\NormalTok{(emitMatch, node, ascent) \{}
+         
+      \CommentTok{/* }
+\CommentTok{         We're now calling to the outside world where Lisp-style }
+\CommentTok{         lists will not be familiar. Convert to standard arrays. }
+\CommentTok{   }
+\CommentTok{         Also, reverse the order because it is more common to }
+\CommentTok{         list paths "root to leaf" than "leaf to root"  */}
+      \KeywordTok{var} \NormalTok{descent     = }\FunctionTok{reverseList}\NormalTok{(ascent);}
+                
+      \FunctionTok{emitMatch}\NormalTok{(}
+         \NormalTok{node,}
+         
+         \CommentTok{// To make a path, strip off the last item which is the special}
+         \CommentTok{// ROOT_PATH token for the 'path' to the root node          }
+         \FunctionTok{listAsArray}\NormalTok{(}\FunctionTok{tail}\NormalTok{(}\FunctionTok{map}\NormalTok{(keyOf,descent))),  }\CommentTok{// path}
+         \FunctionTok{listAsArray}\NormalTok{(}\FunctionTok{map}\NormalTok{(nodeOf, descent))       }\CommentTok{// ancestors    }
+      \NormalTok{);         }
+   \NormalTok{\}}
 
    \KeywordTok{function} \FunctionTok{addUnderlyingListener}\NormalTok{( fullEventName, predicateEvent, compiledJsonPath )\{}
-
+   
       \KeywordTok{var} \NormalTok{emitMatch = }\FunctionTok{oboeBus}\NormalTok{(fullEventName).}\FunctionTok{emit}\NormalTok{;}
    
       \OtherTok{predicateEvent}\NormalTok{.}\FunctionTok{on}\NormalTok{( }\KeywordTok{function} \NormalTok{(ascent) \{}
@@ -4490,7 +4545,11 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 \CommentTok{          */}
          \KeywordTok{if} \NormalTok{(maybeMatchingMapping !== }\KeywordTok{false}\NormalTok{) \{}
 
-            \FunctionTok{emitMatch}\NormalTok{(}\FunctionTok{nodeOf}\NormalTok{(maybeMatchingMapping), ascent);}
+            \FunctionTok{emitMatchingNode}\NormalTok{(}
+               \NormalTok{emitMatch, }
+               \FunctionTok{nodeOf}\NormalTok{(maybeMatchingMapping), }
+               \NormalTok{ascent}
+            \NormalTok{);}
          \NormalTok{\}}
       \NormalTok{\}, fullEventName);}
    
@@ -4538,10 +4597,39 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{/** }
-\CommentTok{ * Over time this should be refactored towards a Node-like}
-\CommentTok{ *    EventEmitter so that under Node an actual EE acn be used.}
-\CommentTok{ *    http://nodejs.org/api/events.html}
+\CommentTok{/**}
+\CommentTok{ * pubSub is a curried interface for listening to and emitting}
+\CommentTok{ * events.}
+\CommentTok{ * }
+\CommentTok{ * If we get a bus:}
+\CommentTok{ *    }
+\CommentTok{ *    var bus = pubSub();}
+\CommentTok{ * }
+\CommentTok{ * We can listen to event 'foo' like:}
+\CommentTok{ * }
+\CommentTok{ *    bus('foo').on(myCallback)}
+\CommentTok{ *    }
+\CommentTok{ * And emit event foo like:}
+\CommentTok{ * }
+\CommentTok{ *    bus('foo').emit()}
+\CommentTok{ *    }
+\CommentTok{ * or, with a parameter:}
+\CommentTok{ * }
+\CommentTok{ *    bus('foo').emit('bar')}
+\CommentTok{ *     }
+\CommentTok{ * All functions can be cached and don't need to be }
+\CommentTok{ * bound. Ie:}
+\CommentTok{ * }
+\CommentTok{ *    var fooEmitter = bus('foo').emit}
+\CommentTok{ *    fooEmitter('bar');  // emit an event}
+\CommentTok{ *    fooEmitter('baz');  // emit another}
+\CommentTok{ *    }
+\CommentTok{ * There's also an uncurried[1] shortcut for .emit and .on:}
+\CommentTok{ * }
+\CommentTok{ *    bus.on('foo', callback)}
+\CommentTok{ *    bus.emit('foo', 'bar')}
+\CommentTok{ * }
+\CommentTok{ * [1]: http://zvon.org/other/haskell/Outputprelude/uncurry_f.html}
 \CommentTok{ */}
 \KeywordTok{function} \FunctionTok{pubSub}\NormalTok{()\{}
 
@@ -4550,17 +4638,28 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
        \NormalTok{removeListener = }\FunctionTok{newSingle}\NormalTok{(}\StringTok{'removeListener'}\NormalTok{); }
       
    \KeywordTok{function} \FunctionTok{newSingle}\NormalTok{(eventName) \{}
-      \KeywordTok{return} \NormalTok{singles[eventName] = }\FunctionTok{singleEventPubSub}\NormalTok{(eventName, newListener, removeListener);   }
+      \KeywordTok{return} \NormalTok{singles[eventName] = }\FunctionTok{singleEventPubSub}\NormalTok{(}
+         \NormalTok{eventName, }
+         \NormalTok{newListener, }
+         \NormalTok{removeListener}
+      \NormalTok{);   }
    \NormalTok{\}      }
 
-   \KeywordTok{return} \KeywordTok{function}\NormalTok{( eventName )\{   }
-      \KeywordTok{if}\NormalTok{( !singles[eventName] ) \{}
-         \KeywordTok{return} \FunctionTok{newSingle}\NormalTok{( eventName );}
-      \NormalTok{\}}
+   \CommentTok{/** pubSub instances are functions */}
+   \KeywordTok{function} \FunctionTok{pubSubInstance}\NormalTok{( eventName )\{   }
       
-      \KeywordTok{return} \NormalTok{singles[eventName];   }
-   \NormalTok{\};}
+      \KeywordTok{return} \NormalTok{singles[eventName] || }\FunctionTok{newSingle}\NormalTok{( eventName );   }
+   \NormalTok{\}}
+
+   \CommentTok{// add convenience EventEmitter-style uncurried form of 'emit' and 'on'}
+   \NormalTok{[}\StringTok{'emit'}\NormalTok{, }\StringTok{'on'}\NormalTok{].}\FunctionTok{forEach}\NormalTok{(}\KeywordTok{function}\NormalTok{(methodName)\{}
    
+      \NormalTok{pubSubInstance[methodName] = }\FunctionTok{varArgs}\NormalTok{(}\KeywordTok{function}\NormalTok{(eventName, parameters)\{}
+         \FunctionTok{apply}\NormalTok{( parameters, }\FunctionTok{pubSubInstance}\NormalTok{( eventName )[methodName]);}
+      \NormalTok{\});   }
+   \NormalTok{\})}
+         
+   \KeywordTok{return} \NormalTok{pubSubInstance;}
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
@@ -4626,18 +4725,23 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{/** }
-\CommentTok{ * A pub/sub which is responsible for a single event type}
+\CommentTok{ * A pub/sub which is responsible for a single event type. A }
+\CommentTok{ * multi-event type event bus is created by pubSub by collecting}
+\CommentTok{ * several of these.}
 \CommentTok{ * }
-\CommentTok{ * }\KeywordTok{@param}\CommentTok{ }\KeywordTok{\{String\}}\CommentTok{ eventType                   the name of the events managed by this singleEventPubSub}
-\CommentTok{ * }\KeywordTok{@param}\CommentTok{ }\KeywordTok{\{singleEventPubSub\}}\CommentTok{ [newListener]    place to notify of new listeners}
-\CommentTok{ * }\KeywordTok{@param}\CommentTok{ }\KeywordTok{\{singleEventPubSub\}}\CommentTok{ [removeListener] place to notify of when listeners are removed}
+\CommentTok{ * }\KeywordTok{@param}\CommentTok{ }\KeywordTok{\{String\}}\CommentTok{ eventType                   }
+\CommentTok{ *    the name of the events managed by this singleEventPubSub}
+\CommentTok{ * }\KeywordTok{@param}\CommentTok{ }\KeywordTok{\{singleEventPubSub\}}\CommentTok{ [newListener]    }
+\CommentTok{ *    place to notify of new listeners}
+\CommentTok{ * }\KeywordTok{@param}\CommentTok{ }\KeywordTok{\{singleEventPubSub\}}\CommentTok{ [removeListener] }
+\CommentTok{ *    place to notify of when listeners are removed}
 \CommentTok{ */}
 \KeywordTok{function} \FunctionTok{singleEventPubSub}\NormalTok{(eventType, newListener, removeListener)\{}
 
    \CommentTok{/** we are optimised for emitting events over firing them.}
-\CommentTok{    *  hence, as well as the tuple list which stores event ids and listeners,}
-\CommentTok{    *  there is also a listener list which can be iterated more quickly}
-\CommentTok{    *  when we are emitting}
+\CommentTok{    *  As well as the tuple list which stores event ids and}
+\CommentTok{    *  listeners there is a list with just the listeners which }
+\CommentTok{    *  can be iterated more quickly when we are emitting}
 \CommentTok{    */}
    \KeywordTok{var} \NormalTok{listenerTupleList,}
        \NormalTok{listenerList;}

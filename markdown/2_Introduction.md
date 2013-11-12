@@ -23,8 +23,8 @@ accommodation for REST resources.
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
 documents received over the web are often interpreted in a streaming
 fashion, to date REST resources are not commonly examined in this way.
-For most practical cases where we wish to be increase the speed of a
-system there is no reasonable distinction between acting *earlier* and
+When we wish to increase the speed of a
+system for most practical cases there is no reasonable distinction between acting *earlier* and
 being *quicker*. In the interest of creating efficient software we
 should use data at the first possible opportunity: examining content
 *while it streams* rather than holding it unexamined until it is wholly
@@ -33,8 +33,8 @@ benefits which may be realised if we fold HTTP streaming into the REST
 paradigm.
 
 Natural languages encourage our thinking to follow patterns that they
-easily support [@whorf56]. This idea has been applied to programming,
-for example Ruby is intentionally designed to discourage global
+comfortably support [@whorf56]. This idea has been applied to programming,
+for example the language Ruby is intentionally designed to discourage global
 variables by using a less attractive notation [@rubylang]. It may be
 useful when exploring new techniques to question which established
 constructs are as they are because of languages which unintentionally
@@ -187,9 +187,8 @@ messages without inspection. For the user checking her email, even if
 application will behave as if it received none and show her nothing.
 Later, when the network is available the inbox will be downloaded from
 scratch including the 90% which has already been successfully delivered.
-A more efficient system would allow the 90% from the aborted first
-request to be used straight away and when the signal later returns fetch
-only the lost 10%.
+The system would be more user friendly and efficient if it used the 90% from the first
+request when it arrives and fetched only the lost 10% when network connectivity returns.
 
 The delivered part of a partially successful message may be used if we
 turn away from this polarised view of wholly successful and unsuccessful
@@ -238,13 +237,14 @@ Deliverables
 
 To avoid feature creep the scope of the software deliverables is pared
 down to the smallest work which can be said to realise the goals of the
-project, the guiding principle being that it is preferable to produce a
-little well than more badly. Amongst commentators on start-up companies
+project. Amongst commentators on start-up companies
 this is known as a *zoom-in pivot* [@lean p172] and the work it produces
-should be the *Minimum Viable Product* or MVP [@lean p106-110]. It would
-not be feasible to deliver a full stack so we are obliged to focus on
+should be the *Minimum Viable Product* or MVP [@lean p106-110]. 
+Given reasonable time constraints it would
+not be feasible to deliver a full stack while concentrating on software quality 
+so we are obliged to focus on
 solutions which interoperate with existing deployments. To a third party
-wishing to adopt the technology it is also more inviting to add small
+wishing to adopt the technology it is more inviting to add small
 enhancements to the existing architecture than to action a shift which
 requires wholesale change.
 

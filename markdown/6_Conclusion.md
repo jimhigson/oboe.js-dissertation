@@ -172,8 +172,12 @@ to stdout without any parsing and is included as a baseline.
   Firefox 24.0.0                       547ms                    1.47
   IE 8.0.0 (Windows XP)              3,048ms                    0.26
 
-We can see that Firefox is slower than other modern browsers despite
-normally being quite fast. This is probably explicable by SpiderMonkey,
+  : time taken to match approximately 800 JSON nodes against a complex
+  JSONPath expression under several Javascript engines \label{browsers}
+
+From table \ref{browsers} we can see that Firefox executes the library 
+more slowly than other modern desktop browsers.
+This is probably explicable by SpiderMonkey,
 the Mozilla just-in-time Javascript compiler being poor at optimising
 functional Javascript [@functionalSpiderMonkey]. The JSON nodes are not
 of a common type so many of the library's internal callsites are not
@@ -182,12 +186,12 @@ When the test was later repeated with a simpler pattern Firefox showed
 by far the largest improvement, indicating that the functional JSONPath
 matching accounts for Firefox's lower than expected performance.
 
-Version 31 of Chrome was released during the project and due to an
+Version 31 of Chrome for OSX was released during the project and due to an
 updated version of the v8 Javascript engine performs more than twice as
-quickly as version 30. Node also uses v8 and should catch up when it is
-next updated. This reflects Javascript engine writers targeting
+quickly as version 30. This reflects Javascript engine writers targeting
 functional optimisation now that functional Javascript is becoming a
-more popular style.
+more popular style. Node and Chrome for iOS also use v8 and should catch up when they are
+next updated.
 
 Of these results I find only the performance under old versions of
 Internet Explorer poor enough to be concerning. An improvement over the
@@ -266,7 +270,7 @@ when examining nodes for pattern matches by checking every registered
 JSONPath expression against every node parsed from the JSON. For many
 expressions we should be able to say that there will be no matches
 inside a particular JSON subtree, either because we have already matched
-or because the the subtree's ancestors invariably imply failure. A more
+or because the subtree's ancestors invariably imply failure. A more
 sophisticated implementation might subdue provably unsatisfiable
 handlers until the SAX parser leaves an unmatchable subtree.
 

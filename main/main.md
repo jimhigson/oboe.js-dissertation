@@ -53,7 +53,7 @@ accommodation for REST resources.
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
 documents received over the web are often interpreted in a streaming
 fashion, to date REST resources are not commonly examined in this way.
-For most practical cases where we wish to be increase the speed of a
+For most practical cases where we wish to increase the speed of a
 system there is no reasonable distinction between acting *earlier* and
 being *quicker*. In the interest of creating efficient software we
 should use data at the first possible opportunity: examining content
@@ -63,8 +63,8 @@ benefits which may be realised if we fold HTTP streaming into the REST
 paradigm.
 
 Natural languages encourage our thinking to follow patterns that they
-easily support [@whorf56]. This idea has been applied to programming,
-for example Ruby is intentionally designed to discourage global
+comfortably support [@whorf56]. This idea has been applied to programming,
+for example the language Ruby is intentionally designed to discourage global
 variables by using a less attractive notation [@rubylang]. It may be
 useful when exploring new techniques to question which established
 constructs are as they are because of languages which unintentionally
@@ -217,9 +217,8 @@ messages without inspection. For the user checking her email, even if
 application will behave as if it received none and show her nothing.
 Later, when the network is available the inbox will be downloaded from
 scratch including the 90% which has already been successfully delivered.
-A more efficient system would allow the 90% from the aborted first
-request to be used straight away and when the signal later returns fetch
-only the lost 10%.
+The system would be more user friendly and efficient if it used the 90% from the first
+request when it arrives and fetched only the lost 10% when network connectivity returns.
 
 The delivered part of a partially successful message may be used if we
 turn away from this polarised view of wholly successful and unsuccessful
@@ -268,13 +267,14 @@ Deliverables
 
 To avoid feature creep the scope of the software deliverables is pared
 down to the smallest work which can be said to realise the goals of the
-project, the guiding principle being that it is preferable to produce a
-little well than more badly. Amongst commentators on start-up companies
+project. Amongst commentators on start-up companies
 this is known as a *zoom-in pivot* [@lean p172] and the work it produces
-should be the *Minimum Viable Product* or MVP [@lean p106-110]. It would
-not be feasible to deliver a full stack so we are obliged to focus on
+should be the *Minimum Viable Product* or MVP [@lean p106-110]. 
+Given reasonable time constraints it would
+not be feasible to deliver a full stack while concentrating on software quality 
+so we are obliged to focus on
 solutions which interoperate with existing deployments. To a third party
-wishing to adopt the technology it is also more inviting to add small
+wishing to adopt the technology it is more inviting to add small
 enhancements to the existing architecture than to action a shift which
 requires wholesale change.
 
@@ -2563,8 +2563,12 @@ to stdout without any parsing and is included as a baseline.
   Firefox 24.0.0                       547ms                    1.47
   IE 8.0.0 (Windows XP)              3,048ms                    0.26
 
-We can see that Firefox is slower than other modern browsers despite
-normally being quite fast. This is probably explicable by SpiderMonkey,
+  : time taken to match approximately 800 JSON nodes against a complex
+  JSONPath expression under several Javascript engines \label{browsers}
+
+From table \ref{browsers} we can see that Firefox executes the library 
+more slowly than other modern desktop browsers.
+This is probably explicable by SpiderMonkey,
 the Mozilla just-in-time Javascript compiler being poor at optimising
 functional Javascript [@functionalSpiderMonkey]. The JSON nodes are not
 of a common type so many of the library's internal callsites are not
@@ -2573,12 +2577,12 @@ When the test was later repeated with a simpler pattern Firefox showed
 by far the largest improvement, indicating that the functional JSONPath
 matching accounts for Firefox's lower than expected performance.
 
-Version 31 of Chrome was released during the project and due to an
+Version 31 of Chrome for OSX was released during the project and due to an
 updated version of the v8 Javascript engine performs more than twice as
-quickly as version 30. Node also uses v8 and should catch up when it is
-next updated. This reflects Javascript engine writers targeting
+quickly as version 30. This reflects Javascript engine writers targeting
 functional optimisation now that functional Javascript is becoming a
-more popular style.
+more popular style. Node and Chrome for iOS also use v8 and should catch up when they are
+next updated.
 
 Of these results I find only the performance under old versions of
 Internet Explorer poor enough to be concerning. An improvement over the
@@ -2657,7 +2661,7 @@ when examining nodes for pattern matches by checking every registered
 JSONPath expression against every node parsed from the JSON. For many
 expressions we should be able to say that there will be no matches
 inside a particular JSON subtree, either because we have already matched
-or because the the subtree's ancestors invariably imply failure. A more
+or because the subtree's ancestors invariably imply failure. A more
 sophisticated implementation might subdue provably unsatisfiable
 handlers until the SAX parser leaves an unmatchable subtree.
 
@@ -3279,34 +3283,73 @@ instanceApi.js {#header_instanceApi}
 function instanceApi(oboeBus){
 
    var oboeApi,
-       addDoneListener = partialComplete(
-           addNodeOrPathListenerApi, 
-           'node', '!');
-   
-   
-   function addPathOrNodeListener( publicApiName, pattern, callback ) {
-   
-      var matchEventName = publicApiName + ':' + pattern,          
+       fullyQualifiedNamePattern = /^(node|path):./,
           
-          safeCallback = protectedCallback(callback);
+       addListener = varArgs(function( eventId, parameters ){
+             
+            if( oboeApi[eventId] ) {
+       
+               // for events added as .on(event), if there is a 
+               // special .event equivalent, pass through to that 
+               apply(parameters, oboeApi[eventId]);                     
+            } else {
+       
+               // we have a standard Node.js EventEmitter 2-argument call.
+               // The first parameter is the listener.
+               var listener = parameters[0];
+       
+               if( fullyQualifiedNamePattern.test(eventId) ) {
+                
+                  // allow fully-qualified node/path listeners 
+                  // to be added                                             
+                  addPathOrNodeListener(eventId, listener);                  
+               } else  {
+       
+                  // the event has no special handling, pass through 
+                  // directly onto the event bus:          
+                  oboeBus(eventId).on( listener);
+               }
+            }
+                
+            return oboeApi; // chaining
+       }),
+ 
+       removeListener = function( eventId, p2, p3 ){
+             
+            if( eventId == 'node' || eventId == 'path' ) {
+      
+               // allow removal of node and path 
+               removePathOrNodeListener(eventId + ':' + p2, p3);          
+            } else {
+      
+               // we have a standard Node.js EventEmitter 2-argument call.
+               // The first parameter is the listener.
+               var listener = p2;
+
+               if( fullyQualifiedNamePattern.test(eventId) ) {
+               
+                  // allow fully-qualified node/path listeners 
+                  // to be added                                             
+                  removePathOrNodeListener(eventId, listener);                  
+               } else  {
+      
+                  // the event has no special handling, pass through 
+                  // directly onto the event bus:          
+                  oboeBus(eventId).un( listener);
+               }
+            }
+               
+            return oboeApi; // chaining      
+       };                               
+   
+   
+   function addPathOrNodeListener( fullyQualifiedName, callback ) {
+      
+      var safeCallback = protectedCallback(callback);
                               
-      oboeBus(matchEventName).on(  function(node, ascent) {
+      oboeBus(fullyQualifiedName).on( function(node, path, ancestors) {
       
-         /* 
-            We're now calling back to outside of oboe where the Lisp-style 
-            lists that we are using internally will not be recognised 
-            so convert to standard arrays. 
-      
-            Also, reverse the order because it is more common to list paths 
-            "root to leaf" than "leaf to root" 
-         */
-         var descent     = reverseList(ascent),
-         
-             // To make a path, strip off the last item which is the special
-             // ROOT_PATH token for the 'path' to the root node
-             path       = listAsArray(tail(map(keyOf,descent))),
-             ancestors  = listAsArray(map(nodeOf, descent)),
-             keep       = true;
+         var keep       = true;
              
          oboeApi.forget = function(){
             keep = false;
@@ -3317,16 +3360,13 @@ function instanceApi(oboeBus){
          delete oboeApi.forget;
          
          if(! keep ) {          
-            oboeBus(matchEventName).un( callback);
+            oboeBus(fullyQualifiedName).un( callback);
          }
-                  
-      
       }, callback)
-
    }   
    
-   function removePathOrNodeListener( publicApiName, pattern, callback ) {
-      oboeBus(publicApiName + ':' + pattern).un(callback)
+   function removePathOrNodeListener( fullyQualifiedName, callback ) {
+      oboeBus(fullyQualifiedName).un(callback)
    }
          
    function protectedCallback( callback ) {
@@ -3347,7 +3387,10 @@ function instanceApi(oboeBus){
    function addListenersMap(eventId, listenerMap) {
    
       for( var pattern in listenerMap ) {
-         addPathOrNodeListener(eventId, pattern, listenerMap[pattern]);
+         addPathOrNodeListener(
+            eventId + ':' + pattern, 
+            listenerMap[pattern]
+         );
       }
    }    
       
@@ -3358,8 +3401,7 @@ function instanceApi(oboeBus){
    
       if( isString(jsonPathOrListenerMap) ) {
          addPathOrNodeListener( 
-            eventId, 
-            jsonPathOrListenerMap,
+            eventId + ':' + jsonPathOrListenerMap,
             callback
          );
       } else {
@@ -3369,25 +3411,6 @@ function instanceApi(oboeBus){
       return oboeApi; // chaining
    }
       
-   /**
-    * implementation behind oboe().on()
-    */       
-   var addListener = varArgs(function( eventId, parameters ){
-
-      if( oboeApi[eventId] ) {
-      
-         // event has some special handling:
-         apply(parameters, oboeApi[eventId]);
-      } else {
-      
-         // the even has no special handling, add it directly to
-         // the event bus:         
-         var listener = parameters[0]; 
-         oboeBus(eventId).on( listener);
-      }
-      
-      return oboeApi;
-   });   
    
    // some interface methods are only filled in after we recieve
    // values and are noops before that:          
@@ -3396,31 +3419,42 @@ function instanceApi(oboeBus){
    });
    
    oboeBus(HTTP_START).on( function(_statusCode, headers) {
-      oboeApi.header = 
-         function(name) {
-            return name ? headers[name] 
-                        : headers
-                        ;
-         }
+   
+      oboeApi.header =  function(name) {
+                           return name ? headers[name] 
+                                       : headers
+                                       ;
+                        }
    });
-      
+         
    /**
     * Construct and return the public API of the Oboe instance to be 
     * returned to the calling application
     */       
    return oboeApi = {
-      on    :  addListener,   
-      done  :  addDoneListener,       
-      node  :  partialComplete(addNodeOrPathListenerApi, 'node'),
-      path  :  partialComplete(addNodeOrPathListenerApi, 'path'),      
-      start :  compose2( oboeBus(HTTP_START).on, protectedCallback ),
-      // fail doesn't use safeOn because that could lead to non-terminating loops
-      fail  :  oboeBus(FAIL_EVENT).on,
-      abort :  oboeBus(ABORTING).emit,
-      header:  noop,
-      root  :  noop
+      on             : addListener,
+      addListener    : addListener, 
+      removeListener : removeListener,
+      emit           : oboeBus.emit,                
+                
+      node           : partialComplete(addNodeOrPathListenerApi, 'node'),
+      path           : partialComplete(addNodeOrPathListenerApi, 'path'),
+      
+      done           : partialComplete(addNodeOrPathListenerApi, 'node', '!'),            
+      start          : compose2( oboeBus(HTTP_START).on, protectedCallback ),
+      
+      // fail doesn't use protectedCallback because 
+      // could lead to non-terminating loops
+      fail           : oboeBus(FAIL_EVENT).on,
+      
+      // public api calling abort fires the ABORTING event
+      abort          : oboeBus(ABORTING).emit,
+      
+      // initially return nothing for header and root
+      header         : noop,
+      root           : noop
    };   
-}   
+} 
    
 ~~~~
 
@@ -4242,9 +4276,29 @@ function patternAdapter(oboeBus, jsonPathCompiler) {
       node:oboeBus(NODE_FOUND)
    ,  path:oboeBus(PATH_FOUND)
    };
+     
+   function emitMatchingNode(emitMatch, node, ascent) {
+         
+      /* 
+         We're now calling to the outside world where Lisp-style 
+         lists will not be familiar. Convert to standard arrays. 
+   
+         Also, reverse the order because it is more common to 
+         list paths "root to leaf" than "leaf to root"  */
+      var descent     = reverseList(ascent);
+                
+      emitMatch(
+         node,
+         
+         // To make a path, strip off the last item which is the special
+         // ROOT_PATH token for the 'path' to the root node          
+         listAsArray(tail(map(keyOf,descent))),  // path
+         listAsArray(map(nodeOf, descent))       // ancestors    
+      );         
+   }
 
    function addUnderlyingListener( fullEventName, predicateEvent, compiledJsonPath ){
-
+   
       var emitMatch = oboeBus(fullEventName).emit;
    
       predicateEvent.on( function (ascent) {
@@ -4267,7 +4321,11 @@ function patternAdapter(oboeBus, jsonPathCompiler) {
           */
          if (maybeMatchingMapping !== false) {
 
-            emitMatch(nodeOf(maybeMatchingMapping), ascent);
+            emitMatchingNode(
+               emitMatch, 
+               nodeOf(maybeMatchingMapping), 
+               ascent
+            );
          }
       }, fullEventName);
    
@@ -4317,10 +4375,39 @@ pubSub.js {#header_pubSub}
 \label{src_pubSub}
 
 ~~~~ {.javascript}
-/** 
- * Over time this should be refactored towards a Node-like
- *    EventEmitter so that under Node an actual EE acn be used.
- *    http://nodejs.org/api/events.html
+/**
+ * pubSub is a curried interface for listening to and emitting
+ * events.
+ * 
+ * If we get a bus:
+ *    
+ *    var bus = pubSub();
+ * 
+ * We can listen to event 'foo' like:
+ * 
+ *    bus('foo').on(myCallback)
+ *    
+ * And emit event foo like:
+ * 
+ *    bus('foo').emit()
+ *    
+ * or, with a parameter:
+ * 
+ *    bus('foo').emit('bar')
+ *     
+ * All functions can be cached and don't need to be 
+ * bound. Ie:
+ * 
+ *    var fooEmitter = bus('foo').emit
+ *    fooEmitter('bar');  // emit an event
+ *    fooEmitter('baz');  // emit another
+ *    
+ * There's also an uncurried[1] shortcut for .emit and .on:
+ * 
+ *    bus.on('foo', callback)
+ *    bus.emit('foo', 'bar')
+ * 
+ * [1]: http://zvon.org/other/haskell/Outputprelude/uncurry_f.html
  */
 function pubSub(){
 
@@ -4329,17 +4416,28 @@ function pubSub(){
        removeListener = newSingle('removeListener'); 
       
    function newSingle(eventName) {
-      return singles[eventName] = singleEventPubSub(eventName, newListener, removeListener);   
+      return singles[eventName] = singleEventPubSub(
+         eventName, 
+         newListener, 
+         removeListener
+      );   
    }      
 
-   return function( eventName ){   
-      if( !singles[eventName] ) {
-         return newSingle( eventName );
-      }
+   /** pubSub instances are functions */
+   function pubSubInstance( eventName ){   
       
-      return singles[eventName];   
-   };
+      return singles[eventName] || newSingle( eventName );   
+   }
+
+   // add convenience EventEmitter-style uncurried form of 'emit' and 'on'
+   ['emit', 'on'].forEach(function(methodName){
    
+      pubSubInstance[methodName] = varArgs(function(eventName, parameters){
+         apply( parameters, pubSubInstance( eventName )[methodName]);
+      });   
+   })
+         
+   return pubSubInstance;
 }
 ~~~~
 
@@ -4410,18 +4508,23 @@ singleEventPubSub.js {#header_singleEventPubSub}
 
 ~~~~ {.javascript}
 /** 
- * A pub/sub which is responsible for a single event type
+ * A pub/sub which is responsible for a single event type. A 
+ * multi-event type event bus is created by pubSub by collecting
+ * several of these.
  * 
- * @param {String} eventType                   the name of the events managed by this singleEventPubSub
- * @param {singleEventPubSub} [newListener]    place to notify of new listeners
- * @param {singleEventPubSub} [removeListener] place to notify of when listeners are removed
+ * @param {String} eventType                   
+ *    the name of the events managed by this singleEventPubSub
+ * @param {singleEventPubSub} [newListener]    
+ *    place to notify of new listeners
+ * @param {singleEventPubSub} [removeListener] 
+ *    place to notify of when listeners are removed
  */
 function singleEventPubSub(eventType, newListener, removeListener){
 
    /** we are optimised for emitting events over firing them.
-    *  hence, as well as the tuple list which stores event ids and listeners,
-    *  there is also a listener list which can be iterated more quickly
-    *  when we are emitting
+    *  As well as the tuple list which stores event ids and
+    *  listeners there is a list with just the listeners which 
+    *  can be iterated more quickly when we are emitting
     */
    var listenerTupleList,
        listenerList;

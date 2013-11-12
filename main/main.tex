@@ -161,7 +161,7 @@ accommodation for REST resources.
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
 documents received over the web are often interpreted in a streaming
 fashion, to date REST resources are not commonly examined in this way.
-For most practical cases where we wish to increase the speed of a system
+When we wish to increase the speed of a system for most practical cases
 there is no reasonable distinction between acting \emph{earlier} and
 being \emph{quicker}. In the interest of creating efficient software we
 should use data at the first possible opportunity: examining content
@@ -1263,17 +1263,20 @@ tree-shaped markup, JSON best meets the project goals because it is
 widely supported, easy to parse, and defines a single n-way tree, making
 it more amenable to selectors which span multiple format versions.
 
+\subsection{Choice of selection
+language}\label{choice-of-selection-language}
+
 JSONPath is well suited for selecting nodes while the document is being
 read because it specifies only constraints on paths and `contains'
 relationships. Because of the top-down serialisation order, on
-encountering any node in a serialised JSON stream we will have already
-seen enough of the prior document to know its full path. JSONPath would
-not be so amenable if it expressed sibling relationships because there
-is no similar guarantee of having seen other nodes on the same level
-when any particular node is encountered. A new implementation of the
-language is required because the existing JSONPath library is
-implemented only as a means to search through already gathered objects
-and is too narrow in applicability to be useful in a streaming context.
+encountering any node in a JSON stream we will have already seen enough
+of the prior document to know its full path. JSONPath would not be so
+amenable if it expressed sibling relationships because there is no
+similar guarantee of having seen other nodes on the same level when any
+particular node is encountered. A new implementation of the language is
+required because the existing JSONPath library is implemented only as a
+means to search through already gathered objects and is too narrow in
+applicability to be useful in a streaming context.
 
 Given that we are selecting specifically inside a REST resource it is
 unlikely that we will be examining a full model. Rather, the selectors
@@ -1299,7 +1302,8 @@ programmatically from inside the callback. Patterns of programmatic
 filtering which arise from use in the wild can later be mined and added
 to the selection language.
 
-\subsection{Detecting types in JSON}\label{detecting-types-in-json}
+\subsection{Using JSONPath to detect higher-level types in
+JSON}\label{using-jsonpath-to-detect-higher-level-types-in-json}
 
 As seen in the `all books' example above, it is intuitive to support
 identifying sub-trees according to a categorisation by higher-level
@@ -3516,95 +3520,119 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-
+\CommentTok{/** }
+\CommentTok{ * The instance API is the thing that is returned when oboe() is called.}
+\CommentTok{ * it allows:}
+\CommentTok{ * }
+\CommentTok{ *    - listeners for various events to be added and removed}
+\CommentTok{ *    - the http response header/headers to be read}
+\CommentTok{ */}
 \KeywordTok{function} \FunctionTok{instanceApi}\NormalTok{(oboeBus)\{}
 
    \KeywordTok{var} \NormalTok{oboeApi,}
        \NormalTok{fullyQualifiedNamePattern = }\OtherTok{/}\FloatTok{^(}\OtherTok{node}\FloatTok{|}\OtherTok{path}\FloatTok{)}\OtherTok{:./}\NormalTok{,}
-          
+       \NormalTok{rootNodeFinishedEvent = }\FunctionTok{oboeBus}\NormalTok{(}\StringTok{'node:!'}\NormalTok{),}
+
+       \CommentTok{/**}
+\CommentTok{        * Add any kind of listener that the instance api exposes }
+\CommentTok{        */}          
        \NormalTok{addListener = }\FunctionTok{varArgs}\NormalTok{(}\KeywordTok{function}\NormalTok{( eventId, parameters )\{}
              
             \KeywordTok{if}\NormalTok{( oboeApi[eventId] ) \{}
        
-               \CommentTok{// for events added as .on(event), if there is a }
-               \CommentTok{// special .event equivalent, pass through to that }
+               \CommentTok{// for events added as .on(event, callback), if there is a }
+               \CommentTok{// .event() equivalent with special behaviour , pass through}
+               \CommentTok{// to that: }
                \FunctionTok{apply}\NormalTok{(parameters, oboeApi[eventId]);                     }
             \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
        
                \CommentTok{// we have a standard Node.js EventEmitter 2-argument call.}
                \CommentTok{// The first parameter is the listener.}
-               \KeywordTok{var} \NormalTok{listener = parameters[}\DecValTok{0}\NormalTok{];}
+               \KeywordTok{var} \NormalTok{event = }\FunctionTok{oboeBus}\NormalTok{(eventId),}
+                   \NormalTok{listener = parameters[}\DecValTok{0}\NormalTok{];}
        
                \KeywordTok{if}\NormalTok{( }\OtherTok{fullyQualifiedNamePattern}\NormalTok{.}\FunctionTok{test}\NormalTok{(eventId) ) \{}
                 
                   \CommentTok{// allow fully-qualified node/path listeners }
                   \CommentTok{// to be added                                             }
-                  \FunctionTok{addPathOrNodeListener}\NormalTok{(eventId, listener);                  }
+                  \FunctionTok{addForgettableCallback}\NormalTok{(event, listener);                  }
                \NormalTok{\} }\KeywordTok{else}  \NormalTok{\{}
        
                   \CommentTok{// the event has no special handling, pass through }
                   \CommentTok{// directly onto the event bus:          }
-                  \FunctionTok{oboeBus}\NormalTok{(eventId).}\FunctionTok{on}\NormalTok{( listener);}
+                  \OtherTok{event}\NormalTok{.}\FunctionTok{on}\NormalTok{( listener);}
                \NormalTok{\}}
             \NormalTok{\}}
                 
             \KeywordTok{return} \NormalTok{oboeApi; }\CommentTok{// chaining}
        \NormalTok{\}),}
  
+       \CommentTok{/**}
+\CommentTok{        * Remove any kind of listener that the instance api exposes }
+\CommentTok{        */} 
        \NormalTok{removeListener = }\KeywordTok{function}\NormalTok{( eventId, p2, p3 )\{}
              
-            \KeywordTok{if}\NormalTok{( eventId == }\StringTok{'node'} \NormalTok{|| eventId == }\StringTok{'path'} \NormalTok{) \{}
+            \KeywordTok{if}\NormalTok{( eventId == }\StringTok{'done'} \NormalTok{) \{}
+            
+               \OtherTok{rootNodeFinishedEvent}\NormalTok{.}\FunctionTok{un}\NormalTok{(p2);}
+               
+            \NormalTok{\} }\KeywordTok{else} \KeywordTok{if}\NormalTok{( eventId == }\StringTok{'node'} \NormalTok{|| eventId == }\StringTok{'path'} \NormalTok{) \{}
       
                \CommentTok{// allow removal of node and path }
-               \FunctionTok{removePathOrNodeListener}\NormalTok{(eventId + }\StringTok{':'} \NormalTok{+ p2, p3);          }
+               \OtherTok{oboeBus}\NormalTok{.}\FunctionTok{un}\NormalTok{(eventId + }\StringTok{':'} \NormalTok{+ p2, p3);          }
             \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
       
                \CommentTok{// we have a standard Node.js EventEmitter 2-argument call.}
-               \CommentTok{// The first parameter is the listener.}
+               \CommentTok{// The second parameter is the listener. This may be a call}
+               \CommentTok{// to remove a fully-qualified node/path listener but requires}
+               \CommentTok{// no special handling}
                \KeywordTok{var} \NormalTok{listener = p2;}
 
-               \KeywordTok{if}\NormalTok{( }\OtherTok{fullyQualifiedNamePattern}\NormalTok{.}\FunctionTok{test}\NormalTok{(eventId) ) \{}
-               
-                  \CommentTok{// allow fully-qualified node/path listeners }
-                  \CommentTok{// to be added                                             }
-                  \FunctionTok{removePathOrNodeListener}\NormalTok{(eventId, listener);                  }
-               \NormalTok{\} }\KeywordTok{else}  \NormalTok{\{}
-      
-                  \CommentTok{// the event has no special handling, pass through }
-                  \CommentTok{// directly onto the event bus:          }
-                  \FunctionTok{oboeBus}\NormalTok{(eventId).}\FunctionTok{un}\NormalTok{( listener);}
-               \NormalTok{\}}
+               \FunctionTok{oboeBus}\NormalTok{(eventId).}\FunctionTok{un}\NormalTok{(listener);                  }
             \NormalTok{\}}
                
             \KeywordTok{return} \NormalTok{oboeApi; }\CommentTok{// chaining      }
        \NormalTok{\};                               }
-   
-   
-   \KeywordTok{function} \FunctionTok{addPathOrNodeListener}\NormalTok{( fullyQualifiedName, callback ) \{}
-      
+                        
+   \CommentTok{/** }
+\CommentTok{    * Add a callback, wrapped in a try/catch so as to not break the}
+\CommentTok{    * execution of Oboe if an exception is thrown (fail events are }
+\CommentTok{    * fired instead)}
+\CommentTok{    * }
+\CommentTok{    * The callback is used as the listener id so that it can later be}
+\CommentTok{    * removed using .un(callback)}
+\CommentTok{    */}
+   \KeywordTok{function} \FunctionTok{addProtectedCallback}\NormalTok{(eventName, callback) \{}
+      \FunctionTok{oboeBus}\NormalTok{(eventName).}\FunctionTok{on}\NormalTok{(}\FunctionTok{protectedCallback}\NormalTok{(callback), callback);}
+      \KeywordTok{return} \NormalTok{oboeApi; }\CommentTok{// chaining            }
+   \NormalTok{\}}
+
+   \CommentTok{/**}
+\CommentTok{    * Add a callback where, if .forget() is called during the callback's}
+\CommentTok{    * execution, the callback will be de-registered}
+\CommentTok{    */}
+   \KeywordTok{function} \FunctionTok{addForgettableCallback}\NormalTok{(event, callback) \{}
       \KeywordTok{var} \NormalTok{safeCallback = }\FunctionTok{protectedCallback}\NormalTok{(callback);}
-                              
-      \FunctionTok{oboeBus}\NormalTok{(fullyQualifiedName).}\FunctionTok{on}\NormalTok{( }\KeywordTok{function}\NormalTok{(node, path, ancestors) \{}
+   
+      \OtherTok{event}\NormalTok{.}\FunctionTok{on}\NormalTok{( }\KeywordTok{function}\NormalTok{() \{}
       
-         \KeywordTok{var} \NormalTok{keep       = }\KeywordTok{true}\NormalTok{;}
+         \KeywordTok{var} \NormalTok{discard = }\KeywordTok{false}\NormalTok{;}
              
          \OtherTok{oboeApi}\NormalTok{.}\FunctionTok{forget} \NormalTok{= }\KeywordTok{function}\NormalTok{()\{}
-            \NormalTok{keep = }\KeywordTok{false}\NormalTok{;}
+            \NormalTok{discard = }\KeywordTok{true}\NormalTok{;}
          \NormalTok{\};           }
          
-         \FunctionTok{safeCallback}\NormalTok{( node, path, ancestors );         }
+         \FunctionTok{apply}\NormalTok{( arguments, safeCallback );         }
                
          \KeywordTok{delete} \OtherTok{oboeApi}\NormalTok{.}\FunctionTok{forget}\NormalTok{;}
          
-         \KeywordTok{if}\NormalTok{(! keep ) \{          }
-            \FunctionTok{oboeBus}\NormalTok{(fullyQualifiedName).}\FunctionTok{un}\NormalTok{( callback);}
+         \KeywordTok{if}\NormalTok{( discard ) \{          }
+            \OtherTok{event}\NormalTok{.}\FunctionTok{un}\NormalTok{(callback);}
          \NormalTok{\}}
       \NormalTok{\}, callback)}
-   \NormalTok{\}   }
-   
-   \KeywordTok{function} \FunctionTok{removePathOrNodeListener}\NormalTok{( fullyQualifiedName, callback ) \{}
-      \FunctionTok{oboeBus}\NormalTok{(fullyQualifiedName).}\FunctionTok{un}\NormalTok{(callback)}
-   \NormalTok{\}}
+      
+      \KeywordTok{return} \NormalTok{oboeApi; }\CommentTok{// chaining         }
+   \NormalTok{\}  }
          
    \KeywordTok{function} \FunctionTok{protectedCallback}\NormalTok{( callback ) \{}
       \KeywordTok{return} \KeywordTok{function}\NormalTok{() \{}
@@ -3617,6 +3645,16 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
          \NormalTok{\}      }
       \NormalTok{\}   }
    \NormalTok{\}}
+
+   \CommentTok{/**}
+\CommentTok{    * Return the fully qualified event for when a pattern matches}
+\CommentTok{    * either a node or a path}
+\CommentTok{    * }
+\CommentTok{    * }\KeywordTok{@param}\CommentTok{ }\KeywordTok{type}\CommentTok{ \{String\} either 'node' or 'path'}
+\CommentTok{    */}      
+   \KeywordTok{function} \FunctionTok{fullyQualifiedPatternMatchEvent}\NormalTok{(type, pattern) \{}
+      \KeywordTok{return} \FunctionTok{oboeBus}\NormalTok{(type + }\StringTok{':'} \NormalTok{+ pattern);}
+   \NormalTok{\}      }
       
    \CommentTok{/**}
 \CommentTok{    * Add several listeners at a time, from a map}
@@ -3624,8 +3662,8 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
    \KeywordTok{function} \FunctionTok{addListenersMap}\NormalTok{(eventId, listenerMap) \{}
    
       \KeywordTok{for}\NormalTok{( }\KeywordTok{var} \NormalTok{pattern }\KeywordTok{in} \NormalTok{listenerMap ) \{}
-         \FunctionTok{addPathOrNodeListener}\NormalTok{(}
-            \NormalTok{eventId + }\StringTok{':'} \NormalTok{+ pattern, }
+         \FunctionTok{addForgettableCallback}\NormalTok{(}
+            \FunctionTok{fullyQualifiedPatternMatchEvent}\NormalTok{(eventId, pattern), }
             \NormalTok{listenerMap[pattern]}
          \NormalTok{);}
       \NormalTok{\}}
@@ -3637,8 +3675,8 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
    \KeywordTok{function} \FunctionTok{addNodeOrPathListenerApi}\NormalTok{( eventId, jsonPathOrListenerMap, callback )\{}
    
       \KeywordTok{if}\NormalTok{( }\FunctionTok{isString}\NormalTok{(jsonPathOrListenerMap) ) \{}
-         \FunctionTok{addPathOrNodeListener}\NormalTok{( }
-            \NormalTok{eventId + }\StringTok{':'} \NormalTok{+ jsonPathOrListenerMap,}
+         \FunctionTok{addForgettableCallback}\NormalTok{(}
+            \FunctionTok{fullyQualifiedPatternMatchEvent}\NormalTok{(eventId, jsonPathOrListenerMap),}
             \NormalTok{callback}
          \NormalTok{);}
       \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
@@ -3654,7 +3692,11 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
    \FunctionTok{oboeBus}\NormalTok{(ROOT_FOUND).}\FunctionTok{on}\NormalTok{( }\KeywordTok{function}\NormalTok{(root) \{}
       \OtherTok{oboeApi}\NormalTok{.}\FunctionTok{root} \NormalTok{= }\FunctionTok{functor}\NormalTok{(root);   }
    \NormalTok{\});}
-   
+
+   \CommentTok{/**}
+\CommentTok{    * When content starts make the headers readable through the}
+\CommentTok{    * instance API}
+\CommentTok{    */}
    \FunctionTok{oboeBus}\NormalTok{(HTTP_START).}\FunctionTok{on}\NormalTok{( }\KeywordTok{function}\NormalTok{(_statusCode, headers) \{}
    
       \OtherTok{oboeApi}\NormalTok{.}\FunctionTok{header} \NormalTok{=  }\KeywordTok{function}\NormalTok{(name) \{}
@@ -3663,7 +3705,7 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
                                        \NormalTok{;}
                         \NormalTok{\}}
    \NormalTok{\});}
-         
+                                                               
    \CommentTok{/**}
 \CommentTok{    * Construct and return the public API of the Oboe instance to be }
 \CommentTok{    * returned to the calling application}
@@ -3677,8 +3719,8 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
       \DataTypeTok{node           }\NormalTok{: }\FunctionTok{partialComplete}\NormalTok{(addNodeOrPathListenerApi, }\StringTok{'node'}\NormalTok{),}
       \DataTypeTok{path           }\NormalTok{: }\FunctionTok{partialComplete}\NormalTok{(addNodeOrPathListenerApi, }\StringTok{'path'}\NormalTok{),}
       
-      \DataTypeTok{done           }\NormalTok{: }\FunctionTok{partialComplete}\NormalTok{(addNodeOrPathListenerApi, }\StringTok{'node'}\NormalTok{, }\StringTok{'!'}\NormalTok{),            }
-      \DataTypeTok{start          }\NormalTok{: }\FunctionTok{compose2}\NormalTok{( }\FunctionTok{oboeBus}\NormalTok{(HTTP_START).}\FunctionTok{on}\NormalTok{, protectedCallback ),}
+      \DataTypeTok{done           }\NormalTok{: }\FunctionTok{partialComplete}\NormalTok{(addForgettableCallback, rootNodeFinishedEvent),            }
+      \DataTypeTok{start          }\NormalTok{: }\FunctionTok{partialComplete}\NormalTok{(addProtectedCallback, HTTP_START ),}
       
       \CommentTok{// fail doesn't use protectedCallback because }
       \CommentTok{// could lead to non-terminating loops}
@@ -3691,8 +3733,8 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
       \DataTypeTok{header         }\NormalTok{: noop,}
       \DataTypeTok{root           }\NormalTok{: noop}
    \NormalTok{\};   }
-\NormalTok{\} }
-   
+\NormalTok{\}}
+    
 \end{Highlighting}
 \end{Shaded}
 
@@ -4652,7 +4694,7 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
    \NormalTok{\}}
 
    \CommentTok{// add convenience EventEmitter-style uncurried form of 'emit' and 'on'}
-   \NormalTok{[}\StringTok{'emit'}\NormalTok{, }\StringTok{'on'}\NormalTok{].}\FunctionTok{forEach}\NormalTok{(}\KeywordTok{function}\NormalTok{(methodName)\{}
+   \NormalTok{[}\StringTok{'emit'}\NormalTok{, }\StringTok{'on'}\NormalTok{, }\StringTok{'un'}\NormalTok{].}\FunctionTok{forEach}\NormalTok{(}\KeywordTok{function}\NormalTok{(methodName)\{}
    
       \NormalTok{pubSubInstance[methodName] = }\FunctionTok{varArgs}\NormalTok{(}\KeywordTok{function}\NormalTok{(eventName, parameters)\{}
          \FunctionTok{apply}\NormalTok{( parameters, }\FunctionTok{pubSubInstance}\NormalTok{( eventName )[methodName]);}

@@ -39,10 +39,13 @@ tree-shaped markup, JSON best meets the project goals because it is
 widely supported, easy to parse, and defines a single n-way tree, making
 it more amenable to selectors which span multiple format versions.
 
+Choice of selection language
+----------------------------
+
 JSONPath is well suited for selecting nodes while the document is being
 read because it specifies only constraints on paths and 'contains'
 relationships. Because of the top-down serialisation order, on
-encountering any node in a serialised JSON stream we will have already
+encountering any node in a JSON stream we will have already
 seen enough of the prior document to know its full path. JSONPath would
 not be so amenable if it expressed sibling relationships because there
 is no similar guarantee of having seen other nodes on the same level
@@ -75,8 +78,8 @@ programmatically from inside the callback. Patterns of programmatic
 filtering which arise from use in the wild can later be mined and added
 to the selection language.
 
-Detecting types in JSON
------------------------
+Using JSONPath to detect higher-level types in JSON
+---------------------------------------------------
 
 As seen in the 'all books' example above, it is intuitive to support
 identifying sub-trees according to a categorisation by higher-level

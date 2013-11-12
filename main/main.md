@@ -53,8 +53,8 @@ accommodation for REST resources.
 Despite REST adopting the mechanisms and semantics of HTTP, whereas
 documents received over the web are often interpreted in a streaming
 fashion, to date REST resources are not commonly examined in this way.
-For most practical cases where we wish to increase the speed of a
-system there is no reasonable distinction between acting *earlier* and
+When we wish to increase the speed of a
+system for most practical cases there is no reasonable distinction between acting *earlier* and
 being *quicker*. In the interest of creating efficient software we
 should use data at the first possible opportunity: examining content
 *while it streams* rather than holding it unexamined until it is wholly
@@ -1115,10 +1115,13 @@ tree-shaped markup, JSON best meets the project goals because it is
 widely supported, easy to parse, and defines a single n-way tree, making
 it more amenable to selectors which span multiple format versions.
 
+Choice of selection language
+----------------------------
+
 JSONPath is well suited for selecting nodes while the document is being
 read because it specifies only constraints on paths and 'contains'
 relationships. Because of the top-down serialisation order, on
-encountering any node in a serialised JSON stream we will have already
+encountering any node in a JSON stream we will have already
 seen enough of the prior document to know its full path. JSONPath would
 not be so amenable if it expressed sibling relationships because there
 is no similar guarantee of having seen other nodes on the same level
@@ -1151,8 +1154,8 @@ programmatically from inside the callback. Patterns of programmatic
 filtering which arise from use in the wild can later be mined and added
 to the selection language.
 
-Detecting types in JSON
------------------------
+Using JSONPath to detect higher-level types in JSON
+---------------------------------------------------
 
 As seen in the 'all books' example above, it is intuitive to support
 identifying sub-trees according to a categorisation by higher-level
@@ -3279,95 +3282,119 @@ instanceApi.js {#header_instanceApi}
 \label{src_instanceApi}
 
 ~~~~ {.javascript}
-
+/** 
+ * The instance API is the thing that is returned when oboe() is called.
+ * it allows:
+ * 
+ *    - listeners for various events to be added and removed
+ *    - the http response header/headers to be read
+ */
 function instanceApi(oboeBus){
 
    var oboeApi,
        fullyQualifiedNamePattern = /^(node|path):./,
-          
+       rootNodeFinishedEvent = oboeBus('node:!'),
+
+       /**
+        * Add any kind of listener that the instance api exposes 
+        */          
        addListener = varArgs(function( eventId, parameters ){
              
             if( oboeApi[eventId] ) {
        
-               // for events added as .on(event), if there is a 
-               // special .event equivalent, pass through to that 
+               // for events added as .on(event, callback), if there is a 
+               // .event() equivalent with special behaviour , pass through
+               // to that: 
                apply(parameters, oboeApi[eventId]);                     
             } else {
        
                // we have a standard Node.js EventEmitter 2-argument call.
                // The first parameter is the listener.
-               var listener = parameters[0];
+               var event = oboeBus(eventId),
+                   listener = parameters[0];
        
                if( fullyQualifiedNamePattern.test(eventId) ) {
                 
                   // allow fully-qualified node/path listeners 
                   // to be added                                             
-                  addPathOrNodeListener(eventId, listener);                  
+                  addForgettableCallback(event, listener);                  
                } else  {
        
                   // the event has no special handling, pass through 
                   // directly onto the event bus:          
-                  oboeBus(eventId).on( listener);
+                  event.on( listener);
                }
             }
                 
             return oboeApi; // chaining
        }),
  
+       /**
+        * Remove any kind of listener that the instance api exposes 
+        */ 
        removeListener = function( eventId, p2, p3 ){
              
-            if( eventId == 'node' || eventId == 'path' ) {
+            if( eventId == 'done' ) {
+            
+               rootNodeFinishedEvent.un(p2);
+               
+            } else if( eventId == 'node' || eventId == 'path' ) {
       
                // allow removal of node and path 
-               removePathOrNodeListener(eventId + ':' + p2, p3);          
+               oboeBus.un(eventId + ':' + p2, p3);          
             } else {
       
                // we have a standard Node.js EventEmitter 2-argument call.
-               // The first parameter is the listener.
+               // The second parameter is the listener. This may be a call
+               // to remove a fully-qualified node/path listener but requires
+               // no special handling
                var listener = p2;
 
-               if( fullyQualifiedNamePattern.test(eventId) ) {
-               
-                  // allow fully-qualified node/path listeners 
-                  // to be added                                             
-                  removePathOrNodeListener(eventId, listener);                  
-               } else  {
-      
-                  // the event has no special handling, pass through 
-                  // directly onto the event bus:          
-                  oboeBus(eventId).un( listener);
-               }
+               oboeBus(eventId).un(listener);                  
             }
                
             return oboeApi; // chaining      
        };                               
-   
-   
-   function addPathOrNodeListener( fullyQualifiedName, callback ) {
-      
+                        
+   /** 
+    * Add a callback, wrapped in a try/catch so as to not break the
+    * execution of Oboe if an exception is thrown (fail events are 
+    * fired instead)
+    * 
+    * The callback is used as the listener id so that it can later be
+    * removed using .un(callback)
+    */
+   function addProtectedCallback(eventName, callback) {
+      oboeBus(eventName).on(protectedCallback(callback), callback);
+      return oboeApi; // chaining            
+   }
+
+   /**
+    * Add a callback where, if .forget() is called during the callback's
+    * execution, the callback will be de-registered
+    */
+   function addForgettableCallback(event, callback) {
       var safeCallback = protectedCallback(callback);
-                              
-      oboeBus(fullyQualifiedName).on( function(node, path, ancestors) {
+   
+      event.on( function() {
       
-         var keep       = true;
+         var discard = false;
              
          oboeApi.forget = function(){
-            keep = false;
+            discard = true;
          };           
          
-         safeCallback( node, path, ancestors );         
+         apply( arguments, safeCallback );         
                
          delete oboeApi.forget;
          
-         if(! keep ) {          
-            oboeBus(fullyQualifiedName).un( callback);
+         if( discard ) {          
+            event.un(callback);
          }
       }, callback)
-   }   
-   
-   function removePathOrNodeListener( fullyQualifiedName, callback ) {
-      oboeBus(fullyQualifiedName).un(callback)
-   }
+      
+      return oboeApi; // chaining         
+   }  
          
    function protectedCallback( callback ) {
       return function() {
@@ -3380,6 +3407,16 @@ function instanceApi(oboeBus){
          }      
       }   
    }
+
+   /**
+    * Return the fully qualified event for when a pattern matches
+    * either a node or a path
+    * 
+    * @param type {String} either 'node' or 'path'
+    */      
+   function fullyQualifiedPatternMatchEvent(type, pattern) {
+      return oboeBus(type + ':' + pattern);
+   }      
       
    /**
     * Add several listeners at a time, from a map
@@ -3387,8 +3424,8 @@ function instanceApi(oboeBus){
    function addListenersMap(eventId, listenerMap) {
    
       for( var pattern in listenerMap ) {
-         addPathOrNodeListener(
-            eventId + ':' + pattern, 
+         addForgettableCallback(
+            fullyQualifiedPatternMatchEvent(eventId, pattern), 
             listenerMap[pattern]
          );
       }
@@ -3400,8 +3437,8 @@ function instanceApi(oboeBus){
    function addNodeOrPathListenerApi( eventId, jsonPathOrListenerMap, callback ){
    
       if( isString(jsonPathOrListenerMap) ) {
-         addPathOrNodeListener( 
-            eventId + ':' + jsonPathOrListenerMap,
+         addForgettableCallback(
+            fullyQualifiedPatternMatchEvent(eventId, jsonPathOrListenerMap),
             callback
          );
       } else {
@@ -3417,7 +3454,11 @@ function instanceApi(oboeBus){
    oboeBus(ROOT_FOUND).on( function(root) {
       oboeApi.root = functor(root);   
    });
-   
+
+   /**
+    * When content starts make the headers readable through the
+    * instance API
+    */
    oboeBus(HTTP_START).on( function(_statusCode, headers) {
    
       oboeApi.header =  function(name) {
@@ -3426,7 +3467,7 @@ function instanceApi(oboeBus){
                                        ;
                         }
    });
-         
+                                                               
    /**
     * Construct and return the public API of the Oboe instance to be 
     * returned to the calling application
@@ -3440,8 +3481,8 @@ function instanceApi(oboeBus){
       node           : partialComplete(addNodeOrPathListenerApi, 'node'),
       path           : partialComplete(addNodeOrPathListenerApi, 'path'),
       
-      done           : partialComplete(addNodeOrPathListenerApi, 'node', '!'),            
-      start          : compose2( oboeBus(HTTP_START).on, protectedCallback ),
+      done           : partialComplete(addForgettableCallback, rootNodeFinishedEvent),            
+      start          : partialComplete(addProtectedCallback, HTTP_START ),
       
       // fail doesn't use protectedCallback because 
       // could lead to non-terminating loops
@@ -3454,8 +3495,8 @@ function instanceApi(oboeBus){
       header         : noop,
       root           : noop
    };   
-} 
-   
+}
+    
 ~~~~
 
 
@@ -4430,7 +4471,7 @@ function pubSub(){
    }
 
    // add convenience EventEmitter-style uncurried form of 'emit' and 'on'
-   ['emit', 'on'].forEach(function(methodName){
+   ['emit', 'on', 'un'].forEach(function(methodName){
    
       pubSubInstance[methodName] = varArgs(function(eventName, parameters){
          apply( parameters, pubSubInstance( eventName )[methodName]);

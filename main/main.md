@@ -1722,6 +1722,11 @@ UNIX philosophy for small, easily combined programs [@unixbasics].
 > Write programs to handle text streams, because that is a universal
 > interface.
 
+*extra challenges*, Code which would be normally thought of as
+compact is not necessarily so after gzipping, for example repetition
+of logic compresses very well, often better than if a generalised form
+is extracted. Contrast with DRY.
+
 
 Implementation
 ==============
@@ -1829,8 +1834,8 @@ also been done by overwriting the XHR constructor to return a mock.
 However this is to be avoided as it opens up the possibility of changes
 to the environment leaking between test cases.
 
-Running the tests
------------------
+Task automation
+---------------
 
 The Grunt task runner [@grunt] is used to automate routine tasks such as
 executing the tests and building, configured so that the unit and
@@ -1838,25 +1843,35 @@ component tests run automatically whenever a change is made to a source
 file or specification. As well as executing correctly, the project is
 required not to surpass a certain size so this also checked on every
 save. Because Oboe is a small, tightly focused project the majority of
-the programming time is spent refactoring already working code. Running
-tests on save provides quick feedback so that mistakes are found before
-the programmer is thinking about the next context. Agile practitioners
-emphasise the importance of tests that execute quickly [@cleancode
-p.314:T9] -- Oboe's 220 unit and component tests run in less than a
-second so discovering programming mistakes is nearly instant. If the
-"content of any medium is always another medium” [@media p.8], we might
-say that the content of programming is the process that is realised by
-its execution. A person working in a physical medium sees the thing they
-are making but the programmer does usually not see their program's
-execution simultaneously as they create. Conway notes that an artisan
-works by transform-in-place "start with the working material in place
-and you step by step transform it into its final form," but software is
-created through proxies. He attempts to close this gap by merging
-programming with the results of programming [@humanize pp.8-9]. If we
-bring together the medium and the message by viewing the result of code
-while we write it, we can build in a series of small, iterative, correct
-steps and programming can be more explorative and expressive. Running
-the tests subtly, automatically, hundreds of times per day is not merely
+the programming time is spent refactoring already working code; running
+tests on save provides quick when refactoring so that equivalence is
+demonstrated before starting to thinking about the next context. Agile
+practitioners emphasise the importance of tests that execute quickly
+[@cleancode p.314:T9] -- Oboe's 220 unit and component tests run in less
+than a second so discovering programming mistakes is nearly instant.
+
+If the "content of any medium is always another medium” [@media p.8], we
+might say that the content of programming is the process that is
+realised by its execution. A sculptor or painter works while seeing the
+thing that they are making. No decision was made to work in this way,
+the immediacy is a natural attribute of the medium. For digital artists,
+freed from restrictions of physical mediums, we may design abstract
+tools in any way that we can imagine. However far the effect of a
+digital paintbrush on the canvas might have diverged from physical
+manipulation, most of the common toolbox assumes a workflow of
+interactive editing and real-time feedback, simulating the physicality
+of traditional mediums. This is not so in programming: a person writing
+a computer program does not usually see its execution until seconds or
+even minutes after their edit -- a lag which would be intolerable
+elsewhere. Conway notes that an artisan works by transform-in-place
+"start with the working material in place and you step by step transform
+it into its final form," but software is created through proxies; he
+posits that we may close this gap by merging programming with the
+results of programming [@humanize pp.8-9]. If we bring together the
+medium and the message by viewing the result of code while we write it,
+we can build in a series of small, iterative, correct steps and
+programming can be more explorative and expressive. Running the tests
+subtly, automatically, hundreds of times per day is not merely
 time-saving, this build process noticeably improved the quality of the
 project's programming.
 
@@ -1866,6 +1881,14 @@ context-switched to the next micro-task. Oboe's source is version
 controlled using Git and hosted on Github. The integration tests are
 used as the final check before a branch in Git is merged into the
 master.
+
+For every commit which is pushed to Github the Travis [@travis] continuous
+integration environment automatically builds and tests the distributable
+form. This service is provided gratis to open source projects. When a third-party
+contributes a bug fix the changes are automatically annotated with their
+test status so that no pull request which breaks the build may be
+accepted. This automation encourages collaboration by making it very
+cheap to accept third party patches.
 
 Packaging to a single distributable file
 ----------------------------------------
@@ -2802,14 +2825,11 @@ var // the events which are never exported are kept as
     NODE_FOUND    = _S++,
     // fired whenever a path is found in the JSON:      
     PATH_FOUND    = _S++,   
-    
-    NODE_MATCHED  = 'node',
-    PATH_MATCHED  = 'path',
-         
+             
     FAIL_EVENT    = 'fail',    
     ROOT_FOUND    = _S++,    
     HTTP_START    = 'start',
-    STREAM_DATA   = _S++,
+    STREAM_DATA   = 'content',
     STREAM_END    = _S++,
     ABORTING      = _S++;
     
@@ -4496,27 +4516,33 @@ publicApi.js {#header_publicApi}
 // export public API
 function oboe(arg1, arg2) {
 
-   if (arg1.url) {
-
-      // method signature is:
-      //    oboe({method:m, url:u, body:b, headers:{...}})
-
-      return wire(
-         (arg1.method || 'GET'),
-         url(arg1.url, arg1.cached),
-         arg1.body,
-         arg1.headers
-      );
+   if( arg1 ) {
+      if (arg1.url) {
+   
+         // method signature is:
+         //    oboe({method:m, url:u, body:b, headers:{...}})
+   
+         return wire(
+            (arg1.method || 'GET'),
+            url(arg1.url, arg1.cached),
+            arg1.body,
+            arg1.headers
+         );
+      } else {
+   
+         //  simple version for GETs. Signature is:
+         //    oboe( url )            
+         //                                
+         return wire(
+            'GET',
+            arg1, // url
+            arg2  // body. Deprecated, use {url:u, body:b} instead
+         );
+      }
    } else {
-
-      //  simple version for GETs. Signature is:
-      //    oboe( url )            
-      //                                
-      return wire(
-         'GET',
-         arg1, // url
-         arg2  // body. Deprecated, use {url:u, body:b} instead
-      );
+      // wire up a no-AJAX Oboe. Will have to have content 
+      // fed in externally and fed in using .emit.
+      return wire();
    }
    
    function url(baseUrl, cached) {
@@ -4998,10 +5024,17 @@ wire.js {#header_wire}
 function wire (httpMethodName, contentSource, body, headers){
 
    var oboeBus = pubSub();
-               
-   streamingHttp( oboeBus,
-                  httpTransport(), 
-                  httpMethodName, contentSource, body, headers );                              
+             
+   // Wire the input stream in if we are given a content source.
+   // This will usually be the case. If not, the instance created
+   // will have to be passed content from an external source.
+                   
+   if( contentSource ) {                
+   
+      streamingHttp( oboeBus,
+                     httpTransport(), 
+                     httpMethodName, contentSource, body, headers );
+   }                              
      
    instanceController( 
                oboeBus, 

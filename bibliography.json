@@ -702,7 +702,17 @@
       ],
       "issued": { "date-parts":[ [1994] ] },
       "type":"book"                  
-   }
+   },
+   
+   {
+      "id":"travis",
+      "title":"Travis Continuous Integration",
+      "author":[         
+         { "family": "Travis CI GmbH"}
+      ],
+      "url":"http://travis-ci.org",
+      "issued": { "date-parts":[ [2013] ] }                  
+   }   
    
 ]
 

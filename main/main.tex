@@ -1904,6 +1904,11 @@ programs to work together.\\Write programs to handle text streams,
 because that is a universal interface.
 \end{quote}
 
+\emph{extra challenges}, Code which would be normally thought of as
+compact is not necessarily so after gzipping, for example repetition of
+logic compresses very well, often better than if a generalised form is
+extracted. Contrast with DRY.
+
 \section{Implementation}\label{implementation}
 
 \subsection{Componentisation of the
@@ -2018,7 +2023,7 @@ also been done by overwriting the XHR constructor to return a mock.
 However this is to be avoided as it opens up the possibility of changes
 to the environment leaking between test cases.
 
-\subsection{Running the tests}\label{running-the-tests}
+\subsection{Task automation}\label{task-automation}
 
 The Grunt task runner (Alman 2012) is used to automate routine tasks
 such as executing the tests and building, configured so that the unit
@@ -2027,26 +2032,37 @@ source file or specification. As well as executing correctly, the
 project is required not to surpass a certain size so this also checked
 on every save. Because Oboe is a small, tightly focused project the
 majority of the programming time is spent refactoring already working
-code. Running tests on save provides quick feedback so that mistakes are
-found before the programmer is thinking about the next context. Agile
-practitioners emphasise the importance of tests that execute quickly
-(Martin 2008 p.314:T9) -- Oboe's 220 unit and component tests run in
-less than a second so discovering programming mistakes is nearly
-instant. If the ``content of any medium is always another medium''
-(McLuhan 1964 p.8), we might say that the content of programming is the
-process that is realised by its execution. A person working in a
-physical medium sees the thing they are making but the programmer does
-usually not see their program's execution simultaneously as they create.
-Conway notes that an artisan works by transform-in-place ``start with
-the working material in place and you step by step transform it into its
-final form,'' but software is created through proxies. He attempts to
-close this gap by merging programming with the results of programming
-(Conway 2004 pp.8-9). If we bring together the medium and the message by
-viewing the result of code while we write it, we can build in a series
-of small, iterative, correct steps and programming can be more
-explorative and expressive. Running the tests subtly, automatically,
-hundreds of times per day is not merely time-saving, this build process
-noticeably improved the quality of the project's programming.
+code; running tests on save provides quick when refactoring so that
+equivalence is demonstrated before starting to thinking about the next
+context. Agile practitioners emphasise the importance of tests that
+execute quickly (Martin 2008 p.314:T9) -- Oboe's 220 unit and component
+tests run in less than a second so discovering programming mistakes is
+nearly instant.
+
+If the ``content of any medium is always another medium'' (McLuhan 1964
+p.8), we might say that the content of programming is the process that
+is realised by its execution. A sculptor or painter works while seeing
+the thing that they are making. No decision was made to work in this
+way, the immediacy is a natural attribute of the medium. For digital
+artists, freed from restrictions of physical mediums, we may design
+abstract tools in any way that we can imagine. However far the effect of
+a digital paintbrush on the canvas might have diverged from physical
+manipulation, most of the common toolbox assumes a workflow of
+interactive editing and real-time feedback, simulating the physicality
+of traditional mediums. This is not so in programming: a person writing
+a computer program does not usually see its execution until seconds or
+even minutes after their edit -- a lag which would be intolerable
+elsewhere. Conway notes that an artisan works by transform-in-place
+``start with the working material in place and you step by step
+transform it into its final form,'' but software is created through
+proxies; he posits that we may close this gap by merging programming
+with the results of programming (Conway 2004 pp.8-9). If we bring
+together the medium and the message by viewing the result of code while
+we write it, we can build in a series of small, iterative, correct steps
+and programming can be more explorative and expressive. Running the
+tests subtly, automatically, hundreds of times per day is not merely
+time-saving, this build process noticeably improved the quality of the
+project's programming.
 
 Integration tests are not run on save. They intentionally simulate a
 slow network so by the time they complete a programmer will have already
@@ -2054,6 +2070,14 @@ context-switched to the next micro-task. Oboe's source is version
 controlled using Git and hosted on Github. The integration tests are
 used as the final check before a branch in Git is merged into the
 master.
+
+For every commit which is pushed to Github the Travis (Travis CI GmbH
+2013) continuous integration environment automatically builds and tests
+the distributable form. This service is provided gratis to open source
+projects. When a third-party contributes a bug fix the changes are
+automatically annotated with their test status so that no pull request
+which breaks the build may be accepted. This automation encourages
+collaboration by making it very cheap to accept third party patches.
 
 \subsection{Packaging to a single distributable
 file}\label{packaging-to-a-single-distributable-file}
@@ -3047,14 +3071,11 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
     \NormalTok{NODE_FOUND    = _S++,}
     \CommentTok{// fired whenever a path is found in the JSON:      }
     \NormalTok{PATH_FOUND    = _S++,   }
-    
-    \NormalTok{NODE_MATCHED  = }\StringTok{'node'}\NormalTok{,}
-    \NormalTok{PATH_MATCHED  = }\StringTok{'path'}\NormalTok{,}
-         
+             
     \NormalTok{FAIL_EVENT    = }\StringTok{'fail'}\NormalTok{,    }
     \NormalTok{ROOT_FOUND    = _S++,    }
     \NormalTok{HTTP_START    = }\StringTok{'start'}\NormalTok{,}
-    \NormalTok{STREAM_DATA   = _S++,}
+    \NormalTok{STREAM_DATA   = }\StringTok{'content'}\NormalTok{,}
     \NormalTok{STREAM_END    = _S++,}
     \NormalTok{ABORTING      = _S++;}
     
@@ -4717,27 +4738,33 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 \CommentTok{// export public API}
 \KeywordTok{function} \FunctionTok{oboe}\NormalTok{(arg1, arg2) \{}
 
-   \KeywordTok{if} \NormalTok{(}\OtherTok{arg1}\NormalTok{.}\FunctionTok{url}\NormalTok{) \{}
-
-      \CommentTok{// method signature is:}
-      \CommentTok{//    oboe(\{method:m, url:u, body:b, headers:\{...\}\})}
-
-      \KeywordTok{return} \FunctionTok{wire}\NormalTok{(}
-         \NormalTok{(}\OtherTok{arg1}\NormalTok{.}\FunctionTok{method} \NormalTok{|| }\StringTok{'GET'}\NormalTok{),}
-         \FunctionTok{url}\NormalTok{(}\OtherTok{arg1}\NormalTok{.}\FunctionTok{url}\NormalTok{, }\OtherTok{arg1}\NormalTok{.}\FunctionTok{cached}\NormalTok{),}
-         \OtherTok{arg1}\NormalTok{.}\FunctionTok{body}\NormalTok{,}
-         \OtherTok{arg1}\NormalTok{.}\FunctionTok{headers}
-      \NormalTok{);}
+   \KeywordTok{if}\NormalTok{( arg1 ) \{}
+      \KeywordTok{if} \NormalTok{(}\OtherTok{arg1}\NormalTok{.}\FunctionTok{url}\NormalTok{) \{}
+   
+         \CommentTok{// method signature is:}
+         \CommentTok{//    oboe(\{method:m, url:u, body:b, headers:\{...\}\})}
+   
+         \KeywordTok{return} \FunctionTok{wire}\NormalTok{(}
+            \NormalTok{(}\OtherTok{arg1}\NormalTok{.}\FunctionTok{method} \NormalTok{|| }\StringTok{'GET'}\NormalTok{),}
+            \FunctionTok{url}\NormalTok{(}\OtherTok{arg1}\NormalTok{.}\FunctionTok{url}\NormalTok{, }\OtherTok{arg1}\NormalTok{.}\FunctionTok{cached}\NormalTok{),}
+            \OtherTok{arg1}\NormalTok{.}\FunctionTok{body}\NormalTok{,}
+            \OtherTok{arg1}\NormalTok{.}\FunctionTok{headers}
+         \NormalTok{);}
+      \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
+   
+         \CommentTok{//  simple version for GETs. Signature is:}
+         \CommentTok{//    oboe( url )            }
+         \CommentTok{//                                }
+         \KeywordTok{return} \FunctionTok{wire}\NormalTok{(}
+            \StringTok{'GET'}\NormalTok{,}
+            \NormalTok{arg1, }\CommentTok{// url}
+            \NormalTok{arg2  }\CommentTok{// body. Deprecated, use \{url:u, body:b\} instead}
+         \NormalTok{);}
+      \NormalTok{\}}
    \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
-
-      \CommentTok{//  simple version for GETs. Signature is:}
-      \CommentTok{//    oboe( url )            }
-      \CommentTok{//                                }
-      \KeywordTok{return} \FunctionTok{wire}\NormalTok{(}
-         \StringTok{'GET'}\NormalTok{,}
-         \NormalTok{arg1, }\CommentTok{// url}
-         \NormalTok{arg2  }\CommentTok{// body. Deprecated, use \{url:u, body:b\} instead}
-      \NormalTok{);}
+      \CommentTok{// wire up a no-AJAX Oboe. Will have to have content }
+      \CommentTok{// fed in externally and fed in using .emit.}
+      \KeywordTok{return} \FunctionTok{wire}\NormalTok{();}
    \NormalTok{\}}
    
    \KeywordTok{function} \FunctionTok{url}\NormalTok{(baseUrl, cached) \{}
@@ -5207,10 +5234,17 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 \KeywordTok{function} \FunctionTok{wire} \NormalTok{(httpMethodName, contentSource, body, headers)\{}
 
    \KeywordTok{var} \NormalTok{oboeBus = }\FunctionTok{pubSub}\NormalTok{();}
-               
-   \FunctionTok{streamingHttp}\NormalTok{( oboeBus,}
-                  \FunctionTok{httpTransport}\NormalTok{(), }
-                  \NormalTok{httpMethodName, contentSource, body, headers );                              }
+             
+   \CommentTok{// Wire the input stream in if we are given a content source.}
+   \CommentTok{// This will usually be the case. If not, the instance created}
+   \CommentTok{// will have to be passed content from an external source.}
+                   
+   \KeywordTok{if}\NormalTok{( contentSource ) \{                }
+   
+      \FunctionTok{streamingHttp}\NormalTok{( oboeBus,}
+                     \FunctionTok{httpTransport}\NormalTok{(), }
+                     \NormalTok{httpMethodName, contentSource, body, headers );}
+   \NormalTok{\}                              }
      
    \FunctionTok{instanceController}\NormalTok{( }
                \NormalTok{oboeBus, }
@@ -5597,6 +5631,9 @@ a Debate Between Sam Harris and Bruce Schneier.''
 
 Stefanov, Stoyan. 2009. ``Progressive Rendering via Multiple Flushes.''
 \url{http://www.phpied.com/progressive-rendering-via-multiple-flushes/}.
+
+Travis CI GmbH. 2013. ``Travis Continuous Integration.''
+\url{http://travis-ci.org}.
 
 van Kesteren, Anne. 2012. ``XMLHttpRequest Level 2 Working Draft.''
 \url{http://www.w3.org/TR/XMLHttpRequest2/\#make-progress-notifications}.

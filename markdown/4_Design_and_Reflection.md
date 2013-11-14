@@ -645,3 +645,8 @@ UNIX philosophy for small, easily combined programs [@unixbasics].
 > Write programs to work together.\
 > Write programs to handle text streams, because that is a universal
 > interface.
+
+*extra challenges*, Code which would be normally thought of as
+compact is not necessarily so after gzipping, for example repetition
+of logic compresses very well, often better than if a generalised form
+is extracted. Contrast with DRY.

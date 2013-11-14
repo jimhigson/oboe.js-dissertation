@@ -712,6 +712,18 @@
       ],
       "url":"http://travis-ci.org",
       "issued": { "date-parts":[ [2013] ] }                  
+   },
+   
+   {
+      "id":"dry",
+      "title":"The Pragmatic Programmer: From Journeyman to Master",
+      "author":[         
+         { "family": "Hunt", "given":"Andrew"},
+         { "family": "Thomas", "given":"David"}
+      ],
+      "publisher":"Addison-Wesley Professional",
+      "issued": { "date-parts":[ [1999] ] },
+      "type":"book"                  
    }   
    
 ]

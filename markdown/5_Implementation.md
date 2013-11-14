@@ -152,13 +152,14 @@ controlled using Git and hosted on Github. The integration tests are
 used as the final check before a branch in Git is merged into the
 master.
 
-For every commit which is pushed to Github the Travis [@travis] continuous
-integration environment automatically builds and tests the distributable
-form. This service is provided gratis to open source projects. When a third-party
-contributes a bug fix the changes are automatically annotated with their
-test status so that no pull request which breaks the build may be
-accepted. This automation encourages collaboration by making it very
-cheap to accept third party patches.
+For every commit which is pushed to Github the Travis [@travis]
+continuous integration environment automatically builds and tests the
+distributable form. This is a hosted service provided gratis to open
+source projects. When a third-party contributes a bug fix the changes
+are automatically annotated with their test status so that no pull
+request which breaks the build may be accepted. This automation
+encourages collaboration by making it very cheap to accept third party
+patches.
 
 Packaging to a single distributable file
 ----------------------------------------

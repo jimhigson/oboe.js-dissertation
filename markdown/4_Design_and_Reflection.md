@@ -45,14 +45,14 @@ Choice of selection language
 JSONPath is well suited for selecting nodes while the document is being
 read because it specifies only constraints on paths and 'contains'
 relationships. Because of the top-down serialisation order, on
-encountering any node in a JSON stream we will have already
-seen enough of the prior document to know its full path. JSONPath would
-not be so amenable if it expressed sibling relationships because there
-is no similar guarantee of having seen other nodes on the same level
-when any particular node is encountered. A new implementation of the
-language is required because the existing JSONPath library is
-implemented only as a means to search through already gathered objects
-and is too narrow in applicability to be useful in a streaming context.
+encountering any node in a JSON stream we will have already seen enough
+of the prior document to know its full path. JSONPath would not be so
+amenable if it expressed sibling relationships because there is no
+similar guarantee of having seen other nodes on the same level when any
+particular node is encountered. A new implementation of the language is
+required because the existing JSONPath library is implemented only as a
+means to search through already gathered objects and is too narrow in
+applicability to be useful in a streaming context.
 
 Given that we are selecting specifically inside a REST resource it is
 unlikely that we will be examining a full model. Rather, the selectors
@@ -283,9 +283,13 @@ While SAX parsers provide an unappealing interface to application
 developers, as a starting point to handle low-level parsing in
 higher-level libraries they work very well -- most XML DOM parsers are
 built in this way. The pre-existing Clarinet project [@clarinet] is well
-tested, liberally licenced, and compact, meeting our needs perfectly.
-The name of this project, Oboe.js, was chosen in tribute to the value
-delivered by Clarinet, itself named after the **SAX**ophone.
+tested, liberally licenced, and compact, appropriately meeting our
+needs. The version of Clarinet used in Oboe when delivered to the
+browser has been customised to remove Node-specific parts and to work
+better with browser compiler optimisers, for example by removing
+non-literal case labels from switch statements. The name of this
+project, Oboe.js, was chosen in tribute to the value delivered by
+Clarinet, itself named after the **SAX**ophone.
 
 API design
 ----------
@@ -646,7 +650,17 @@ UNIX philosophy for small, easily combined programs [@unixbasics].
 > Write programs to handle text streams, because that is a universal
 > interface.
 
-*extra challenges*, Code which would be normally thought of as
-compact is not necessarily so after gzipping, for example repetition
-of logic compresses very well, often better than if a generalised form
-is extracted. Contrast with DRY.
+Working to a maximum post-gzip size introduces some unintuitive
+challenges. Because duplication compresses well, code which would normally
+be considered to have been written compactly doesn't necessarily produce
+a smaller deliverable than code which is repetitive. In many cases
+staying DRY [@dry p.27] by extracting a common component from two
+similar algorithms actually creates a larger gzipped form. The DRY
+principle is not primarily for the sake of compactness, there are better
+reasons to avoid duplicating logic - wherever something is expressed
+twice there is the possibility for the two versions to diverge. Code
+which disagrees with itself cannot be self-documenting because there is
+no single authoritative version. In Oboe, for maintainability DRY code
+has generally been preferred over code which compresses well, but
+experimentation has been used to find the best gzipped size when
+choosing between equally DRY alternatives.

@@ -1520,9 +1520,13 @@ While SAX parsers provide an unappealing interface to application
 developers, as a starting point to handle low-level parsing in
 higher-level libraries they work very well -- most XML DOM parsers are
 built in this way. The pre-existing Clarinet project (Job 2011) is well
-tested, liberally licenced, and compact, meeting our needs perfectly.
-The name of this project, Oboe.js, was chosen in tribute to the value
-delivered by Clarinet, itself named after the \textbf{SAX}ophone.
+tested, liberally licenced, and compact, appropriately meeting our
+needs. The version of Clarinet used in Oboe when delivered to the
+browser has been customised to remove Node-specific parts and to work
+better with browser compiler optimisers, for example by removing
+non-literal case labels from switch statements. The name of this
+project, Oboe.js, was chosen in tribute to the value delivered by
+Clarinet, itself named after the \textbf{SAX}ophone.
 
 \subsection{API design}\label{api-design}
 
@@ -1904,10 +1908,20 @@ programs to work together.\\Write programs to handle text streams,
 because that is a universal interface.
 \end{quote}
 
-\emph{extra challenges}, Code which would be normally thought of as
-compact is not necessarily so after gzipping, for example repetition of
-logic compresses very well, often better than if a generalised form is
-extracted. Contrast with DRY.
+Working to a maximum post-gzip size introduces some unintuitive
+challenges. Because duplication compresses well, code which would
+normally be considered to have been written compactly doesn't
+necessarily produce a smaller deliverable than code which is repetitive.
+In many cases staying DRY (Hunt and Thomas 1999 p.27) by extracting a
+common component from two similar algorithms actually creates a larger
+gzipped form. The DRY principle is not primarily for the sake of
+compactness, there are better reasons to avoid duplicating logic -
+wherever something is expressed twice there is the possibility for the
+two versions to diverge. Code which disagrees with itself cannot be
+self-documenting because there is no single authoritative version. In
+Oboe, for maintainability DRY code has generally been preferred over
+code which compresses well, but experimentation has been used to find
+the best gzipped size when choosing between equally DRY alternatives.
 
 \section{Implementation}\label{implementation}
 
@@ -2073,11 +2087,12 @@ master.
 
 For every commit which is pushed to Github the Travis (Travis CI GmbH
 2013) continuous integration environment automatically builds and tests
-the distributable form. This service is provided gratis to open source
-projects. When a third-party contributes a bug fix the changes are
-automatically annotated with their test status so that no pull request
-which breaks the build may be accepted. This automation encourages
-collaboration by making it very cheap to accept third party patches.
+the distributable form. This is a hosted service provided gratis to open
+source projects. When a third-party contributes a bug fix the changes
+are automatically annotated with their test status so that no pull
+request which breaks the build may be accepted. This automation
+encourages collaboration by making it very cheap to accept third party
+patches.
 
 \subsection{Packaging to a single distributable
 file}\label{packaging-to-a-single-distributable-file}
@@ -5579,6 +5594,9 @@ SpiderMonkey.''
 
 Harmony. 2013. ``Draft Specification for ES.next (Ecma-262 Edition 6).''
 \url{http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts}.
+
+Hunt, Andrew, and David Thomas. 1999. \emph{The Pragmatic Programmer:
+From Journeyman to Master}. Addison-Wesley Professional.
 
 Job, Nuno. 2011. ``Clarinet - SAX Based Evented Streaming JSON Parser in
 JavaScript.'' \url{https://github.com/dscape/clarinet}.

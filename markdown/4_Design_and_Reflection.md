@@ -589,7 +589,7 @@ separately from other HTTP requests. Schneier often argues that
 Complexity and Security] and in one online debate paints a buildings
 analogy [@schneierdoors]:
 
-> More specifically, simplicity tends to completely remove potential
+> Simplicity tends to completely remove potential
 > avenues of attack. An easy example might be to think of a building.
 > Adding a new door is an additional complexity, and requires additional
 > security to secure that door. This leads to an analysis of door

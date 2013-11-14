@@ -108,7 +108,7 @@ content. The ability to present the first content as early as possible
 is a desirable trait for system usability because it allows the user to
 start reading earlier and a progressively rendered display in itself
 increases the human perception of speed [@perceptionFaxSpeed]. Note also
-how the cadence of requests is more steady in Figure
+how the cadence of requests is more steady in figure
 \ref{rest_timeline_2} with four connections opened at roughly equal
 intervals rather than a single request followed by a rapid burst of
 three. Both clients and servers routinely limit the number of

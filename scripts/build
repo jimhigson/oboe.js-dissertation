@@ -1,18 +1,21 @@
 #!/bin/sh
 
-pandoc proposal.md -o main/proposal.pdf
+# this script deals with post-pandoc edits to the raw tex. Everything else
+# is disabled. 
 
-echo made proposal pdf
+#pandoc proposal.md -o main/proposal.pdf
 
-./scripts/gen_source_appendix
+#echo made proposal pdf
 
-./scripts/all_markdown > main/main.md
+#./scripts/gen_source_appendix
 
-echo made main md 
+#./scripts/all_markdown > main/main.md
 
-./scripts/all_markdown | pandoc -f markdown+autolink_bare_uris --smart --toc --default-image-extension=png --number-sections --bibliography=bibliography.json --template=scripts/mainOboeTemplate --to latex --output=main/main.tex
+#echo made main md 
 
-echo made main tex
+#./scripts/all_markdown | pandoc -f markdown+autolink_bare_uris --smart --toc --default-image-extension=png --number-sections --bibliography=bibliography.json --template=scripts/mainOboeTemplate --to latex --output=main/main.tex
+
+#echo made main tex
 
 echo making main pdf...
  
@@ -20,8 +23,12 @@ pdflatex main/main.tex
 
 echo ...done
 
-wc -w markdown/*.md
-wc -w proposal.md
+cp main.pdf main
+
+echo ... and copied
+
+# wc -w markdown/*.md
+# wc -w proposal.md
 
 
 

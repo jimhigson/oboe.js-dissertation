@@ -231,7 +231,7 @@ faster}\label{rest-aggregation-could-be-faster}
 \begin{figure}[htbp]
 \centering
 \includegraphics{images/rest_timeline_1.png}
-\caption{\textbf{Sequence diagram showing the aggregation of low-level
+\caption[Sequence of aggregation of REST resources]{\textbf{Sequence diagram showing the aggregation of low-level
 REST resources by an intermediary.} A client fetches an author's
 publication list and then their first three articles. This sequence
 represents the most commonly used technique in which the client does not
@@ -241,7 +241,7 @@ react until the response is complete. \label{rest_timeline_1}}
 \begin{figure}[htbp]
 \centering
 \includegraphics{images/rest_timeline_2.png}
-\caption{\textbf{Revised aggregation sequence showing a client which
+\caption[Revised REST aggregation sequence of a streaming client]{\textbf{Revised aggregation sequence showing a client which
 progressively interprets the resources.} Because UML sequence diagrams
 draw returned values as a one-off happening rather than a continuous
 process, the lighter arrow notation is added to represent fragments of
@@ -261,7 +261,7 @@ content. The ability to present the first content as early as possible
 is a desirable trait for system usability because it allows the user to
 start reading earlier and a progressively rendered display in itself
 increases the human perception of speed (Geelhoed et al. 1995). Note
-also how the cadence of requests is more steady in Figure
+also how the cadence of requests is more steady in figure
 \ref{rest_timeline_2} with four connections opened at roughly equal
 intervals rather than a single request followed by a rapid burst of
 three. Both clients and servers routinely limit the number of
@@ -2962,6 +2962,154 @@ less code, is less tightly coupled to JSON format specifics, and with a
 declarative style, I believe is easier to use than the previous simplest
 solution.
 
+\section{Bibliography}\label{bibliography}
+
+Ahuvia, Yogev. 2013. ``Design Patterns: Infinite Scrolling: Let's Get To
+The Bottom Of This
+Http://uxdesign.smashingmagazine.com/2013/05/03/infinite-scrolling-get-bottom/.''
+Smashing Magazine.
+
+Alman, Ben. 2012. ``Grunt: The Javascript Task Runner.''
+\url{http://gruntjs.com/}.
+
+Ashkenas, Jeremy. 2008. ``Underscore.js: Memoize.''
+\url{http://underscorejs.org/\#memoize}.
+
+Bazon, Mihai. 2010. ``UglifyJs.''
+\url{https://github.com/mishoo/UglifyJS}.
+
+Bray, Tim, Jean Paoli, C M Sperberg-McQueen, Eve Maler, and François
+Yergeau. 2008. ``Extensible Markup Language (XML) 1.0 (Fifth Edition).''
+\url{http://www.w3.org/TR/REC-xml/\#sec-starttags}.
+
+Browserling Inc. 2012. ``Browserify Website.''
+\url{http://browserify.org/}.
+
+Burke, James. 2011. ``Require.js.'' \url{http://requirejs.org/}.
+
+Conway, Mel. 2004. \emph{Humanizing Application Building: An
+Anthropological Perspective}.
+\url{http://melconway.com/Home/pdf/humanize.pdf}.
+
+Cragg, Duncan. 2006. ``Duncan Cragg on Declarative Architectures: STREST
+(Service-Trampled REST) Will Break Web 2.0.''
+\url{http://duncan-cragg.org/blog/post/strest-service-trampled-rest-will-break-web-20/}.
+
+Douglas, Crockford. 2009. ``JSON: The Fat-free Alternative to XML.''
+\url{http://json.org}.
+
+Eberhart, Andreas, and Stefan Fischer. 2002. \emph{Java Tools: Using
+XML, EJB, CORBA, Servlets and SOAP}.
+
+ECMA. 1999. ``ECMAScript Language Specification 3rd Edition.''
+\url{http://www.ecma-international.org/publications/files/ECMA-ST-ARCH/ECMA-262,\%203rd\%20edition,\%20December\%201999.pdf}.
+
+Etemad, Elika J, and Tab Atkins. 2013. ``Selectors Level 4.''
+\url{http://dev.w3.org/csswg/selectors4/}.
+
+Fielding, R. 2000. ``Principled Design of the Modern Web Architecture.''
+
+Fielding, R, J Gettys, J Mogul, H Frystyk, et al. 1999. ``Hypertext
+Transfer Protocol -{}- HTTP/1.1: Header Field Definitions.''
+\url{http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html\#sec14.5}.
+
+Gamma, Erich, Richard Helm, Ralph Johnson, and John Vlissides. 1994.
+\emph{Design Patterns: Elements of Reusable Object-Oriented Software}.
+
+Geelhoed, Erik, Peter Toft, Suzanne Roberts, and Patrick Hyland. 1995.
+``To Influence Time Perception.'' Hewlett Packard Labs.
+\url{http://www.sigchi.org/chi95/proceedings/shortppr/egd_bdy.htm}.
+
+Gill, Brendan. 2013. ``OpenSignal.''
+
+Goessner, Stefan. 2007. ``JSONPath - XPath for JSON.''
+\url{http://goessner.net/articles/JsonPath/}.
+
+Google. 2009. ``Google Closure Compiler.''
+\url{https://developers.google.com/closure/compiler/}.
+
+Gudgin, Martin, Marc Hadley, Noah Mendelsohn, Jean-Jacques Moreau,
+Henrik Frystyk Nielsen, Anish Karmarkar, and Yves Lafon. 2007. ``SOAP
+Version 1.2 Part 1: Messaging Framework (Second Edition).''
+\url{http://www.w3.org/TR/soap12-part1/}.
+
+Guo, shu-yu. 2013. ``Two Reasons Functional Style Is Slow in
+SpiderMonkey.''
+\url{http://rfrn.org//~shu/2013/03/20/two-reasons-functional-style-is-slow-in-spidermonkey.html}.
+
+Harmony. 2013. ``Draft Specification for ES.next (Ecma-262 Edition 6).''
+\url{http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts}.
+
+Hunt, Andrew, and David Thomas. 1999. \emph{The Pragmatic Programmer:
+From Journeyman to Master}. Addison-Wesley Professional.
+
+Job, Nuno. 2011. ``Clarinet - SAX Based Evented Streaming JSON Parser in
+JavaScript.'' \url{https://github.com/dscape/clarinet}.
+
+---------. 2012. ``Clarinet - SAX Based Evented Streaming JSON Parser in
+JavaScript for the Browser and Nodejs.''
+\url{http://writings.nunojob.com/2011/12/clarinet-sax-based-evented-streaming-json-parser-in-javascript-for-the-browser-and-nodejs.html}.
+
+Lea, Tom. 2012. ``Improving Performance on Twitter.com.''
+\url{{[}https://blog.twitter.com/2012/improving-performance-twittercom{]}}.
+
+Lieberherr, Karl J, Ignacio Silva-Lepe, and Xiao Cun. 1994. ``Adaptive
+Ob Ject-Oriented Programming Using Graph-Based Customization.''
+\url{http://www.csg.ci.i.u-tokyo.ac.jp/old-pages/muga/paper/others/gpce_gcse/ap_graf.pdf}.
+
+Martelli, Alex. 2000. ``Discussion of Typing in Python Language, 2000.''
+\url{https://groups.google.com/forum/?hl=en/\#!msg/comp.lang.python/CCs2oJdyuzc/NYjla5HKMOIJ}.
+
+Martin, Robert ``Uncle Bob''. 2008. \emph{Clean Code: A Handbook of
+Agile Software Craftsmanship}.
+
+McIlroy, Doug. 1978. ``Basics of the Unix Philosophy.''
+\url{http://www.faqs.org/docs/artu/ch01s06.html}.
+
+McLuhan, Marshall. 1964. \emph{Understanding Media: The Extensions of
+Man}.
+
+Microsoft. 2013. ``LINQ (Language-Integrated Query).''
+\url{http://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx}.
+
+Netty. 2010. ``Netty Project.'' \url{http://netty.io/}.
+
+NPM. 2013. ``Get JSON.'' \url{https://npmjs.org/package/get-json}.
+
+Ogden, Max. 2012. ``Streaming XHR.''
+\url{http://maxogden.com/a-proposal-for-streaming-xhr.html}.
+
+Reis, Eric. 2011. \emph{The Lean Startup: How Today's Entrepreneurs Use
+Continuous Innovation to Create Radically Successful Businesses.} Crown
+Business Publishing.
+
+Ryan, Dahl. 2009. ``Node.js.'' \url{http://nodejs.org/}.
+
+Schneier, Bruce. 2000. ``Crypto-Gram Newsletter.''
+\url{https://www.schneier.com/crypto-gram-0003.html\#8}.
+
+Schneier, Bruce, and Sam Harris. 2013. ``To Profile or Not to Profile? -
+a Debate Between Sam Harris and Bruce Schneier.''
+\url{http://www.samharris.org/blog/item/to-profile-or-not-to-profile}.
+
+Stefanov, Stoyan. 2009. ``Progressive Rendering via Multiple Flushes.''
+\url{http://www.phpied.com/progressive-rendering-via-multiple-flushes/}.
+
+Travis CI GmbH. 2013. ``Travis Continuous Integration.''
+\url{http://travis-ci.org}.
+
+van Kesteren, Anne. 2012. ``XMLHttpRequest Level 2 Working Draft.''
+\url{http://www.w3.org/TR/XMLHttpRequest2/\#make-progress-notifications}.
+
+van Kesteren, Anne, and Dean Jackson. 2006. ``The XMLHttpRequest
+Object.'' \url{http://www.w3.org/TR/2006/WD-XMLHttpRequest-20060405/}.
+
+Whorf, B. L. 1956. ``Language, Thought and Reality (Ed. J. B.
+Carroll).'' Cambridge, MA: MIT Press.
+
+Yukihiro, Matsumoto. 2003. ``The Power and Philosophy of Ruby.''
+\url{http://www.rubyist.net/~matz/slides/oscon2003/index.html}.
+
 \hyperdef{}{appendixux5fhttpux5flimits}{\section{Appendix i: Limits to
 number of simultaneous connections under various HTTP
 clients}\label{appendixux5fhttpux5flimits}}
@@ -5516,153 +5664,5 @@ listing}\label{appendix-ii-oboe.js-source-code-listing}
 \OtherTok{console}\NormalTok{.}\FunctionTok{log}\NormalTok{(}\StringTok{'Benchmark server started on port'}\NormalTok{, }\FunctionTok{String}\NormalTok{(PORT));}
 \end{Highlighting}
 \end{Shaded}
-
-\section{Bibliography}\label{bibliography}
-
-Ahuvia, Yogev. 2013. ``Design Patterns: Infinite Scrolling: Let's Get To
-The Bottom Of This
-Http://uxdesign.smashingmagazine.com/2013/05/03/infinite-scrolling-get-bottom/.''
-Smashing Magazine.
-
-Alman, Ben. 2012. ``Grunt: The Javascript Task Runner.''
-\url{http://gruntjs.com/}.
-
-Ashkenas, Jeremy. 2008. ``Underscore.js: Memoize.''
-\url{http://underscorejs.org/\#memoize}.
-
-Bazon, Mihai. 2010. ``UglifyJs.''
-\url{https://github.com/mishoo/UglifyJS}.
-
-Bray, Tim, Jean Paoli, C M Sperberg-McQueen, Eve Maler, and François
-Yergeau. 2008. ``Extensible Markup Language (XML) 1.0 (Fifth Edition).''
-\url{http://www.w3.org/TR/REC-xml/\#sec-starttags}.
-
-Browserling Inc. 2012. ``Browserify Website.''
-\url{http://browserify.org/}.
-
-Burke, James. 2011. ``Require.js.'' \url{http://requirejs.org/}.
-
-Conway, Mel. 2004. \emph{Humanizing Application Building: An
-Anthropological Perspective}.
-\url{http://melconway.com/Home/pdf/humanize.pdf}.
-
-Cragg, Duncan. 2006. ``Duncan Cragg on Declarative Architectures: STREST
-(Service-Trampled REST) Will Break Web 2.0.''
-\url{http://duncan-cragg.org/blog/post/strest-service-trampled-rest-will-break-web-20/}.
-
-Douglas, Crockford. 2009. ``JSON: The Fat-free Alternative to XML.''
-\url{http://json.org}.
-
-Eberhart, Andreas, and Stefan Fischer. 2002. \emph{Java Tools: Using
-XML, EJB, CORBA, Servlets and SOAP}.
-
-ECMA. 1999. ``ECMAScript Language Specification 3rd Edition.''
-\url{http://www.ecma-international.org/publications/files/ECMA-ST-ARCH/ECMA-262,\%203rd\%20edition,\%20December\%201999.pdf}.
-
-Etemad, Elika J, and Tab Atkins. 2013. ``Selectors Level 4.''
-\url{http://dev.w3.org/csswg/selectors4/}.
-
-Fielding, R. 2000. ``Principled Design of the Modern Web Architecture.''
-
-Fielding, R, J Gettys, J Mogul, H Frystyk, et al. 1999. ``Hypertext
-Transfer Protocol -{}- HTTP/1.1: Header Field Definitions.''
-\url{http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html\#sec14.5}.
-
-Gamma, Erich, Richard Helm, Ralph Johnson, and John Vlissides. 1994.
-\emph{Design Patterns: Elements of Reusable Object-Oriented Software}.
-
-Geelhoed, Erik, Peter Toft, Suzanne Roberts, and Patrick Hyland. 1995.
-``To Influence Time Perception.'' Hewlett Packard Labs.
-\url{http://www.sigchi.org/chi95/proceedings/shortppr/egd_bdy.htm}.
-
-Gill, Brendan. 2013. ``OpenSignal.''
-
-Goessner, Stefan. 2007. ``JSONPath - XPath for JSON.''
-\url{http://goessner.net/articles/JsonPath/}.
-
-Google. 2009. ``Google Closure Compiler.''
-\url{https://developers.google.com/closure/compiler/}.
-
-Gudgin, Martin, Marc Hadley, Noah Mendelsohn, Jean-Jacques Moreau,
-Henrik Frystyk Nielsen, Anish Karmarkar, and Yves Lafon. 2007. ``SOAP
-Version 1.2 Part 1: Messaging Framework (Second Edition).''
-\url{http://www.w3.org/TR/soap12-part1/}.
-
-Guo, shu-yu. 2013. ``Two Reasons Functional Style Is Slow in
-SpiderMonkey.''
-\url{http://rfrn.org//~shu/2013/03/20/two-reasons-functional-style-is-slow-in-spidermonkey.html}.
-
-Harmony. 2013. ``Draft Specification for ES.next (Ecma-262 Edition 6).''
-\url{http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts}.
-
-Hunt, Andrew, and David Thomas. 1999. \emph{The Pragmatic Programmer:
-From Journeyman to Master}. Addison-Wesley Professional.
-
-Job, Nuno. 2011. ``Clarinet - SAX Based Evented Streaming JSON Parser in
-JavaScript.'' \url{https://github.com/dscape/clarinet}.
-
----------. 2012. ``Clarinet - SAX Based Evented Streaming JSON Parser in
-JavaScript for the Browser and Nodejs.''
-\url{http://writings.nunojob.com/2011/12/clarinet-sax-based-evented-streaming-json-parser-in-javascript-for-the-browser-and-nodejs.html}.
-
-Lea, Tom. 2012. ``Improving Performance on Twitter.com.''
-\url{{[}https://blog.twitter.com/2012/improving-performance-twittercom{]}}.
-
-Lieberherr, Karl J, Ignacio Silva-Lepe, and Xiao Cun. 1994. ``Adaptive
-Ob Ject-Oriented Programming Using Graph-Based Customization.''
-\url{http://www.csg.ci.i.u-tokyo.ac.jp/old-pages/muga/paper/others/gpce_gcse/ap_graf.pdf}.
-
-Martelli, Alex. 2000. ``Discussion of Typing in Python Language, 2000.''
-\url{https://groups.google.com/forum/?hl=en/\#!msg/comp.lang.python/CCs2oJdyuzc/NYjla5HKMOIJ}.
-
-Martin, Robert ``Uncle Bob''. 2008. \emph{Clean Code: A Handbook of
-Agile Software Craftsmanship}.
-
-McIlroy, Doug. 1978. ``Basics of the Unix Philosophy.''
-\url{http://www.faqs.org/docs/artu/ch01s06.html}.
-
-McLuhan, Marshall. 1964. \emph{Understanding Media: The Extensions of
-Man}.
-
-Microsoft. 2013. ``LINQ (Language-Integrated Query).''
-\url{http://msdn.microsoft.com/en-us/library/vstudio/bb397926.aspx}.
-
-Netty. 2010. ``Netty Project.'' \url{http://netty.io/}.
-
-NPM. 2013. ``Get JSON.'' \url{https://npmjs.org/package/get-json}.
-
-Ogden, Max. 2012. ``Streaming XHR.''
-\url{http://maxogden.com/a-proposal-for-streaming-xhr.html}.
-
-Reis, Eric. 2011. \emph{The Lean Startup: How Today's Entrepreneurs Use
-Continuous Innovation to Create Radically Successful Businesses.} Crown
-Business Publishing.
-
-Ryan, Dahl. 2009. ``Node.js.'' \url{http://nodejs.org/}.
-
-Schneier, Bruce. 2000. ``Crypto-Gram Newsletter.''
-\url{https://www.schneier.com/crypto-gram-0003.html\#8}.
-
-Schneier, Bruce, and Sam Harris. 2013. ``To Profile or Not to Profile? -
-a Debate Between Sam Harris and Bruce Schneier.''
-\url{http://www.samharris.org/blog/item/to-profile-or-not-to-profile}.
-
-Stefanov, Stoyan. 2009. ``Progressive Rendering via Multiple Flushes.''
-\url{http://www.phpied.com/progressive-rendering-via-multiple-flushes/}.
-
-Travis CI GmbH. 2013. ``Travis Continuous Integration.''
-\url{http://travis-ci.org}.
-
-van Kesteren, Anne. 2012. ``XMLHttpRequest Level 2 Working Draft.''
-\url{http://www.w3.org/TR/XMLHttpRequest2/\#make-progress-notifications}.
-
-van Kesteren, Anne, and Dean Jackson. 2006. ``The XMLHttpRequest
-Object.'' \url{http://www.w3.org/TR/2006/WD-XMLHttpRequest-20060405/}.
-
-Whorf, B. L. 1956. ``Language, Thought and Reality (Ed. J. B.
-Carroll).'' Cambridge, MA: MIT Press.
-
-Yukihiro, Matsumoto. 2003. ``The Power and Philosophy of Ruby.''
-\url{http://www.rubyist.net/~matz/slides/oscon2003/index.html}.
 
 \end{document}

@@ -16,7 +16,7 @@ echo made main tex
 
 echo making main pdf...
  
-./scripts/all_markdown | pandoc -f markdown+autolink_bare_uris --smart --toc --default-image-extension=png --number-sections --bibliography=bibliography.json --template=scripts/mainOboeTemplate --output=main/main.pdf
+pdflatex main/main.tex
 
 echo ...done
 

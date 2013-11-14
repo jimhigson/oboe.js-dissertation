@@ -29,7 +29,7 @@ finer ones.
 Design for automated testing
 ----------------------------
 
-![**The test pyramid**. Many tests specify the low-level components,
+![**The test pyramid.** Many tests specify the low-level components,
 fewer on their composed behaviours, and fewer still on a whole-system
 level. \label{testpyramid}](images/testPyramid.png)
 

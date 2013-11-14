@@ -231,7 +231,9 @@ faster}\label{rest-aggregation-could-be-faster}
 \begin{figure}[htbp]
 \centering
 \includegraphics{images/rest_timeline_1.png}
-\caption[Sequence of aggregation of REST resources]{\textbf{Sequence diagram showing the aggregation of low-level
+\caption[Sequence diagram showing the aggregation of low-level
+REST resources by an intermediary]{\textbf{Sequence diagram showing the 
+aggregation of low-level
 REST resources by an intermediary.} A client fetches an author's
 publication list and then their first three articles. This sequence
 represents the most commonly used technique in which the client does not
@@ -241,7 +243,8 @@ react until the response is complete. \label{rest_timeline_1}}
 \begin{figure}[htbp]
 \centering
 \includegraphics{images/rest_timeline_2.png}
-\caption[Revised REST aggregation sequence of a streaming client]{\textbf{Revised aggregation sequence showing a client which
+\caption[Revised aggregation sequence showing a client which
+progressively interprets the resources]{\textbf{Revised aggregation sequence showing a client which
 progressively interprets the resources.} Because UML sequence diagrams
 draw returned values as a one-off happening rather than a continuous
 process, the lighter arrow notation is added to represent fragments of
@@ -426,7 +429,7 @@ less disruptive when services are upgraded.
 \begin{figure}[htbp]
 \centering
 \includegraphics{images/architecture.png}
-\caption{\textbf{Labelling nodes in an n-tier architecture}. Although
+\caption[Labelling nodes in an n-tier architecture]{\textbf{Labelling nodes in an n-tier architecture.} Although
 network topology is often split about client and server side, for our
 purposes categorisation as data, middle, and presentation tier is the
 more meaningful distinction. According to this split the client- and
@@ -1016,7 +1019,7 @@ the plethora of confusing and incompatible representations of JSON that
 are output by the various Java parsers: JSON's Object better resembles
 Java's Map interface than Java Objects, creating linguistic
 difficulties, and the confusion between JSON null, Java null, and
-Jackson's NullNode\footnote{See
+Jackson's NullNode\footnote{
   \url{http://jackson.codehaus.org/1.0.1/javadoc/org/codehaus/jackson/node/NullNode.html}}
 is a common cause of errors. Emboldened by certainty regarding
 deserialisation, AJAX libraries directly integrate JSON parsers,
@@ -1931,7 +1934,9 @@ project}\label{componentisation-of-the-project}
 \begin{figure}[htbp]
 \centering
 \includegraphics{images/overallDesign.png}
-\caption{\textbf{Major components of Oboe.js illustrating program flow
+\caption[Major components of Oboe.js illustrating program flow
+from HTTP transport to application callbacks]{\textbf{Major components 
+of Oboe.js illustrating program flow
 from HTTP transport to application callbacks.} UML facet/receptacle
 notation is used to show the flow of events and event names are given in
 capitals. For clarity events are depicted as transferring directly
@@ -1960,7 +1965,7 @@ testing}\label{design-for-automated-testing}
 \begin{figure}[htbp]
 \centering
 \includegraphics{images/testPyramid.png}
-\caption{\textbf{The test pyramid}. Many tests specify the low-level
+\caption[The test pyramid]{\textbf{The test pyramid.} Many tests specify the low-level
 components, fewer on their composed behaviours, and fewer still on a
 whole-system level. \label{testpyramid}}
 \end{figure}
@@ -2300,7 +2305,8 @@ required.
 \begin{figure}[htbp]
 \centering
 \includegraphics{images/ascent.png}
-\caption{\textbf{List representation of an ascent rising from leaf to
+\caption[List representation of an ascent rising from leaf to
+root through a JSON tree]{\textbf{List representation of an ascent rising from leaf to
 root through a JSON tree.} Note the special ROOT value which represents
 the location of the pathless root node. The ROOT value is an object,
 taking advantage of object uniqueness to ensure that its location is

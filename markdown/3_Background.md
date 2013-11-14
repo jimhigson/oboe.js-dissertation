@@ -1,7 +1,7 @@
 Background
 ==========
 
-![**Labelling nodes in an n-tier architecture**. Although network
+![**Labelling nodes in an n-tier architecture.** Although network
 topology is often split about client and server side, for our purposes
 categorisation as data, middle, and presentation tier is the more
 meaningful distinction. According to this split the client- and
@@ -757,8 +757,7 @@ While SAX addresses many of the problems raised in this dissertation,
 its unfriendly developer ergonomics have presented too high a barrier
 for adoption for all but fringe use cases.
 
-[^1]: See
-    <http://jackson.codehaus.org/1.0.1/javadoc/org/codehaus/jackson/node/NullNode.html>
+[^1]: <http://jackson.codehaus.org/1.0.1/javadoc/org/codehaus/jackson/node/NullNode.html>
 
 [^2]: For an example closer to the real world see
     https://github.com/dscape/clarinet/blob/master/samples/twitter.js

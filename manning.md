@@ -18,31 +18,30 @@ between being reacting *earlier* and being *faster*.
 A Journey
 ------
 
-The passenger checks her email using a smartphone. As the train progresses
+A passenger checks her email on her phone. As the train moves
 through the countryside the reception is lost and reestablished many times.
 Let's look inside the email webapp. 
 The web developer's standard toolkit is structured so that
-connections that were terminated early but were partially successful are considered wholly
-unsuccessful. The
-popular AJAX library jQuery automatically parses JSON or XML responses
-before passing back to the application but given an early disconnection
-there are no means to parse the partial response. 
-With applications following the path set out by the tooling,
-our canonical webapp disregards partial
+connections that are terminated early but were partially successful are considered wholly
+unsuccessful. 
+Popular AJAX libraries automatically parse JSON and XML responses
+before passing back to the application but if there is an early disconnection,
+provide no facility to gather the partial response. 
+With applications following a path set out by their tooling,
+our email webapp disregards partial
 data without inspection. For our passenger, even if
-90% of her inbox had been retrieved, if her signal is lost, the
-web applications behaves as if it received nothing.
+90% of her inbox had been retrieved, if her signal is lost the
+application behaves as if it received nothing.
 Later, when the network returns her inbox will be downloaded from
-scratch, repeating the 90% which has already been successfully delivered.
+scratch, repeating the 90% which was already successfully transferred.
 
-By embracing streaming in REST we
-stop seeing messages as wholly successful or unsuccessful.
-The data may be conceptualised as having many parts which are
+By integrating streaming into REST we
+step back from a dichotomy of messages as wholly successful or unsuccessful.
+The message is conceptualised as having many parts which are
 useful in themselves, in which the successful delivery of each part is
-handled independently as soon as it arrives.
-On early disconnection the content
-delivered up to that point will have already been handled so no special
-case is required to handle the partial data.
+handled immediately on delivery.
+When an early disconnection occurs the content previously delivered
+has already been handled: no special cases are needed to salvage the remains.
 
 A Vote
 -------

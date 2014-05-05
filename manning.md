@@ -51,17 +51,17 @@ salvage the remains.
 A Vote: caching and distribution
 --------------------------------
 
-Election results are provided by a news organisation through a REST
-service. When clients request historical data, static data is delivered
-much as we would expect. For data representing an ongoing vote the best
-information so far as is known can be immediately sent: an incomplete
-resource with the results so far, followed by the remainder dispatched
-live as the polls are called. While the data is sent as a stream, when
-all results are known, after-the-fact the JSON closes as usual and
-leaves a standard, cacheable complete resource. Once the polls have
-closed a client wishing to fetch the results would use the *same URL for
-the historic data as was used during the event for the live stream*.
-This is possible because cool URLs locate data by its meaning,
+We wish to provide a REST service for election results.
+When clients request historical data, static data is delivered
+much as we would expect. For data representing an ongoing vote we can
+do better than a holding page: the best information so far as is known
+can be immediately sent, followed by the remainder dispatched
+live as the polls are called. When
+all results are known, the JSON closes as usual to
+form a standard, complete, cacheable complete resource. A
+client wishing to fetch results after-the-fact would use the *same URL for
+the historic data as was used during the election for the live stream*.
+This is possible because cool URLs[1] locate data by its meaning,
 indifferent to the time when the request is made.
 
 An application developer receiving streaming REST does not have to
@@ -69,3 +69,5 @@ handle live and historic data as separate cases. They may concentrate on
 handling the receipt of data regardless of the timing. Without providing
 divergent cases, the code which displays results as they are announced
 may also be applied to historic data.
+
+[1] http://something.com

@@ -15,8 +15,8 @@ are yet to embrace streaming and still wait until a resource arrives completely
 before using it. We should want to act early: in most situations there is no real-world difference
 between being reacting *earlier* and being *faster*.
 
-A Journey
-------
+On a Journey: reactivity and fault tolerance
+--------------------------------------
 
 A passenger checks her email on her phone. As the train moves
 through the countryside the reception is lost and reestablished many times.
@@ -43,24 +43,23 @@ handled immediately on delivery.
 When an early disconnection occurs the content previously delivered
 has already been handled: no special cases are needed to salvage the remains.
 
-A Vote
--------
+A Vote: caching and distribution
+---------------------------
 
-Consider the REST service provided by a news organisation for per-ward results in
-an important election.
-Where historic results are requested the data is delivered in JSON format much
-as usual. But requests for ongoing vote results, an incomplete JSON with the wards known so far
-would be immediately sent, followed by the remainder dispatched
-live as the results are called. While the data is sent as a stream,
+Election results are provided by a news organisation through a REST service.
+When clients request historical data, static data is delivered much as we would expect.
+For data representing an ongoing vote the best information so far as is known can be immediately sent:
+an incomplete resource with the results so far, followed by the remainder dispatched
+live as the polls are called. While the data is sent as a stream,
 when all results are known, after-the-fact the
 JSON closes as usual and leaves a standard, cacheable complete resource.
-After the polls have closed somebody wishing to fetch the results would use the *same URL for the
+Once the polls have closed a client wishing to fetch the results would use the *same URL for the
 historic data as was used during the event for the live stream*. This is
 possible because cool URLs locate data by its meaning, indifferent to
 the time when the request is made.
 
 An application developer receiving streaming REST does not have to handle
-live and historic data as separate cases, they can concentrate on
-handling data regardless of the timing. Without branching, the code which
-displays results as they are announced would automatically be able to
-show historic data.
+live and historic data as separate cases. They may concentrate on
+handling the receipt of data regardless of the timing. Without providing divergent cases,
+the code which displays results as they are announced may also be applied to
+historic data.

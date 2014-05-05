@@ -58,8 +58,8 @@ holding page: the best information so far as is known can be immediately
 sent, followed by the remainder dispatched live as the polls are called.
 When all results are known, the JSON closes as usual to form a standard,
 complete, cacheable complete resource. A client wishing to fetch results
-after-the-fact would use the *same URL for the historic data as was used
-during the election for the live stream*. This is possible because cool
+after-the-fact requests the same URL for the historic data as was used
+during the election for the live stream. This is possible because cool
 URLs[1] locate data by its meaning, indifferent to the time when the
 request is made.
 

@@ -19,8 +19,7 @@ NginX. In Node the stream, not the whole resource, is the primary
 abstraction. However, today's popular REST clients are yet to embrace
 streaming and still wait until a resource arrives completely before
 using it. We should try to be early: in practice there is usually no
-difference between being reacting *earlier* and being
-*faster*.
+difference between being reacting *earlier* and being *faster*.
 
 On a Journey: reactivity and fault tolerance
 --------------------------------------------
@@ -51,22 +50,24 @@ salvage the remains.
 A Vote: caching and distribution
 --------------------------------
 
-We wish to provide a REST service for election results. When clients
-request historical data, static data is delivered much as we would
+We wish to provide a REST service for election results. If a client
+requests historical data, a static resource is delivered much as we would
 expect. For data representing an ongoing vote we can do better than a
-holding page: the best information so far as is known can be immediately
+holding page: the best information so far is immediately
 sent, followed by the remainder dispatched live as the polls are called.
 When all results are known, the JSON closes as usual to form a standard,
-complete, cacheable complete resource. A client wishing to fetch results
+complete, cacheable resource. A client wishing to fetch results
 after-the-fact requests the same URL for the historic data as was used
 during the election for the live stream. This is possible because cool
 URLs[1] locate data by its meaning, indifferent to the time when the
 request is made.
 
-An application developer receiving streaming REST does not have to
-handle live and historic data as separate cases. They may concentrate on
-handling the receipt of data regardless of the timing. Without providing
-divergent cases, the code which displays results as they are announced
-may also be applied to historic data.
+Under streaming REST the unification of live and historic data frees the
+application developer to handle streamed or static resources
+from a single transport layer, without writing divergent cases.
+For the election we might display colours on a map - the
+results might be to-the-second or decades past, but through the
+entire front-end stack we need only code once.
+
 
 [1] http://something.com

@@ -18,8 +18,8 @@ We have now a generation of highly asynchronous servers: Node.js, Netty,
 NginX. In Node the stream, not the whole resource, is the primary
 abstraction. However, today's popular REST clients are yet to embrace
 streaming and still wait until a resource arrives completely before
-using it. We should want to act early: in most situations there is no
-real-world difference between being reacting *earlier* and being
+using it. We should try to be early: in practice there is usually no
+difference between being reacting *earlier* and being
 *faster*.
 
 On a Journey: reactivity and fault tolerance

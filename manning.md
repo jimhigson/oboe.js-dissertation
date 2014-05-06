@@ -39,14 +39,14 @@ successfully transferred.
 
 By integrating streaming into REST we step back from this dichotomy of
 messages being wholly successful or unsuccessful. The resource is
-conceptualised as having many parts which are useful in themselves, in
-which the successful delivery of each part is handled immediately on
-receipt. When an early disconnection occurs the content previously
+conceptualised as having many parts which are useful in themselves, so that
+each part is handled immediately on receipt.
+When an early disconnection occurs the content previously
 delivered has already been handled: no special cases are needed to
 salvage the remains.
 
-If the connection is good, displaying the inbox
-progressively is known to improve the user perception of
+Even if the connection is good, displaying the inbox
+progressively is also known to improve the user perception of
 application speed.
 
 A Vote: caching, distribution and security
@@ -69,11 +69,11 @@ The unification of live and historic data frees the
 application developer from coding separately for either type.
 For the election we might display colours on a map - the
 results could be to-the-second or decades past, but through the
-entire front-end stack we need only code once.
+entire front-end stack we need only code this once.
 
 A building with fewer doors is inherently more secure, given the same
 budget available to secure it. Likewise, a service with a single,
-unified interface is easier to secure because all the effort can
-be concentrated on a single entry-point.
+unified REST interface is easier to secure than one built on REST and WebSockets
+because all our effort can be concentrated on a single entry-point.
 
 [^cool]: http://www.w3.org/Provider/Style/URI.html

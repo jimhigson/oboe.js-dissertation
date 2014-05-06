@@ -21,7 +21,7 @@ streaming and do not use a resource until it has arrived completely.
 We should try to act earlier: in practice there is usually no
 difference between being reacting *earlier* and being *faster*.
 
-On a Journey: availability, reactivity and fault tolerance
+On a Journey: availability, reactivity, and fault tolerance
 --------------------------------------------
 
 A passenger checks her email on her phone. As the train moves through
@@ -49,7 +49,7 @@ Even if the connection is good, displaying the inbox
 progressively is also known to improve the user perception of
 application speed.
 
-A Vote: caching, distribution and security
+A Vote: caching, distribution, and security
 --------------------------------
 
 We wish to provide a REST service for election results. When a client
